@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { NavbarComponent } from './components/navbar/navbar.component';
+import { UpdateService } from './services/update.service';
 
 @Component({
     selector: 'app-root',
@@ -15,4 +16,6 @@ import { NavbarComponent } from './components/navbar/navbar.component';
     `,
     styleUrl: './app.component.css'
 })
-export class AppComponent {}
+export class AppComponent {
+    constructor(private updateService: UpdateService) {}
+}
