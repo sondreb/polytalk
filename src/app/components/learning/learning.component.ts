@@ -124,25 +124,33 @@ import { AudioService } from '../../services/audio.service';
     .tabs {
       display: flex;
       justify-content: center;
-      gap: 1rem;
+      gap: 0.5rem;
       margin-bottom: 2rem;
+      padding: 0.5rem;
+      background: var(--background-color);
+      border-radius: 12px;
     }
     .tabs button {
       padding: 0.75rem 1.5rem;
-      border: none;
-      background: var(--background-color);
+      border: 1px solid transparent;
+      background: transparent;
       border-radius: 8px;
       cursor: pointer;
       font-size: 1rem;
       transition: all 0.2s ease;
+      color: var(--text-color);
+      font-weight: 500;
+      min-width: 100px;
     }
     .tabs button.active {
-      background: var(--primary-color);
-      color: white;
+      background: white;
+      color: var(--primary-color);
+      border-color: var(--primary-color);
       box-shadow: 0 2px 4px rgba(0,0,0,0.1);
     }
     .tabs button:hover:not(.active) {
-      background: var(--background-color-darker);
+      background: rgba(255,255,255,0.5);
+      border-color: var(--background-color-darker);
     }
   `]
 })
