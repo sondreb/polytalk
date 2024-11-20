@@ -1,6 +1,6 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { Language, LanguageService, LearningContent } from '../../services/language.service';
 import { AudioService } from '../../services/audio.service';
@@ -17,6 +17,14 @@ import { AudioService } from '../../services/audio.service';
              class="flag-image">
         {{ selectedLanguage?.name }}
       </h2>
+
+      <div class="tabs">
+        <button *ngFor="let tab of tabs" 
+                [class.active]="category === tab.toLowerCase()"
+                (click)="selectCategory(tab.toLowerCase())">
+          {{ tab }}
+        </button>
+      </div>
 
       <div class="controls card">
         <div class="settings">
@@ -113,6 +121,29 @@ import { AudioService } from '../../services/audio.service';
       margin-right: 8px;
       box-shadow: 0 1px 3px rgba(0,0,0,0.2);
     }
+    .tabs {
+      display: flex;
+      justify-content: center;
+      gap: 1rem;
+      margin-bottom: 2rem;
+    }
+    .tabs button {
+      padding: 0.75rem 1.5rem;
+      border: none;
+      background: var(--background-color);
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 1rem;
+      transition: all 0.2s ease;
+    }
+    .tabs button.active {
+      background: var(--primary-color);
+      color: white;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+    .tabs button:hover:not(.active) {
+      background: var(--background-color-darker);
+    }
   `]
 })
 export class LearningComponent implements OnInit, OnDestroy {
@@ -127,9 +158,11 @@ export class LearningComponent implements OnInit, OnDestroy {
   isPlaying = false;
   private playbackTimeout: any;
   selectedLanguage?: Language;
+  tabs = ['Words', 'Numbers', 'Sentences'];
 
   constructor(
     private route: ActivatedRoute,
+    private router: Router,
     private languageService: LanguageService,
     private audioService: AudioService
   ) {}
@@ -195,5 +228,9 @@ export class LearningComponent implements OnInit, OnDestroy {
   playItem(item: {native: string, translation: string}) {
     const audioFile = `/assets/audio/${this.languageCode}/${item.native}.mp3`;
     this.audioService.play(audioFile);
+  }
+
+  selectCategory(category: string) {
+    this.router.navigate(['/learn', this.languageCode, category]);
   }
 }
