@@ -26,6 +26,14 @@ import { RouterLink } from '@angular/router';
         <p>Practice common phrases and expressions</p>
       </div>
     </div>
+
+    <div class="disclaimer">
+      <p>
+        Please note that this application may contain errors in translations, pronunciations, or cultural context. 
+        Some content is generated using AI technology, which can occasionally produce inaccurate results. 
+        This tool is meant for basic learning purposes only and should not be considered a substitute for professional language instruction.
+      </p>
+    </div>
   `,
   styles: [`
     .hero {
@@ -54,6 +62,17 @@ import { RouterLink } from '@angular/router';
     .cta-button:hover {
       transform: translateY(-2px);
       background: var(--secondary-color);
+    }
+    .disclaimer {
+      margin-top: 3rem;
+      padding: 1rem;
+      text-align: center;
+      color: var(--text-color);
+      opacity: 0.8;
+      font-size: 0.9rem;
+      max-width: 800px;
+      margin-left: auto;
+      margin-right: auto;
     }
   `]
 })

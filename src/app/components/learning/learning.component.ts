@@ -2,7 +2,7 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute } from '@angular/router';
 import { FormsModule } from '@angular/forms';
-import { LanguageService, LearningContent } from '../../services/language.service';
+import { Language, LanguageService, LearningContent } from '../../services/language.service';
 import { AudioService } from '../../services/audio.service';
 
 @Component({
@@ -11,6 +11,13 @@ import { AudioService } from '../../services/audio.service';
   imports: [CommonModule, FormsModule],
   template: `
     <section class="learning">
+      <h2 class="language-header">
+        <img [src]="selectedLanguage?.flagImage" 
+             [alt]="selectedLanguage?.name + ' flag'"
+             class="flag-image">
+        {{ selectedLanguage?.name }}
+      </h2>
+
       <div class="controls card">
         <div class="settings">
           <label>
@@ -93,6 +100,19 @@ import { AudioService } from '../../services/audio.service';
       min-width: 40px;
       border-radius: 50%;
     }
+    .language-header {
+      text-align: center;
+      margin-bottom: 2rem;
+      font-size: 1.5rem;
+      color: var(--primary-color);
+    }
+    .flag-image {
+      width: 32px;
+      height: 24px;
+      vertical-align: middle;
+      margin-right: 8px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+    }
   `]
 })
 export class LearningComponent implements OnInit, OnDestroy {
@@ -106,6 +126,7 @@ export class LearningComponent implements OnInit, OnDestroy {
   interval = 2;
   isPlaying = false;
   private playbackTimeout: any;
+  selectedLanguage?: Language;
 
   constructor(
     private route: ActivatedRoute,
@@ -131,6 +152,10 @@ export class LearningComponent implements OnInit, OnDestroy {
 
   loadItems() {
     if (!this.content) return;
+    
+    // Get language details
+    this.selectedLanguage = this.languageService.getLanguages()
+      .find(lang => lang.code === this.languageCode);
     
     const items = this.content[this.category as keyof LearningContent];
     this.currentItems = Object.entries(items).map(([native, translation]) => ({

@@ -14,7 +14,9 @@ import { LanguageService, Language } from '../../services/language.service';
         <div *ngFor="let language of languages" 
              class="card language-card"
              [routerLink]="['/learn', language.code, 'words']">
-          <span class="flag">{{ language.flag }}</span>
+          <img [src]="language.flagImage" 
+               [alt]="language.name + ' flag'"
+               class="flag-image">
           <h2>{{ language.name }}</h2>
         </div>
       </div>
@@ -43,6 +45,12 @@ import { LanguageService, Language } from '../../services/language.service';
     h2 {
       margin: 1rem 0 0;
       color: var(--text-color);
+    }
+    .flag-image {
+      width: 64px;
+      height: 48px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+      border-radius: 4px;
     }
   `]
 })

@@ -4,6 +4,7 @@ export interface Language {
   code: string;
   name: string;
   flag: string;
+  flagImage: string;  // Add this new property
 }
 
 export interface LearningContent {
@@ -17,15 +18,15 @@ export interface LearningContent {
 })
 export class LanguageService {
   private languages: Language[] = [
-    { code: 'es', name: 'Spanish', flag: '🇪🇸' },
-    { code: 'fr', name: 'French', flag: '🇫🇷' },
-    { code: 'de', name: 'German', flag: '🇩🇪' },
-    { code: 'it', name: 'Italian', flag: '🇮🇹' },
-    { code: 'ja', name: 'Japanese', flag: '🇯🇵' },
-    { code: 'zh', name: 'Chinese', flag: '🇨🇳' },
-    { code: 'ko', name: 'Korean', flag: '🇰🇷' },
-    { code: 'ru', name: 'Russian', flag: '🇷🇺' },
-    { code: 'me', name: 'Montenegrin', flag: '🇲🇪' },
+    { code: 'es', name: 'Spanish', flag: '🇪🇸', flagImage: '/assets/flags/es.png' },
+    { code: 'fr', name: 'French', flag: '🇫🇷', flagImage: '/assets/flags/fr.png' },
+    { code: 'de', name: 'German', flag: '🇩🇪', flagImage: '/assets/flags/de.png' },
+    { code: 'it', name: 'Italian', flag: '🇮🇹', flagImage: '/assets/flags/it.png' },
+    { code: 'ja', name: 'Japanese', flag: '🇯🇵', flagImage: '/assets/flags/jp.png' },
+    { code: 'zh', name: 'Chinese', flag: '🇨🇳', flagImage: '/assets/flags/cn.png' },
+    { code: 'ko', name: 'Korean', flag: '🇰🇷', flagImage: '/assets/flags/kr.png' },
+    { code: 'ru', name: 'Russian', flag: '🇷🇺', flagImage: '/assets/flags/ru.png' },
+    { code: 'me', name: 'Montenegrin', flag: '🇲🇪', flagImage: '/assets/flags/me.png' },
   ];
 
   private content: { [key: string]: LearningContent } = {
@@ -570,11 +571,11 @@ export class LanguageService {
         'bad': 'плохой (plokhoy)',
         'big': 'большой (bolshoy)',
         'small': 'маленький (malenkiy)',
-        'hot': 'горячий (goryachiy)',
+        'hot': 'горяч��й (goryachiy)',
         'cold': 'холодный (kholodnyy)',
         // Essential Verbs
         'to eat': 'есть (yest)',
-        'to drink': 'пить (pit)',
+        'to drink': '��ить (pit)',
         'to sleep': 'спать (spat)',
         'to go': 'идти (idti)',
         'to help': 'помогать (pomogat)',
