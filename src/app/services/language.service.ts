@@ -613,3 +613,25 @@ export class LanguageService {
         'Excuse me': 'Извините (Izvinite)',
         'I\'m sorry': 'Простите (Prostite)',
         // Emergency Phrases
+        'I need help': 'Мне нужна помощь (Mne nuzhna pomoshch)',
+        'I am lost': 'Я заблудился (Ya zabludilsya)',
+        'I don\'t understand': 'Я не понимаю (Ya ne ponimayu)',
+        'Do you speak English?': 'Вы говорите по-английски? (Vy govorite po-angliyski?)',
+        'Where is the bathroom?': 'Где туалет? (Gde tualet?)',
+        // Practical Phrases
+        'How much does it cost?': 'Сколько это стоит? (Skolko eto stoit?)',
+        'Can you help me?': 'Вы можете мне помочь? (Vy mozhete mne pomoch?)',
+        'I would like...': 'Я бы хотел... (Ya by khotel...)',
+        'The check, please': 'Счёт, пожалуйста (Schyot, pozhaluysta)',
+      }
+    }
+  };
+
+  getLanguages(): Language[] {
+    return this.languages;
+  }
+
+  getContent(languageCode: string): LearningContent | undefined {
+    return this.content[languageCode];
+  }
+}
