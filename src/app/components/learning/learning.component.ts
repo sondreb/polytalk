@@ -1,29 +1,45 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute } from '@angular/router';
+import { FormsModule } from '@angular/forms';
 import { LanguageService, LearningContent } from '../../services/language.service';
+import { AudioService } from '../../services/audio.service';
 
 @Component({
   selector: 'app-learning',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, FormsModule],
   template: `
     <section class="learning">
-      <div class="controls">
-        <h2>{{ category | titlecase }} in {{ languageCode | uppercase }}</h2>
+      <div class="controls card">
+        <div class="settings">
+          <label>
+            Repeat Count:
+            <input type="number" [(ngModel)]="repeatCount" min="1" max="10">
+          </label>
+          <label>
+            Interval (seconds):
+            <input type="number" [(ngModel)]="interval" min="1" max="10">
+          </label>
+        </div>
+        
         <div class="buttons">
-          <button (click)="playNext()">Play Next</button>
-          <button (click)="toggleLoop()">
-            {{ isLooping ? 'Stop Loop' : 'Start Loop' }}
+          <button (click)="startPlayback()" [disabled]="isPlaying">
+            Start Playback
+          </button>
+          <button (click)="stopPlayback()" [disabled]="!isPlaying">
+            Stop
           </button>
         </div>
       </div>
 
       <div class="content card">
         <div *ngFor="let item of currentItems" class="item"
-             [class.active]="item === currentItem">
+             [class.active]="item === currentItem"
+             (click)="playItem(item)">
           <span class="native">{{ item.native }}</span>
           <span class="translation">{{ item.translation }}</span>
+          <button class="play-button">▶</button>
         </div>
       </div>
     </section>
@@ -56,19 +72,45 @@ import { LanguageService, LearningContent } from '../../services/language.servic
       color: var(--primary-color);
       font-weight: bold;
     }
+    .settings {
+      display: flex;
+      gap: 1rem;
+      margin-bottom: 1rem;
+    }
+    .settings label {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    .settings input {
+      width: 60px;
+      padding: 0.3rem;
+      border: 1px solid var(--background-color);
+      border-radius: 4px;
+    }
+    .play-button {
+      padding: 0.5rem;
+      min-width: 40px;
+      border-radius: 50%;
+    }
   `]
 })
-export class LearningComponent implements OnInit {
+export class LearningComponent implements OnInit, OnDestroy {
   languageCode: string = '';
   category: string = '';
   content?: LearningContent;
   currentItems: {native: string, translation: string}[] = [];
   currentItem?: {native: string, translation: string};
   isLooping: boolean = false;
+  repeatCount = 1;
+  interval = 2;
+  isPlaying = false;
+  private playbackTimeout: any;
 
   constructor(
     private route: ActivatedRoute,
-    private languageService: LanguageService
+    private languageService: LanguageService,
+    private audioService: AudioService
   ) {}
 
   ngOnInit() {
@@ -78,6 +120,13 @@ export class LearningComponent implements OnInit {
       this.content = this.languageService.getContent(this.languageCode);
       this.loadItems();
     });
+    this.audioService.isPlayingState.subscribe(
+      playing => this.isPlaying = playing
+    );
+  }
+
+  ngOnDestroy() {
+    this.stopPlayback();
   }
 
   loadItems() {
@@ -101,5 +150,25 @@ export class LearningComponent implements OnInit {
   toggleLoop() {
     this.isLooping = !this.isLooping;
     // Implementation for loop playback
+  }
+
+  startPlayback() {
+    const audioFiles = this.currentItems.map(item => 
+      `/assets/audio/${this.languageCode}/${item.native}.mp3`
+    );
+    this.audioService.setQueue(audioFiles, this.repeatCount);
+    this.audioService.play();
+  }
+
+  stopPlayback() {
+    this.audioService.stop();
+    if (this.playbackTimeout) {
+      clearTimeout(this.playbackTimeout);
+    }
+  }
+
+  playItem(item: {native: string, translation: string}) {
+    const audioFile = `/assets/audio/${this.languageCode}/${item.native}.mp3`;
+    this.audioService.play(audioFile);
   }
 }

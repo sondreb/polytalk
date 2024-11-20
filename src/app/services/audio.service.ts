@@ -1,63 +1,54 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 
-export interface AudioItem {
-  text: string;
-  audioUrl: string;
-}
-
 @Injectable({
   providedIn: 'root'
 })
 export class AudioService {
   private audio = new Audio();
-  private queue: AudioItem[] = [];
-  private isLooping = false;
+  private queue: string[] = [];
+  private isPlaying = new BehaviorSubject<boolean>(false);
   private repeatCount = 1;
-  
-  playing$ = new BehaviorSubject<boolean>(false);
-  currentItem$ = new BehaviorSubject<AudioItem | null>(null);
+  private currentIndex = 0;
 
   constructor() {
     this.audio.onended = () => this.playNext();
   }
 
-  setQueue(items: AudioItem[], repeat: number = 1) {
-    this.queue = [...items];
+  setQueue(audioFiles: string[], repeat: number = 1) {
+    this.queue = audioFiles;
     this.repeatCount = repeat;
-    this.currentItem$.next(this.queue[0]);
+    this.currentIndex = 0;
   }
 
-  toggleLoop() {
-    this.isLooping = !this.isLooping;
-    return this.isLooping;
-  }
-
-  play() {
-    const current = this.currentItem$.value;
-    if (current) {
-      this.audio.src = current.audioUrl;
-      this.audio.play();
-      this.playing$.next(true);
+  play(url?: string) {
+    if (url) {
+      this.audio.src = url;
     }
+    this.audio.play();
+    this.isPlaying.next(true);
   }
 
-  pause() {
+  stop() {
     this.audio.pause();
-    this.playing$.next(false);
+    this.audio.currentTime = 0;
+    this.isPlaying.next(false);
   }
 
   private playNext() {
-    const currentIndex = this.queue.findIndex(item => 
-      item === this.currentItem$.value);
-    const nextIndex = (currentIndex + 1) % this.queue.length;
-    
-    if (nextIndex === 0 && !this.isLooping) {
-      this.playing$.next(false);
-      return;
+    if (this.currentIndex < this.queue.length - 1) {
+      this.currentIndex++;
+      this.play(this.queue[this.currentIndex]);
+    } else if (this.repeatCount > 1) {
+      this.repeatCount--;
+      this.currentIndex = 0;
+      this.play(this.queue[this.currentIndex]);
+    } else {
+      this.stop();
     }
+  }
 
-    this.currentItem$.next(this.queue[nextIndex]);
-    this.play();
+  get isPlayingState() {
+    return this.isPlaying.asObservable();
   }
 }
