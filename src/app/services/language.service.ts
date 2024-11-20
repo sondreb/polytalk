@@ -25,6 +25,7 @@ export class LanguageService {
     { code: 'zh', name: 'Chinese', flag: '🇨🇳' },
     { code: 'ko', name: 'Korean', flag: '🇰🇷' },
     { code: 'ru', name: 'Russian', flag: '🇷🇺' },
+    { code: 'me', name: 'Montenegrin', flag: '🇲🇪' },
   ];
 
   private content: { [key: string]: LearningContent } = {
@@ -546,7 +547,7 @@ export class LanguageService {
         // Practical Phrases
         'How much does it cost?': '얼마예요? (Eolmayeyo?)',
         'Can you help me?': '도와주실 수 있나요? (Dowajusil su innayo?)',
-        'I would like...': '...주세�� (...juseyo)',
+        'I would like...': '...주세요 (...juseyo)',
         'The check, please': '계산서 주세요 (Gyesanseo juseyo)',
       }
     },
@@ -623,6 +624,81 @@ export class LanguageService {
         'Can you help me?': 'Вы можете мне помочь? (Vy mozhete mne pomoch?)',
         'I would like...': 'Я бы хотел... (Ya by khotel...)',
         'The check, please': 'Счёт, пожалуйста (Schyot, pozhaluysta)',
+      }
+    },
+
+    me: {
+      words: {
+        // Essential Nouns
+        'water': 'voda',
+        'food': 'hrana',
+        'restaurant': 'restoran',
+        'bathroom': 'kupatilo',
+        'hospital': 'bolnica',
+        'hotel': 'hotel',
+        'airport': 'aerodrom',
+        'train': 'voz',
+        'bus': 'autobus',
+        'taxi': 'taksi',
+        // Common Adjectives
+        'good': 'dobar',
+        'bad': 'loš',
+        'big': 'veliki',
+        'small': 'mali',
+        'hot': 'vruć',
+        'cold': 'hladan',
+        // Essential Verbs
+        'to eat': 'jesti',
+        'to drink': 'piti',
+        'to sleep': 'spavati',
+        'to go': 'ići',
+        'to help': 'pomoći',
+      },
+      numbers: {
+        '0': 'nula',
+        '1': 'jedan',
+        '2': 'dva',
+        '3': 'tri',
+        '4': 'četiri',
+        '5': 'pet',
+        '6': 'šest',
+        '7': 'sedam',
+        '8': 'osam',
+        '9': 'devet',
+        '10': 'deset',
+        '20': 'dvadeset',
+        '30': 'trideset',
+        '40': 'četrdeset',
+        '50': 'pedeset',
+        '100': 'sto',
+        '1000': 'hiljada',
+      },
+      sentences: {
+        // Greetings
+        'Hello': 'Zdravo',
+        'Good morning': 'Dobro jutro',
+        'Good afternoon': 'Dobar dan',
+        'Good night': 'Laku noć',
+        'Goodbye': 'Doviđenja',
+        // Essential Phrases
+        'How are you?': 'Kako si?',
+        'I am fine': 'Dobro sam',
+        'Thank you': 'Hvala',
+        'You\'re welcome': 'Nema na čemu',
+        'Please': 'Molim',
+        'Excuse me': 'Izvinite',
+        'I\'m sorry': 'Žao mi je',
+        // Emergency Phrases
+        'I need help': 'Treba mi pomoć',
+        'I am lost': 'Izgubio sam se',
+        'I don\'t understand': 'Ne razumijem',
+        'Do you speak English?': 'Govoriš li engleski?',
+        'Where is the bathroom?': 'Gdje je kupatilo?',
+        // Practical Phrases
+        'How much does it cost?': 'Koliko košta?',
+        'Can you help me?': 'Možete li mi pomoći?',
+        'I would like...': 'Želio bih...',
+        'The check, please': 'Račun, molim vas',
       }
     }
   };
