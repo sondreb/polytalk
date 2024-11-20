@@ -475,14 +475,141 @@ export class LanguageService {
         'The check, please': '请结账 (Qǐng jiézhàng)',
       }
     },
-    // ... Similar structure for other languages ...
-  };
 
-  getLanguages(): Language[] {
-    return this.languages;
-  }
+    ko: {
+      words: {
+        // Essential Nouns
+        'water': '물 (mul)',
+        'food': '음식 (eumsik)',
+        'restaurant': '식당 (sikdang)',
+        'bathroom': '화장실 (hwajangsil)',
+        'hospital': '병원 (byeongwon)',
+        'hotel': '호텔 (hotel)',
+        'airport': '공항 (gonghang)',
+        'train': '기차 (gicha)',
+        'bus': '버스 (beoseu)',
+        'taxi': '택시 (taeksi)',
+        // Common Adjectives
+        'good': '좋은 (jo-eun)',
+        'bad': '나쁜 (nappeun)',
+        'big': '큰 (keun)',
+        'small': '작은 (jag-eun)',
+        'hot': '뜨거운 (tteugeoun)',
+        'cold': '추운 (chu-un)',
+        // Essential Verbs
+        'to eat': '먹다 (meokda)',
+        'to drink': '마시다 (masida)',
+        'to sleep': '자다 (jada)',
+        'to go': '가다 (gada)',
+        'to help': '돕다 (dopda)',
+      },
+      numbers: {
+        '0': '영 (yeong)',
+        '1': '일 (il)',
+        '2': '이 (i)',
+        '3': '삼 (sam)',
+        '4': '사 (sa)',
+        '5': '오 (o)',
+        '6': '육 (yuk)',
+        '7': '칠 (chil)',
+        '8': '팔 (pal)',
+        '9': '구 (gu)',
+        '10': '십 (sip)',
+        '20': '이십 (isip)',
+        '30': '삼십 (samsip)',
+        '40': '사십 (sasip)',
+        '50': '오십 (osip)',
+        '100': '백 (baek)',
+        '1000': '천 (cheon)',
+      },
+      sentences: {
+        // Greetings
+        'Hello': '안녕하세요 (Annyeonghaseyo)',
+        'Good morning': '안녕하세요 (Annyeonghaseyo)',
+        'Good afternoon': '안녕하세요 (Annyeonghaseyo)',
+        'Good night': '안녕히 주무세요 (Annyeonghi jumuseyo)',
+        'Goodbye': '안녕히 가세요 (Annyeonghi gaseyo)',
+        // Essential Phrases
+        'How are you?': '어떻게 지내세요? (Eotteoke jinaeseyo?)',
+        'I am fine': '잘 지내요 (Jal jinaeyo)',
+        'Thank you': '감사합니다 (Gamsahamnida)',
+        'You\'re welcome': '천만에요 (Cheonmaneyo)',
+        'Please': '주세요 (Juseyo)',
+        'Excuse me': '실례합니다 (Sillyehamnida)',
+        'I\'m sorry': '죄송합니다 (Joesonghamnida)',
+        // Emergency Phrases
+        'I need help': '도움이 필요해요 (Doum-i pilyohaeyo)',
+        'I am lost': '길을 잃었어요 (Gil-eul ilheosseoyo)',
+        'I don\'t understand': '이해가 안 돼요 (Ihaega an dwaeyo)',
+        'Do you speak English?': '영어 하실 줄 아세요? (Yeong-eo hasil jul aseyo?)',
+        'Where is the bathroom?': '화장실이 어디예요? (Hwajangsil-i eodiyeyo?)',
+        // Practical Phrases
+        'How much does it cost?': '얼마예요? (Eolmayeyo?)',
+        'Can you help me?': '도와주실 수 있나요? (Dowajusil su innayo?)',
+        'I would like...': '...주세�� (...juseyo)',
+        'The check, please': '계산서 주세요 (Gyesanseo juseyo)',
+      }
+    },
 
-  getContent(languageCode: string): LearningContent | undefined {
-    return this.content[languageCode];
-  }
-}
+    ru: {
+      words: {
+        // Essential Nouns
+        'water': 'вода (voda)',
+        'food': 'еда (yeda)',
+        'restaurant': 'ресторан (restoran)',
+        'bathroom': 'туалет (tualet)',
+        'hospital': 'больница (bolnitsa)',
+        'hotel': 'отель (otel)',
+        'airport': 'аэропорт (aeroport)',
+        'train': 'поезд (poyezd)',
+        'bus': 'автобус (avtobus)',
+        'taxi': 'такси (taksi)',
+        // Common Adjectives
+        'good': 'хороший (khoroshiy)',
+        'bad': 'плохой (plokhoy)',
+        'big': 'большой (bolshoy)',
+        'small': 'маленький (malenkiy)',
+        'hot': 'горячий (goryachiy)',
+        'cold': 'холодный (kholodnyy)',
+        // Essential Verbs
+        'to eat': 'есть (yest)',
+        'to drink': 'пить (pit)',
+        'to sleep': 'спать (spat)',
+        'to go': 'идти (idti)',
+        'to help': 'помогать (pomogat)',
+      },
+      numbers: {
+        '0': 'ноль (nol)',
+        '1': 'один (odin)',
+        '2': 'два (dva)',
+        '3': 'три (tri)',
+        '4': 'четыре (chetyre)',
+        '5': 'пять (pyat)',
+        '6': 'шесть (shest)',
+        '7': 'семь (sem)',
+        '8': 'восемь (vosem)',
+        '9': 'девять (devyat)',
+        '10': 'десять (desyat)',
+        '20': 'двадцать (dvadtsat)',
+        '30': 'тридцать (tridtsat)',
+        '40': 'сорок (sorok)',
+        '50': 'пятьдесят (pyatdesyat)',
+        '100': 'сто (sto)',
+        '1000': 'тысяча (tysyacha)',
+      },
+      sentences: {
+        // Greetings
+        'Hello': 'Здравствуйте (Zdravstvuyte)',
+        'Good morning': 'Доброе утро (Dobroye utro)',
+        'Good afternoon': 'Добрый день (Dobryy den)',
+        'Good night': 'Спокойной ночи (Spokoynoy nochi)',
+        'Goodbye': 'До свидания (Do svidaniya)',
+        // Essential Phrases
+        'How are you?': 'Как дела? (Kak dela?)',
+        'I am fine': 'У меня всё хорошо (U menya vsyo khorosho)',
+        'Thank you': 'Спасибо (Spasibo)',
+        'You\'re welcome': 'Пожалуйста (Pozhaluysta)',
+        'Please': 'Пожалуйста (Pozhaluysta)',
+        'Excuse me': 'Извините (Izvinite)',
+        'I\'m sorry': 'Простите (Prostite)',
+        // Emergency Phrases
