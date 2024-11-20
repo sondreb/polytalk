@@ -56,6 +56,7 @@ export class LanguageService {
         'to sleep': 'dormir',
         'to go': 'ir',
         'to help': 'ayudar',
+        'thanks': 'gracias',
       },
       numbers: {
         '0': 'cero',
@@ -130,6 +131,7 @@ export class LanguageService {
         'to sleep': 'dormir',
         'to go': 'aller',
         'to help': 'aider',
+        'thanks': 'merci',
       },
       numbers: {
         '0': 'zéro',
@@ -204,6 +206,7 @@ export class LanguageService {
         'to sleep': 'schlafen',
         'to go': 'gehen',
         'to help': 'helfen',
+        'thanks': 'danke',
       },
       numbers: {
         '0': 'null',
@@ -279,6 +282,7 @@ export class LanguageService {
         'to sleep': 'dormire',
         'to go': 'andare',
         'to help': 'aiutare',
+        'thanks': 'grazie',
       },
       numbers: {
         '0': 'zero',
@@ -354,6 +358,7 @@ export class LanguageService {
         'to sleep': '寝る (neru)',
         'to go': '行く (iku)',
         'to help': '助ける (tasukeru)',
+        'thanks': 'ありがとう (arigatō)',
       },
       numbers: {
         '0': '零 (rei)',
@@ -399,7 +404,7 @@ export class LanguageService {
         'How much does it cost?': 'いくらですか？ (Ikura desu ka?)',
         'Can you help me?': '手伝っていただけますか？ (Tetsudatte itadakemasu ka?)',
         'I would like...': '...をお願いします (...o onegaishimasu)',
-        'The check, please': 'お会計をお願いします (O-kaikei o onegaishimasu)',
+        'The check, please': '���会計をお願いします (O-kaikei o onegaishimasu)',
       }
     },
 
@@ -429,6 +434,7 @@ export class LanguageService {
         'to sleep': '睡觉 (shuìjiào)',
         'to go': '去 (qù)',
         'to help': '帮助 (bāngzhù)',
+        'thanks': '谢谢 (xièxie)',
       },
       numbers: {
         '0': '零 (líng)',
@@ -474,7 +480,7 @@ export class LanguageService {
         'How much does it cost?': '多少钱？(Duōshao qián?)',
         'Can you help me?': '你能帮我吗？(Nǐ néng bāng wǒ ma?)',
         'I would like...': '我想要... (Wǒ xiǎng yào...)',
-        'The check, please': '请结账 (Qǐng jiézhàng)',
+        'The check, please': '���结账 (Qǐng jiézhàng)',
       }
     },
 
@@ -504,6 +510,7 @@ export class LanguageService {
         'to sleep': '자다 (jada)',
         'to go': '가다 (gada)',
         'to help': '돕다 (dopda)',
+        'thanks': '감사합니다 (gamsahamnida)',
       },
       numbers: {
         '0': '영 (yeong)',
@@ -571,14 +578,15 @@ export class LanguageService {
         'bad': 'плохой (plokhoy)',
         'big': 'большой (bolshoy)',
         'small': 'маленький (malenkiy)',
-        'hot': 'горяч��й (goryachiy)',
+        'hot': 'горячий (goryachiy)',
         'cold': 'холодный (kholodnyy)',
         // Essential Verbs
         'to eat': 'есть (yest)',
-        'to drink': '��ить (pit)',
+        'to drink': 'пить (pit)',
         'to sleep': 'спать (spat)',
         'to go': 'идти (idti)',
         'to help': 'помогать (pomogat)',
+        'thanks': 'спасибо (spasibo)',
       },
       numbers: {
         '0': 'ноль (nol)',
@@ -654,6 +662,7 @@ export class LanguageService {
         'to sleep': 'spavati',
         'to go': 'ići',
         'to help': 'pomoći',
+        'thanks': 'hvala',
       },
       numbers: {
         '0': 'nula',
