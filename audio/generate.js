@@ -33,6 +33,7 @@ const voiceMap = {
   me: "Nada", // Using Serbian voice for Montenegrin
   pl: "Ewa", // Added Polish voice
   ar: "Zeina", // Added Arabic voice
+  hi: "Aditi", // Added Hindi voice
 };
 
 // Read the language service file
