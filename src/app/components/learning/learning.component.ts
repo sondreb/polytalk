@@ -36,6 +36,10 @@ import { AudioService } from '../../services/audio.service';
             Interval (seconds):
             <input type="number" [(ngModel)]="interval" min="1" max="10">
           </label>
+          <label class="checkbox-label">
+            <input type="checkbox" [(ngModel)]="playBothLanguages">
+            Play both English and {{selectedLanguage?.name}}
+          </label>
         </div>
         
         <div class="buttons">
@@ -161,6 +165,14 @@ import { AudioService } from '../../services/audio.service';
       align-items: center;
       gap: 0.5rem;
     }
+    .checkbox-label {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    .checkbox-label input[type="checkbox"] {
+      width: auto;
+    }
     @media (max-width: 768px) {
       .learning {
         padding: 1rem 0;
@@ -193,6 +205,7 @@ export class LearningComponent implements OnInit, OnDestroy {
   repeatCount = 1;
   interval = 2;
   isPlaying = false;
+  playBothLanguages = true;  // New property
   private playbackTimeout: any;
   selectedLanguage?: Language;
   tabs = ['Words', 'Numbers', 'Sentences'];
@@ -248,9 +261,19 @@ export class LearningComponent implements OnInit, OnDestroy {
   }
 
   startPlayback() {
-    const audioFiles = this.currentItems.map(item => 
-      `/assets/audio/${this.languageCode}/${this.category}/${item.native}.mp3`
-    );
+    let audioFiles: string[] = [];
+    
+    this.currentItems.forEach(item => {
+      if (this.playBothLanguages) {
+        // Add English audio first, then translated version
+        audioFiles.push(`/assets/audio/en/${this.category}/${item.native}.mp3`);
+        audioFiles.push(`/assets/audio/${this.languageCode}/${this.category}/${item.native}.mp3`);
+      } else {
+        // Only add translated version
+        audioFiles.push(`/assets/audio/${this.languageCode}/${this.category}/${item.native}.mp3`);
+      }
+    });
+
     this.audioService.setQueue(audioFiles, this.repeatCount);
     this.audioService.play();
   }

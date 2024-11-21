@@ -9,6 +9,7 @@ export class AudioService {
   private queue: string[] = [];
   private isPlaying = new BehaviorSubject<boolean>(false);
   private repeatCount = 1;
+  private currentRepeat = 1;
   private currentIndex = 0;
 
   constructor() {
@@ -18,33 +19,52 @@ export class AudioService {
   setQueue(audioFiles: string[], repeat: number = 1) {
     this.queue = audioFiles;
     this.repeatCount = repeat;
+    this.currentRepeat = 1;
     this.currentIndex = 0;
   }
 
   play(url?: string) {
     if (url) {
+      // Single file playback
       this.audio.src = url;
+      this.audio.play();
+      this.isPlaying.next(true);
+    } else if (this.queue.length > 0) {
+      // Start queue playback
+      this.audio.src = this.queue[0];
+      this.audio.play();
+      this.isPlaying.next(true);
     }
-    this.audio.play();
-    this.isPlaying.next(true);
   }
 
   stop() {
     this.audio.pause();
     this.audio.currentTime = 0;
     this.isPlaying.next(false);
+    this.currentIndex = 0;
+    this.currentRepeat = 1;
   }
 
   private playNext() {
-    if (this.currentIndex < this.queue.length - 1) {
-      this.currentIndex++;
-      this.play(this.queue[this.currentIndex]);
-    } else if (this.repeatCount > 1) {
-      this.repeatCount--;
-      this.currentIndex = 0;
-      this.play(this.queue[this.currentIndex]);
-    } else {
-      this.stop();
+    this.currentIndex++;
+    
+    // If we've reached the end of the queue
+    if (this.currentIndex >= this.queue.length) {
+      // If we haven't reached the repeat count, start over
+      if (this.currentRepeat < this.repeatCount) {
+        this.currentRepeat++;
+        this.currentIndex = 0;
+      } else {
+        // We're done with all repeats
+        this.stop();
+        return;
+      }
+    }
+
+    // Play the next file
+    if (this.currentIndex < this.queue.length) {
+      this.audio.src = this.queue[this.currentIndex];
+      this.audio.play();
     }
   }
 
