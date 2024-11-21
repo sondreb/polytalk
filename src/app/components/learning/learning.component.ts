@@ -229,7 +229,7 @@ export class LearningComponent implements OnInit, OnDestroy {
 
   startPlayback() {
     const audioFiles = this.currentItems.map(item => 
-      `/assets/audio/${this.languageCode}/${item.native}.mp3`
+      `/assets/audio/${this.languageCode}/${this.category}/${item.native}.mp3`
     );
     this.audioService.setQueue(audioFiles, this.repeatCount);
     this.audioService.play();
@@ -245,7 +245,7 @@ export class LearningComponent implements OnInit, OnDestroy {
   playItem(item: {native: string, translation: string}, language: 'en' | 'native') {
     const fileName = language === 'en' ? item.native : item.native;
     const langCode = language === 'en' ? 'en' : this.languageCode;
-    const audioFile = `/assets/audio/${langCode}/${fileName}.mp3`;
+    const audioFile = `/assets/audio/${langCode}/${this.category}/${fileName}.mp3`;
     this.audioService.play(audioFile);
   }
 
