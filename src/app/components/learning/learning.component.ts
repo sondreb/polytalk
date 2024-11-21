@@ -157,7 +157,6 @@ import { AudioService } from '../../services/audio.service';
         height: 24px;
         vertical-align: middle;
         margin-right: 8px;
-        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
       }
       .tabs {
         display: flex;

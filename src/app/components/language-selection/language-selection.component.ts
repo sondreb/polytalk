@@ -49,7 +49,6 @@ import { LanguageService, Language } from '../../services/language.service';
     .flag-image {
       width: 64px;
       height: 48px;
-      box-shadow: 0 2px 4px rgba(0,0,0,0.2);
       border-radius: 4px;
     }
   `]
