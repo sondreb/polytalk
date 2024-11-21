@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, HostListener } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
@@ -34,7 +34,7 @@ import { AudioService } from '../../services/audio.service';
         </button>
       </div>
 
-      <div class="controls card">
+      <div class="controls card" [class.sticky]="isControlsSticky">
         <div class="settings">
           <label>
             Word Repeat:
@@ -361,17 +361,23 @@ import { AudioService } from '../../services/audio.service';
         justify-content: space-between;
         align-items: center;
         gap: 1rem;
+        transition: all 0.3s ease;
+        background: var(--surface-color);
       }
-      .settings {
-        display: flex;
-        gap: 1.5rem;
-        padding: 0;  /* Removed padding */
-        margin: 0;   /* Removed margin */
-        background: transparent;  /* Removed background */
-        border-radius: 12px;
-        align-items: center;  /* Added to vertically center items */
+      .controls.card.sticky {
+        position: fixed;
+        top: 64px; /* Adjust based on navbar height */
+        left: 0;
+        right: 0;
+        margin: 0;
+        border-radius: 0;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+        z-index: 99;
       }
       @media (max-width: 768px) {
+        .controls.card.sticky {
+          top: 56px; /* Adjust for smaller navbar */
+        }
         .controls.card {
           flex-direction: column;
           padding: 0.5rem;
@@ -403,6 +409,14 @@ export class LearningComponent implements OnInit, OnDestroy {
   private readonly SETTINGS_KEY = 'polytalk-settings';
   selectedLanguage?: Language;
   tabs = ['Words', 'Numbers', 'Sentences'];
+  isControlsSticky = false;
+  private readonly CONTROLS_SCROLL_THRESHOLD = 200; // Adjust as needed
+
+  @HostListener('window:scroll', ['$event'])
+  onWindowScroll() {
+    const scrollPosition = window.pageYOffset || document.documentElement.scrollTop;
+    this.isControlsSticky = scrollPosition > this.CONTROLS_SCROLL_THRESHOLD;
+  }
 
   constructor(
     private route: ActivatedRoute,
