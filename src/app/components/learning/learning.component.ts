@@ -143,8 +143,8 @@ import { AudioService } from '../../services/audio.service';
       .settings {
         display: flex;
         gap: 1.5rem;
-        margin-bottom: 1.5rem;
-        padding: 1rem;
+        margin-bottom: 1rem;  // Reduced from 1.5rem
+        padding: 0.75rem;    // Reduced from 1rem
         background: rgba(99, 102, 241, 0.05);
         border-radius: 12px;
       }
@@ -258,6 +258,10 @@ import { AudioService } from '../../services/audio.service';
         .content.card {
           padding: 0.25rem;  // Even smaller padding on mobile
         }
+        .controls.card {
+          padding: 0.5rem;
+          margin: 0 0.25rem;  // Smaller margin on mobile
+        }
       }
       .buttons button {
         padding: 0.75rem 1.5rem;
@@ -349,6 +353,36 @@ import { AudioService } from '../../services/audio.service';
         border-radius: 50%;
         background: linear-gradient(135deg, var(--gradient-start), var(--gradient-end));
         flex-shrink: 0;  /* Prevent button from shrinking */
+      }
+      .controls.card {
+        padding: 0.75rem;  // Reduced from 1.5rem
+        margin: 0 0.5rem;  // Added small horizontal margin
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 1rem;
+      }
+      .settings {
+        display: flex;
+        gap: 1.5rem;
+        padding: 0;  /* Removed padding */
+        margin: 0;   /* Removed margin */
+        background: transparent;  /* Removed background */
+        border-radius: 12px;
+        align-items: center;  /* Added to vertically center items */
+      }
+      @media (max-width: 768px) {
+        .controls.card {
+          flex-direction: column;
+          padding: 0.5rem;
+          gap: 0.75rem;
+        }
+        
+        .settings {
+          flex-direction: column;
+          gap: 0.75rem;
+          width: 100%;
+        }
       }
     `,
   ],
