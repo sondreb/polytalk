@@ -1,9 +1,9 @@
 <div align="center">
-	<img style="border-radius: 20px" src="public/favicon.jpg" width="96">
+	<img style="border-radius: 20px" src="public/favicon.png" width="96">
 	<h1>Polytalk</h1>
 	<h3>Learn the basics of every language in the world.</h3>
 	<br>
-	<h4><a href="https://polytalk.brainbox.no">Open App</a></h4>
+	<h4><a href="https://polytalk.me">Open App</a></h4>
 </div>
 <br>
 <br>
