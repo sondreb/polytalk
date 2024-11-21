@@ -714,7 +714,7 @@ export class LanguageService {
   };
 
   getLanguages(): Language[] {
-    return this.languages;
+    return [...this.languages].sort((a, b) => a.name.localeCompare(b.name));
   }
 
   getContent(languageCode: string): LearningContent | undefined {
