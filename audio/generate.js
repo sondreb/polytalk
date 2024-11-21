@@ -2,12 +2,19 @@ const AWS = require('aws-sdk');
 const fs = require('fs');
 const path = require('path');
 const util = require('util');
+require('dotenv').config();
+
+// Verify required environment variables
+if (!process.env.AWS_ACCESS_KEY_ID || !process.env.AWS_SECRET_ACCESS_KEY) {
+    console.error('Error: AWS credentials not found in .env file');
+    process.exit(1);
+}
 
 // Configure AWS
 AWS.config.update({
-    region: 'us-east-1',
-    accessKeyId: 'YOUR_ACCESS_KEY',
-    secretAccessKey: 'YOUR_SECRET_KEY'
+    region: process.env.AWS_REGION || 'us-east-1',
+    accessKeyId: process.env.AWS_ACCESS_KEY_ID,
+    secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY
 });
 
 const polly = new AWS.Polly();
