@@ -517,8 +517,7 @@ export class LearningComponent implements OnInit, OnDestroy {
       const fileName = file.split('/').pop()?.replace('.mp3', '');
       if (fileName) {
         this.currentlyPlayingItem = this.currentItems.find(
-          (item) =>
-            this.sanitizeText(item.native) === this.sanitizeText(fileName)
+          (item) => this.sanitizeKey(item.native) === this.sanitizeKey(fileName)
         );
 
         // Scroll to the currently playing item
@@ -594,7 +593,7 @@ export class LearningComponent implements OnInit, OnDestroy {
     let audioFiles: string[] = [];
 
     this.currentItems.forEach((item) => {
-      const sanitizedFileName = this.sanitizeText(item.native);
+      const sanitizedFileName = this.sanitizeKey(item.native);
       for (let i = 0; i < this.wordRepeat; i++) {
         if (this.playBothLanguages) {
           audioFiles.push(
@@ -629,7 +628,7 @@ export class LearningComponent implements OnInit, OnDestroy {
     item: { native: string; translation: string },
     language: 'en' | 'native'
   ) {
-    const sanitizedFileName = this.sanitizeText(item.native);
+    const sanitizedFileName = this.sanitizeKey(item.native);
     const langCode = language === 'en' ? 'en' : this.languageCode;
     const audioFile = `/assets/audio/${langCode}/${this.category}/${sanitizedFileName}.mp3`;
     this.audioService.playSingleFile(audioFile);
@@ -639,10 +638,15 @@ export class LearningComponent implements OnInit, OnDestroy {
     this.router.navigate(['/learn', this.languageCode, category]);
   }
 
-  sanitizeText(text: string): string {
-    return text
-      .toLowerCase()
-      .replace(/[^a-z0-9\s]/g, '') // Remove special characters but keep spaces (\s)
-      .trim();
+  sanitizeKey(key: string) {
+    // Remove question marks and other invalid filename characters
+    return key.replace(/[?<>:"/\\|*]/g, '').trim();
   }
+
+  // sanitizeText(text: string): string {
+  //   return text
+  //     .toLowerCase()
+  //     .replace(/[^a-z0-9\s]/g, '') // Remove special characters but keep spaces (\s)
+  //     .trim();
+  // }
 }
