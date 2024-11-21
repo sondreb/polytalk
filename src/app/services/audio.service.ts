@@ -6,6 +6,7 @@ import { BehaviorSubject } from 'rxjs';
 })
 export class AudioService {
   private audio = new Audio();
+  private silentAudio: AudioContext;
   private queue: string[] = [];
   private isPlaying = new BehaviorSubject<boolean>(false);
   private repeatCount = 1;
@@ -16,6 +17,23 @@ export class AudioService {
   private currentFile = new BehaviorSubject<string>('');
 
   constructor() {
+    // Initialize Web Audio API context
+    this.silentAudio = new AudioContext();
+    
+    // Create silent buffer
+    const silentBuffer = this.silentAudio.createBuffer(
+      1,
+      this.silentAudio.sampleRate * 0.1, // 100ms of silence
+      this.silentAudio.sampleRate
+    );
+
+    // Connect audio context to keep stream alive
+    const source = this.silentAudio.createBufferSource();
+    source.buffer = silentBuffer;
+    source.connect(this.silentAudio.destination);
+    source.loop = true;
+    source.start();
+
     this.audio.onended = () => this.playNext();
   }
 
@@ -41,6 +59,9 @@ export class AudioService {
   }
 
   play(url?: string) {
+    // Resume audio context if it was suspended
+    this.silentAudio.resume();
+
     if (url) {
       // Sanitize single file url
       const dirPath = url.substring(0, url.lastIndexOf('/') + 1);
@@ -85,6 +106,8 @@ export class AudioService {
     this.currentIndex = 0;
     this.currentRepeat = 1;
     this.currentFile.next(''); // Clear current file
+    // Suspend audio context when stopping
+    this.silentAudio.suspend();
   }
 
   private playNext() {
