@@ -25,6 +25,7 @@ export class LanguageService {
     { code: 'ja', name: 'Japanese', flag: '🇯🇵', flagImage: '/assets/flags/jp.png' },
     { code: 'zh', name: 'Chinese', flag: '🇨🇳', flagImage: '/assets/flags/cn.png' },
     { code: 'ko', name: 'Korean', flag: '🇰🇷', flagImage: '/assets/flags/kr.png' },
+    { code: 'pl', name: 'Polish', flag: '🇵🇱', flagImage: '/assets/flags/pl.png' },
     { code: 'ru', name: 'Russian', flag: '🇷🇺', flagImage: '/assets/flags/ru.png' },
     { code: 'me', name: 'Montenegrin', flag: '🇲🇪', flagImage: '/assets/flags/me.png' },
   ];
@@ -404,7 +405,7 @@ export class LanguageService {
         'How much does it cost?': 'いくらですか？ (Ikura desu ka?)',
         'Can you help me?': '手伝っていただけますか？ (Tetsudatte itadakemasu ka?)',
         'I would like...': '...をお願いします (...o onegaishimasu)',
-        'The check, please': '���会計をお願いします (O-kaikei o onegaishimasu)',
+        'The check, please': 'お会計をお願いします (O-kaikei o onegaishimasu)',
       }
     },
 
@@ -480,7 +481,7 @@ export class LanguageService {
         'How much does it cost?': '多少钱？(Duōshao qián?)',
         'Can you help me?': '你能帮我吗？(Nǐ néng bāng wǒ ma?)',
         'I would like...': '我想要... (Wǒ xiǎng yào...)',
-        'The check, please': '���结账 (Qǐng jiézhàng)',
+        'The check, please': '请结账 (Qǐng jiézhàng)',
       }
     },
 
@@ -710,7 +711,83 @@ export class LanguageService {
         'I would like...': 'Želio bih...',
         'The check, please': 'Račun, molim vas',
       }
-    }
+    },
+
+    pl: {
+      words: {
+        // Essential Nouns
+        'water': 'woda',
+        'food': 'jedzenie',
+        'restaurant': 'restauracja',
+        'bathroom': 'łazienka',
+        'hospital': 'szpital',
+        'hotel': 'hotel',
+        'airport': 'lotnisko',
+        'train': 'pociąg',
+        'bus': 'autobus',
+        'taxi': 'taksówka',
+        // Common Adjectives
+        'good': 'dobry',
+        'bad': 'zły',
+        'big': 'duży',
+        'small': 'mały',
+        'hot': 'gorący',
+        'cold': 'zimny',
+        // Essential Verbs
+        'to eat': 'jeść',
+        'to drink': 'pić',
+        'to sleep': 'spać',
+        'to go': 'iść',
+        'to help': 'pomóc',
+        'thanks': 'dziękuję',
+      },
+      numbers: {
+        '0': 'zero',
+        '1': 'jeden',
+        '2': 'dwa',
+        '3': 'trzy',
+        '4': 'cztery',
+        '5': 'pięć',
+        '6': 'sześć',
+        '7': 'siedem',
+        '8': 'osiem',
+        '9': 'dziewięć',
+        '10': 'dziesięć',
+        '20': 'dwadzieścia',
+        '30': 'trzydzieści',
+        '40': 'czterdzieści',
+        '50': 'pięćdziesiąt',
+        '100': 'sto',
+        '1000': 'tysiąc',
+      },
+      sentences: {
+        // Greetings
+        'Hello': 'Cześć',
+        'Good morning': 'Dzień dobry',
+        'Good afternoon': 'Dzień dobry',
+        'Good night': 'Dobranoc',
+        'Goodbye': 'Do widzenia',
+        // Essential Phrases
+        'How are you?': 'Jak się masz?',
+        'I am fine': 'Mam się dobrze',
+        'Thank you': 'Dziękuję',
+        'You\'re welcome': 'Proszę bardzo',
+        'Please': 'Proszę',
+        'Excuse me': 'Przepraszam',
+        'I\'m sorry': 'Przykro mi',
+        // Emergency Phrases
+        'I need help': 'Potrzebuję pomocy',
+        'I am lost': 'Zgubiłem się',
+        'I don\'t understand': 'Nie rozumiem',
+        'Do you speak English?': 'Czy mówisz po angielsku?',
+        'Where is the bathroom?': 'Gdzie jest łazienka?',
+        // Practical Phrases
+        'How much does it cost?': 'Ile to kosztuje?',
+        'Can you help me?': 'Czy możesz mi pomóc?',
+        'I would like...': 'Chciałbym...',
+        'The check, please': 'Rachunek poproszę',
+      }
+    },
   };
 
   getLanguages(): Language[] {
