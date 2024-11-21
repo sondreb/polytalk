@@ -298,6 +298,20 @@ export class LearningComponent implements OnInit, OnDestroy {
     this.audioService.isPlayingState.subscribe(
       (playing) => (this.isPlaying = playing)
     );
+    this.audioService.currentFileState.subscribe(file => {
+      if (!file) {
+        this.currentlyPlayingItem = undefined;
+        return;
+      }
+
+      // Extract the word from the file path
+      const fileName = file.split('/').pop()?.replace('.mp3', '');
+      if (fileName) {
+        this.currentlyPlayingItem = this.currentItems.find(item => 
+          item.native === fileName
+        );
+      }
+    });
   }
 
   ngOnDestroy() {
@@ -391,14 +405,7 @@ export class LearningComponent implements OnInit, OnDestroy {
     const fileName = language === 'en' ? item.native : item.native;
     const langCode = language === 'en' ? 'en' : this.languageCode;
     const audioFile = `/assets/audio/${langCode}/${this.category}/${fileName}.mp3`;
-    this.currentlyPlayingItem = item;
     this.audioService.playSingleFile(audioFile);
-    // Clear the highlight after playback (approximately 2 seconds)
-    setTimeout(() => {
-      if (this.currentlyPlayingItem === item) {
-        this.currentlyPlayingItem = undefined;
-      }
-    }, 2000);
   }
 
   selectCategory(category: string) {
