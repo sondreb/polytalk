@@ -40,6 +40,19 @@ import { RouterLink } from '@angular/router';
       text-align: center;
       padding: 4rem 1rem;
     }
+    .features.grid {
+      margin: 4rem auto;
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 2rem;
+      max-width: 1200px;
+      padding: 0 1rem;
+    }
+    .card {
+      padding: 2rem;
+      border-radius: 8px;
+      background: rgba(255, 255, 255, 0.05);
+    }
     h1 {
       font-size: 3rem;
       margin-bottom: 1rem;
@@ -77,6 +90,10 @@ import { RouterLink } from '@angular/router';
     @media (max-width: 768px) {
       .hero {
         padding: 2rem 1rem;
+      }
+      .features.grid {
+        grid-template-columns: 1fr;
+        margin: 2rem auto;
       }
       h1 {
         font-size: 2rem;
