@@ -373,14 +373,11 @@ export class LearningComponent implements OnInit, OnDestroy {
     }
   }
 
-  playItem(
-    item: { native: string; translation: string },
-    language: 'en' | 'native'
-  ) {
+  playItem(item: { native: string; translation: string }, language: 'en' | 'native') {
     const fileName = language === 'en' ? item.native : item.native;
     const langCode = language === 'en' ? 'en' : this.languageCode;
     const audioFile = `/assets/audio/${langCode}/${this.category}/${fileName}.mp3`;
-    this.audioService.play(audioFile);
+    this.audioService.playSingleFile(audioFile);
   }
 
   selectCategory(category: string) {

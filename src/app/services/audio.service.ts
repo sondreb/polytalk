@@ -64,6 +64,11 @@ export class AudioService {
     }
   }
 
+  playSingleFile(audioFile: string) {
+    const audio = new Audio(audioFile);
+    audio.play().catch(error => console.error('Error playing audio:', error));
+  }
+
   stop() {
     if (this.playbackTimeout) {
       clearTimeout(this.playbackTimeout);
