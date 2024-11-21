@@ -8,6 +8,9 @@
   "display": "standalone",
   "scope": "./",
   "start_url": "./",
+  "launch_handler": {
+    "client_mode": ["focus-existing", "auto"]
+  },
   "icons": [
     {
       "src": "icons/icon-72x72.png",

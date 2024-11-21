@@ -50,11 +50,15 @@ import { AudioService } from '../../services/audio.service';
 
       <div class="content card">
         <div *ngFor="let item of currentItems" class="item"
-             [class.active]="item === currentItem"
-             (click)="playItem(item)">
-          <span class="native">{{ item.native }}</span>
-          <span class="translation">{{ item.translation }}</span>
-          <button class="play-button">▶</button>
+             [class.active]="item === currentItem">
+          <div class="native">
+            <button class="play-button" (click)="playItem(item, 'en')">▶</button>
+            <span>{{ item.native }}</span>
+          </div>
+          <div class="translation">
+            <span>{{ item.translation }}</span>
+            <button class="play-button" (click)="playItem(item, 'native')">▶</button>
+          </div>
         </div>
       </div>
     </section>
@@ -152,6 +156,11 @@ import { AudioService } from '../../services/audio.service';
       background: rgba(255,255,255,0.5);
       border-color: var(--background-color-darker);
     }
+    .native, .translation {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
   `]
 })
 export class LearningComponent implements OnInit, OnDestroy {
@@ -233,8 +242,10 @@ export class LearningComponent implements OnInit, OnDestroy {
     }
   }
 
-  playItem(item: {native: string, translation: string}) {
-    const audioFile = `/assets/audio/${this.languageCode}/${item.native}.mp3`;
+  playItem(item: {native: string, translation: string}, language: 'en' | 'native') {
+    const fileName = language === 'en' ? item.native : item.native;
+    const langCode = language === 'en' ? 'en' : this.languageCode;
+    const audioFile = `/assets/audio/${langCode}/${fileName}.mp3`;
     this.audioService.play(audioFile);
   }
 
