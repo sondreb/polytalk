@@ -253,18 +253,18 @@ import { AudioService } from '../../services/audio.service';
       }
 
       .buttons button:disabled {
-        opacity: 0.7;
+        opacity: 0.9;
         cursor: not-allowed;
-        background-color: #d8d8d8;
-        border: 1px solid #bbb;
-        color: #666;
+        background: #94a3b8;  /* Slate 400 - lighter gray with better contrast */
+        color: #f1f5f9;       /* Slate 100 - very light color for text */
+        border: none;
         box-shadow: none;
         transform: none;
       }
 
       .buttons button:disabled:hover {
         transform: none;
-        background-color: #d8d8d8;
+        background: #94a3b8;  /* Keep the same color on hover */
       }
 
       .buttons button:not(:disabled):hover {
