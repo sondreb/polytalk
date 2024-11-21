@@ -34,44 +34,47 @@ import { AudioService } from '../../services/audio.service';
         </button>
       </div>
 
-      <div class="controls card" [class.sticky]="isControlsSticky">
-        <div class="settings">
-          <label>
-            Word Repeat:
-            <input
-              type="number"
-              [(ngModel)]="wordRepeat"
-              (ngModelChange)="saveSettings()"
-              min="1"
-              max="10"
-            />
-          </label>
-          <label>
-            Loops:
-            <input
-              type="number"
-              [(ngModel)]="loopRepeat"
-              (ngModelChange)="saveSettings()"
-              min="1"
-              max="10"
-            />
-          </label>
-          <label class="checkbox-label">
-            <input
-              type="checkbox"
-              [(ngModel)]="playBothLanguages"
-              (ngModelChange)="saveSettings()"
-            />
-            Play both English and {{ selectedLanguage?.name }}
-          </label>
-        </div>
+      <div class="controls-wrapper">
+        <div class="controls card" [class.sticky]="isControlsSticky">
+          <div class="settings">
+            <label>
+              Word Repeat:
+              <input
+                type="number"
+                [(ngModel)]="wordRepeat"
+                (ngModelChange)="saveSettings()"
+                min="1"
+                max="10"
+              />
+            </label>
+            <label>
+              Loops:
+              <input
+                type="number"
+                [(ngModel)]="loopRepeat"
+                (ngModelChange)="saveSettings()"
+                min="1"
+                max="10"
+              />
+            </label>
+            <label class="checkbox-label">
+              <input
+                type="checkbox"
+                [(ngModel)]="playBothLanguages"
+                (ngModelChange)="saveSettings()"
+              />
+              Play both English and {{ selectedLanguage?.name }}
+            </label>
+          </div>
 
-        <div class="buttons">
-          <button (click)="startPlayback()" [disabled]="isPlaying">
-            Start Playback
-          </button>
-          <button (click)="stopPlayback()" [disabled]="!isPlaying">Stop</button>
+          <div class="buttons">
+            <button (click)="startPlayback()" [disabled]="isPlaying">
+              Start Playback
+            </button>
+            <button (click)="stopPlayback()" [disabled]="!isPlaying">Stop</button>
+          </div>
         </div>
+        <div class="controls-placeholder" [class.visible]="isControlsSticky"></div>
       </div>
 
       <div class="content card">
@@ -80,6 +83,7 @@ import { AudioService } from '../../services/audio.service';
           class="item"
           [class.active]="item === currentItem"
           [class.playing]="item === currentlyPlayingItem"
+          [id]="'item-' + item.native"
         >
           <div class="native">
             <button class="play-button" (click)="playItem(item, 'en')">
@@ -118,6 +122,7 @@ import { AudioService } from '../../services/audio.service';
         padding: 1.25rem;
         border-bottom: 1px solid rgba(99, 102, 241, 0.1);
         transition: all 0.3s ease;
+        scroll-margin-top: 200px;
       }
       .item:hover {
         background: rgba(99, 102, 241, 0.05);
@@ -392,6 +397,24 @@ import { AudioService } from '../../services/audio.service';
         box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
         z-index: 99;
       }
+      .controls-wrapper {
+        position: relative;
+      }
+
+      .controls-placeholder {
+        height: 0;
+      }
+
+      .controls-placeholder.visible {
+        height: 85px;  /* Adjust this value to match your controls height */
+      }
+
+      @media (max-width: 768px) {
+        .controls-placeholder.visible {
+          height: 200px;  /* Adjust for mobile layout where controls stack */
+        }
+      }
+
       @media (max-width: 768px) {
         .controls.card.sticky {
           top: 56px; /* Adjust for smaller navbar */
@@ -491,6 +514,17 @@ export class LearningComponent implements OnInit, OnDestroy {
         this.currentlyPlayingItem = this.currentItems.find(
           (item) => item.native === fileName
         );
+        
+        // Scroll to the currently playing item
+        if (this.currentlyPlayingItem) {
+          const element = document.getElementById(`item-${this.currentlyPlayingItem.native}`);
+          if (element) {
+            element.scrollIntoView({ 
+              behavior: 'smooth', 
+              block: 'center'
+            });
+          }
+        }
       }
     });
   }
