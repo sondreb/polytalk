@@ -38,7 +38,10 @@ import { RouterLink } from '@angular/router';
   styles: [`
     .hero {
       text-align: center;
-      padding: 4rem 1rem;
+      padding: 6rem 1rem;
+      background: linear-gradient(135deg, rgba(99, 102, 241, 0.1), rgba(139, 92, 246, 0.1));
+      border-radius: 24px;
+      margin: 2rem 0;
     }
     .features.grid {
       margin: 4rem auto;
@@ -50,13 +53,23 @@ import { RouterLink } from '@angular/router';
     }
     .card {
       padding: 2rem;
-      border-radius: 8px;
-      background: rgba(255, 255, 255, 0.05);
+      text-align: center;
+      background: var(--surface-color);
+      border-radius: 16px;
+      border: 1px solid rgba(99, 102, 241, 0.1);
+      transition: all 0.3s ease;
+    }
+    .card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 12px 20px rgba(99, 102, 241, 0.15);
     }
     h1 {
-      font-size: 3rem;
-      margin-bottom: 1rem;
-      color: var(--primary-color);
+      font-size: 3.5rem;
+      font-weight: 800;
+      background: linear-gradient(135deg, var(--gradient-start), var(--gradient-end));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin-bottom: 1.5rem;
     }
     .hero p {
       font-size: 1.25rem;
@@ -64,16 +77,19 @@ import { RouterLink } from '@angular/router';
     }
     .cta-button {
       display: inline-block;
-      padding: 1rem 2rem;
-      background: var(--primary-color);
+      padding: 1rem 2.5rem;
+      background: linear-gradient(135deg, var(--gradient-start), var(--gradient-end));
       color: white;
       text-decoration: none;
-      border-radius: 8px;
-      font-size: 1.1rem;
-      transition: transform 0.2s;
+      border-radius: 12px;
+      font-size: 1.2rem;
+      font-weight: 600;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 12px rgba(99, 102, 241, 0.2);
     }
     .cta-button:hover {
       transform: translateY(-2px);
+      box-shadow: 0 8px 16px rgba(99, 102, 241, 0.3);
       background: var(--secondary-color);
     }
     .disclaimer {

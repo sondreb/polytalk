@@ -115,16 +115,22 @@ import { AudioService } from '../../services/audio.service';
       .item {
         display: flex;
         justify-content: space-between;
-        padding: 1rem;
-        border-bottom: 1px solid var(--background-color);
+        padding: 1.25rem;
+        border-bottom: 1px solid rgba(99, 102, 241, 0.1);
+        transition: all 0.3s ease;
+      }
+      .item:hover {
+        background: rgba(99, 102, 241, 0.05);
       }
       .item.active {
         background: var(--background-color);
         border-radius: 8px;
       }
       .item.playing {
-        background: var(--primary-color);
+        background: linear-gradient(135deg, var(--gradient-start), var(--gradient-end));
         color: white;
+        transform: scale(1.02);
+        box-shadow: 0 4px 12px rgba(99, 102, 241, 0.2);
         border-radius: 8px;
       }
       .item.playing .translation {
@@ -151,9 +157,14 @@ import { AudioService } from '../../services/audio.service';
         border-radius: 4px;
       }
       .play-button {
-        padding: 0.5rem;
-        min-width: 40px;
+        width: 40px;
+        height: 40px;
+        padding: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
         border-radius: 50%;
+        background: linear-gradient(135deg, var(--gradient-start), var(--gradient-end));
       }
       .language-header {
         text-align: center;
@@ -172,9 +183,9 @@ import { AudioService } from '../../services/audio.service';
         justify-content: center;
         gap: 0.5rem;
         margin-bottom: 2rem;
-        padding: 0.5rem;
-        background: var(--background-color);
-        border-radius: 12px;
+        padding: 0.75rem;
+        background: rgba(99, 102, 241, 0.1);
+        border-radius: 16px;
       }
       .tabs button {
         padding: 0.75rem 1.5rem;
@@ -189,8 +200,9 @@ import { AudioService } from '../../services/audio.service';
         min-width: 100px;
       }
       .tabs button.active {
-        background: white;
-        color: var(--primary-color);
+        background: linear-gradient(135deg, var(--gradient-start), var(--gradient-end));
+        color: white;
+        font-weight: 600;
         border-color: var(--primary-color);
         box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
       }

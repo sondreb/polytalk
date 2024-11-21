@@ -22,9 +22,13 @@ import { CommonModule } from '@angular/common';
   styles: [
     `
       nav {
-        background: white;
-        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        background: rgba(255, 255, 255, 0.8);
+        backdrop-filter: blur(10px);
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
         padding: 1rem;
+        position: sticky;
+        top: 0;
+        z-index: 100;
       }
       .nav-content {
         max-width: 1200px;
@@ -36,26 +40,29 @@ import { CommonModule } from '@angular/common';
       .brand {
         font-size: 1.5rem;
         font-weight: bold;
-        color: var(--primary-color);
+        background: linear-gradient(135deg, var(--gradient-start), var(--gradient-end));
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
         text-decoration: none;
       }
       .nav-links a {
         color: var(--text-color);
         text-decoration: none;
         padding: 0.5rem 1rem;
-        border-radius: 4px;
+        border-radius: 8px;
+        transition: all 0.3s ease;
       }
       .nav-links a:hover {
-        background: var(--background-color);
+        background: linear-gradient(135deg, var(--gradient-start), var(--gradient-end));
+        color: white;
       }
       .install-button {
         margin-left: 1rem;
-        padding: 0.5rem 1rem;
-        background: var(--primary-color);
+        background: linear-gradient(135deg, var(--gradient-start), var(--gradient-end));
         color: white;
-        border: none;
-        border-radius: 4px;
-        cursor: pointer;
+        padding: 0.5rem 1.5rem;
+        border-radius: 8px;
+        font-weight: 600;
       }
       .install-button:hover {
         background: var(--secondary-color);

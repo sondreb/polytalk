@@ -1,11 +1,17 @@
 /* You can add global styles to this file, and also import other style files */
 
 :root {
-  --primary-color: #4a90e2;
-  --secondary-color: #50c878;
-  --background-color: #f5f7fa;
-  --text-color: #333;
-  --accent-color: #ff6b6b;
+  --primary-color: #6366f1;
+  --primary-dark: #4f46e5;
+  --secondary-color: #10b981;
+  --secondary-dark: #059669;
+  --background-color: #f8fafc;
+  --surface-color: #ffffff;
+  --text-color: #1e293b;
+  --text-light: #64748b;
+  --accent-color: #f43f5e;
+  --gradient-start: #6366f1;
+  --gradient-end: #8b5cf6;
 }
 
 body {
@@ -23,25 +29,34 @@ body {
 button {
   font-size: 16px;
   padding: 12px 24px;
-  background-color: var(--primary-color);
+  background: linear-gradient(135deg, var(--gradient-start), var(--gradient-end));
   color: white;
   border: none;
-  border-radius: 8px;
+  border-radius: 12px;
   cursor: pointer;
-  font-family: inherit;
-  transition: transform 0.2s, background-color 0.2s;
+  font-weight: 600;
+  transition: all 0.3s ease;
 }
 
 button:hover {
   transform: translateY(-2px);
-  background-color: #357abd;
+  box-shadow: 0 4px 12px rgba(99, 102, 241, 0.2);
 }
 
 .card {
-  background: white;
-  border-radius: 12px;
+  background: var(--surface-color);
+  border-radius: 16px;
   padding: 1.5rem;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05),
+              0 10px 15px -3px rgba(0, 0, 0, 0.1);
+  border: 1px solid rgba(99, 102, 241, 0.1);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 12px rgba(0, 0, 0, 0.1),
+              0 20px 25px -5px rgba(0, 0, 0, 0.1);
 }
 
 .grid {
