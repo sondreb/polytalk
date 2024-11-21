@@ -100,13 +100,13 @@ import { AudioService } from '../../services/audio.service';
   styles: [
     `
       .learning {
-        padding: 2rem 0;
+        padding: 1rem 0;  // Reduced from 2rem
       }
       .controls {
         display: flex;
         justify-content: space-between;
         align-items: center;
-        margin-bottom: 2rem;
+        margin-bottom: 1rem;  // Reduced from 2rem
       }
       .buttons {
         display: flex;
@@ -142,106 +142,121 @@ import { AudioService } from '../../services/audio.service';
       }
       .settings {
         display: flex;
-        gap: 1rem;
-        margin-bottom: 1rem;
+        gap: 1.5rem;
+        margin-bottom: 1.5rem;
+        padding: 1rem;
+        background: rgba(99, 102, 241, 0.05);
+        border-radius: 12px;
       }
+      
       .settings label {
         display: flex;
         align-items: center;
-        gap: 0.5rem;
-      }
-      .settings input {
-        width: 60px;
-        padding: 0.3rem;
-        border: 1px solid var(--background-color);
-        border-radius: 4px;
-      }
-      .play-button {
-        width: 40px;
-        height: 40px;
-        padding: 0;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        border-radius: 50%;
-        background: linear-gradient(135deg, var(--gradient-start), var(--gradient-end));
-      }
-      .language-header {
-        text-align: center;
-        margin-bottom: 2rem;
-        font-size: 1.5rem;
-        color: var(--primary-color);
-      }
-      .flag-image {
-        width: 32px;
-        height: 24px;
-        vertical-align: middle;
-        margin-right: 8px;
-      }
-      .tabs {
-        display: flex;
-        justify-content: center;
-        gap: 0.5rem;
-        margin-bottom: 2rem;
-        padding: 0.75rem;
-        background: rgba(99, 102, 241, 0.1);
-        border-radius: 16px;
-      }
-      .tabs button {
-        padding: 0.75rem 1.5rem;
-        border: 1px solid transparent;
-        background: transparent;
-        border-radius: 8px;
-        cursor: pointer;
-        font-size: 1rem;
-        transition: all 0.2s ease;
-        color: var(--text-color);
+        gap: 0.75rem;
         font-weight: 500;
-        min-width: 100px;
+        color: var(--text-color);
       }
-      .tabs button.active {
-        background: linear-gradient(135deg, var(--gradient-start), var(--gradient-end));
-        color: white;
-        font-weight: 600;
+      
+      .settings input[type="number"] {
+        width: 70px;
+        padding: 0.5rem;
+        border: 2px solid rgba(99, 102, 241, 0.2);
+        border-radius: 8px;
+        font-size: 1rem;
+        font-weight: 500;
+        color: var(--text-color);
+        background: var(--surface-color);
+        transition: all 0.2s ease;
+        text-align: center;
+        -moz-appearance: textfield; /* Firefox */
+      }
+      
+      .settings input[type="number"]::-webkit-outer-spin-button,
+      .settings input[type="number"]::-webkit-inner-spin-button {
+        -webkit-appearance: none;
+        margin: 0;
+      }
+      
+      .settings input[type="number"]:focus {
+        outline: none;
         border-color: var(--primary-color);
-        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
       }
-      .tabs button:hover:not(.active) {
-        background: rgba(255, 255, 255, 0.5);
-        border-color: var(--background-color-darker);
-      }
-      .native,
-      .translation {
-        display: flex;
-        align-items: center;
-        gap: 0.5rem;
-      }
+      
       .checkbox-label {
         display: flex;
         align-items: center;
-        gap: 0.5rem;
+        gap: 0.75rem;
+        cursor: pointer;
       }
-      .checkbox-label input[type='checkbox'] {
-        width: auto;
+      
+      .checkbox-label input[type="checkbox"] {
+        appearance: none;
+        -webkit-appearance: none;
+        width: 1.5rem;
+        height: 1.5rem;
+        border: 2px solid rgba(99, 102, 241, 0.2);
+        border-radius: 6px;
+        background: var(--surface-color);
+        cursor: pointer;
+        position: relative;
+        transition: all 0.2s ease;
       }
+      
+      .checkbox-label input[type="checkbox"]:checked {
+        background: linear-gradient(135deg, var(--gradient-start), var(--gradient-end));
+        border-color: transparent;
+      }
+      
+      .checkbox-label input[type="checkbox"]:checked::after {
+        content: "✓";
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        color: white;
+        font-size: 1rem;
+        font-weight: bold;
+      }
+      
+      .checkbox-label input[type="checkbox"]:focus {
+        outline: none;
+        border-color: var(--primary-color);
+        box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+      }
+      
       @media (max-width: 768px) {
         .learning {
-          padding: 1rem 0;
+          padding: 0.5rem 0;  // Even smaller padding on mobile
         }
         .controls {
           flex-direction: column;
           gap: 1rem;
+          margin-bottom: 0.75rem;
         }
         .settings {
           flex-direction: column;
-          gap: 0.5rem;
+          gap: 1rem;
+          padding: 0.75rem;
+        }
+        
+        .settings label {
+          width: 100%;
+          justify-content: space-between;
+        }
+        
+        .checkbox-label {
+          width: 100%;
         }
         .tabs button {
           padding: 0.5rem 1rem;
           min-width: 80px;
         }
         .item {
-          padding: 0.75rem;
+          padding: 0.75rem 0.5rem;  // Reduced horizontal padding
+        }
+        .content.card {
+          padding: 0.25rem;  // Even smaller padding on mobile
         }
       }
       .buttons button {
@@ -270,6 +285,70 @@ import { AudioService } from '../../services/audio.service';
       .buttons button:not(:disabled):hover {
         background-color: var(--primary-color);
         color: white;
+      }
+      .language-header {
+        text-align: center;
+        margin-bottom: 2rem;
+        font-size: 1.5rem;
+        color: var(--primary-color);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 1rem;
+      }
+      .flag-image {
+        width: 48px;
+        height: 36px;
+        border-radius: 4px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      }
+      .tabs {
+        display: flex;
+        justify-content: center;
+        gap: 0.5rem;
+        margin-bottom: 1rem;  // Reduced from 2rem
+        padding: 0.75rem;
+        background: transparent;  // Removed white background
+        border-radius: 12px;
+        box-shadow: none;  // Removed shadow
+      }
+      .tabs button {
+        padding: 0.75rem 1.5rem;
+        border: 1px solid transparent;
+        background: transparent;
+        border-radius: 8px;
+        cursor: pointer;
+        font-size: 1rem;
+        transition: all 0.2s ease;
+        color: var(--text-color);
+        font-weight: 500;
+        min-width: 100px;
+      }
+      .tabs button.active {
+        background: linear-gradient(135deg, var(--gradient-start), var(--gradient-end));
+        color: white;
+        font-weight: 600;
+      }
+      .tabs button:hover:not(.active) {
+        background: var(--background-color);
+      }
+      .native,
+      .translation {
+        display: flex;
+        align-items: center;
+        gap: 1rem;  /* Increased from 0.5rem to 1rem for more spacing */
+      }
+
+      .play-button {
+        width: 40px;
+        height: 40px;
+        padding: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 50%;
+        background: linear-gradient(135deg, var(--gradient-start), var(--gradient-end));
+        flex-shrink: 0;  /* Prevent button from shrinking */
       }
     `,
   ],
