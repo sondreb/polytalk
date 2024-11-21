@@ -27,13 +27,21 @@ export class AudioService {
     if (url) {
       // Single file playback
       this.audio.src = url;
-      this.audio.play();
-      this.isPlaying.next(true);
+      this.audio.play().then(() => {
+        this.isPlaying.next(true);
+      }).catch(error => {
+        console.error('Error playing audio:', error);
+        this.isPlaying.next(false);
+      });
     } else if (this.queue.length > 0) {
       // Start queue playback
       this.audio.src = this.queue[0];
-      this.audio.play();
-      this.isPlaying.next(true);
+      this.audio.play().then(() => {
+        this.isPlaying.next(true);
+      }).catch(error => {
+        console.error('Error playing audio:', error);
+        this.isPlaying.next(false);
+      });
     }
   }
 
@@ -64,7 +72,12 @@ export class AudioService {
     // Play the next file
     if (this.currentIndex < this.queue.length) {
       this.audio.src = this.queue[this.currentIndex];
-      this.audio.play();
+      this.audio.play().then(() => {
+        this.isPlaying.next(true);
+      }).catch(error => {
+        console.error('Error playing audio:', error);
+        this.isPlaying.next(false);
+      });
     }
   }
 

@@ -193,6 +193,33 @@ import { AudioService } from '../../services/audio.service';
         padding: 0.75rem;
       }
     }
+    .buttons button {
+      padding: 0.75rem 1.5rem;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      min-width: 120px;
+    }
+
+    .buttons button:disabled {
+      opacity: 0.7;
+      cursor: not-allowed;
+      background-color: #d8d8d8;
+      border: 1px solid #bbb;
+      color: #666;
+      box-shadow: none;
+      transform: none;
+    }
+
+    .buttons button:disabled:hover {
+      transform: none;
+      background-color: #d8d8d8;
+    }
+
+    .buttons button:not(:disabled):hover {
+      background-color: var(--primary-color);
+      color: white;
+    }
   `]
 })
 export class LearningComponent implements OnInit, OnDestroy {
