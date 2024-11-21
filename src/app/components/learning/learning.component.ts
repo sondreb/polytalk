@@ -79,6 +79,7 @@ import { AudioService } from '../../services/audio.service';
           *ngFor="let item of currentItems"
           class="item"
           [class.active]="item === currentItem"
+          [class.playing]="item === currentlyPlayingItem"
         >
           <div class="native">
             <button class="play-button" (click)="playItem(item, 'en')">
@@ -120,6 +121,14 @@ import { AudioService } from '../../services/audio.service';
       .item.active {
         background: var(--background-color);
         border-radius: 8px;
+      }
+      .item.playing {
+        background: var(--primary-color);
+        color: white;
+        border-radius: 8px;
+      }
+      .item.playing .translation {
+        color: white;
       }
       .translation {
         color: var(--primary-color);
@@ -264,6 +273,7 @@ export class LearningComponent implements OnInit, OnDestroy {
   loopRepeat = 2; // renamed from interval
   isPlaying = false;
   playBothLanguages = true; // New property
+  currentlyPlayingItem?: { native: string; translation: string };
   private playbackTimeout: any;
   private readonly SETTINGS_KEY = 'polytalk-settings';
   selectedLanguage?: Language;
@@ -342,6 +352,8 @@ export class LearningComponent implements OnInit, OnDestroy {
   }
 
   startPlayback() {
+    // Reset currently playing item
+    this.currentlyPlayingItem = undefined;
     let audioFiles: string[] = [];
 
     this.currentItems.forEach((item) => {
@@ -367,6 +379,8 @@ export class LearningComponent implements OnInit, OnDestroy {
   }
 
   stopPlayback() {
+    // Reset currently playing item
+    this.currentlyPlayingItem = undefined;
     this.audioService.stop();
     if (this.playbackTimeout) {
       clearTimeout(this.playbackTimeout);
@@ -377,7 +391,14 @@ export class LearningComponent implements OnInit, OnDestroy {
     const fileName = language === 'en' ? item.native : item.native;
     const langCode = language === 'en' ? 'en' : this.languageCode;
     const audioFile = `/assets/audio/${langCode}/${this.category}/${fileName}.mp3`;
+    this.currentlyPlayingItem = item;
     this.audioService.playSingleFile(audioFile);
+    // Clear the highlight after playback (approximately 2 seconds)
+    setTimeout(() => {
+      if (this.currentlyPlayingItem === item) {
+        this.currentlyPlayingItem = undefined;
+      }
+    }, 2000);
   }
 
   selectCategory(category: string) {
