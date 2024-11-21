@@ -407,6 +407,29 @@ import { AudioService } from '../../services/audio.service';
           gap: 0.75rem;
           width: 100%;
         }
+
+        .settings label {
+          width: 100%;
+          justify-content: space-between;
+        }
+      }
+      .settings {
+        display: flex;
+        gap: 1.5rem;
+        padding: 0;
+        margin: 0;
+        background: transparent;
+        border-radius: 12px;
+        align-items: center;
+      }
+
+      .settings label {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        margin: 0;
+        font-weight: 500;
+        color: var(--text-color);
       }
     `,
   ],
