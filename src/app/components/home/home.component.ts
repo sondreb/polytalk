@@ -79,6 +79,8 @@ import { RouterLink } from '@angular/router';
       display: inline-block;
       padding: 1rem 2.5rem;
       background: linear-gradient(135deg, var(--gradient-start), var(--gradient-end));
+      background-size: 200% 100%;
+      background-position: 0% 0%;
       color: white;
       text-decoration: none;
       border-radius: 12px;
@@ -90,7 +92,9 @@ import { RouterLink } from '@angular/router';
     .cta-button:hover {
       transform: translateY(-2px);
       box-shadow: 0 8px 16px rgba(99, 102, 241, 0.3);
-      background: var(--secondary-color);
+      background: linear-gradient(135deg, var(--secondary-color), var(--secondary-dark));
+      background-size: 200% 100%;
+      background-position: 100% 0%;
     }
     .disclaimer {
       margin-top: 3rem;

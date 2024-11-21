@@ -59,13 +59,18 @@ import { CommonModule } from '@angular/common';
       .install-button {
         margin-left: 1rem;
         background: linear-gradient(135deg, var(--gradient-start), var(--gradient-end));
+        background-size: 200% 100%;
+        background-position: 0% 0%;
         color: white;
         padding: 0.5rem 1.5rem;
         border-radius: 8px;
         font-weight: 600;
+        transition: all 0.3s ease;
       }
       .install-button:hover {
-        background: var(--secondary-color);
+        background: linear-gradient(135deg, var(--secondary-color), var(--secondary-dark));
+        background-size: 200% 100%;
+        background-position: 100% 0%;
       }
     `,
   ],
