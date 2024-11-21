@@ -13,7 +13,7 @@ import { UpdateService } from './services/update.service';
         A new version is available! 
         <button (click)="updateService.updateNow()">Update Now</button>
       </div>
-      <app-navbar />
+      <app-navbar [showInstall]="showInstallPrompt" (installClicked)="installPwa()" />
       <main>
         <router-outlet />
       </main>
@@ -42,5 +42,27 @@ import { UpdateService } from './services/update.service';
     `]
 })
 export class AppComponent {
-    constructor(public updateService: UpdateService) {}
+    showInstallPrompt = false;
+    private deferredPrompt: any;
+
+    constructor(public updateService: UpdateService) {
+        window.addEventListener('beforeinstallprompt', (e) => {
+            e.preventDefault();
+            this.deferredPrompt = e;
+            this.showInstallPrompt = true;
+        });
+    }
+
+    async installPwa() {
+        if (!this.deferredPrompt) return;
+        
+        this.deferredPrompt.prompt();
+        const { outcome } = await this.deferredPrompt.userChoice;
+        
+        if (outcome === 'accepted') {
+            this.showInstallPrompt = false;
+        }
+        
+        this.deferredPrompt = null;
+    }
 }

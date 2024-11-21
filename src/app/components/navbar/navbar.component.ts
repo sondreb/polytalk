@@ -1,16 +1,20 @@
-import { Component } from '@angular/core';
+import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { RouterLink } from '@angular/router';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-navbar',
   standalone: true,
-  imports: [RouterLink],
+  imports: [RouterLink, CommonModule],
   template: `
     <nav>
       <div class="nav-content">
         <a routerLink="/" class="brand">PolyTalk.Me</a>
         <div class="nav-links">
           <a routerLink="/languages">Languages</a>
+          <button *ngIf="showInstall" (click)="onInstallClick()" class="install-button">
+            Install App
+          </button>
         </div>
       </div>
     </nav>
@@ -44,7 +48,26 @@ import { RouterLink } from '@angular/router';
       .nav-links a:hover {
         background: var(--background-color);
       }
+      .install-button {
+        margin-left: 1rem;
+        padding: 0.5rem 1rem;
+        background: var(--primary-color);
+        color: white;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+      }
+      .install-button:hover {
+        background: var(--secondary-color);
+      }
     `,
   ],
 })
-export class NavbarComponent {}
+export class NavbarComponent {
+  @Input() showInstall = false;
+  @Output() installClicked = new EventEmitter<void>();
+
+  onInstallClick() {
+    this.installClicked.emit();
+  }
+}
