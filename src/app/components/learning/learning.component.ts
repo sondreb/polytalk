@@ -161,6 +161,26 @@ import { AudioService } from '../../services/audio.service';
       align-items: center;
       gap: 0.5rem;
     }
+    @media (max-width: 768px) {
+      .learning {
+        padding: 1rem 0;
+      }
+      .controls {
+        flex-direction: column;
+        gap: 1rem;
+      }
+      .settings {
+        flex-direction: column;
+        gap: 0.5rem;
+      }
+      .tabs button {
+        padding: 0.5rem 1rem;
+        min-width: 80px;
+      }
+      .item {
+        padding: 0.75rem;
+      }
+    }
   `]
 })
 export class LearningComponent implements OnInit, OnDestroy {

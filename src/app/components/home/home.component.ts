@@ -74,6 +74,17 @@ import { RouterLink } from '@angular/router';
       margin-left: auto;
       margin-right: auto;
     }
+    @media (max-width: 768px) {
+      .hero {
+        padding: 2rem 1rem;
+      }
+      h1 {
+        font-size: 2rem;
+      }
+      .hero p {
+        font-size: 1.1rem;
+      }
+    }
   `]
 })
 export class HomeComponent {}
