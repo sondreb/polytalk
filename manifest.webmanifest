@@ -3,7 +3,7 @@
   "short_name": "Polytalk",
   "author": "SondreB",
   "description": "Learn the basics of every language in the world.",
-  "theme_color": "#1976d2",
+  "theme_color": "#6366f1",
   "background_color": "#fafafa",
   "display": "standalone",
   "scope": "./",
