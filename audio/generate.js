@@ -32,6 +32,7 @@ const voiceMap = {
   ru: "Tatyana",
   me: "Nada", // Using Serbian voice for Montenegrin
   pl: "Ewa", // Added Polish voice
+  ar: "Zeina", // Added Arabic voice
 };
 
 // Read the language service file
@@ -49,7 +50,7 @@ const languageData = eval("({" + contentMatch[2] + "})");
 // Add this helper function to sanitize keys
 function sanitizeKey(key) {
   // Remove question marks and other invalid filename characters
-  return key.replace(/[?<>:"/\\|*]/g, '').trim();
+  return key.replace(/[?<>:"/\\|*]/g, "").trim();
 }
 
 async function generateAudio(text, language, category, key) {
