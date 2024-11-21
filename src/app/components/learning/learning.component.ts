@@ -47,7 +47,7 @@ import { AudioService } from '../../services/audio.service';
             />
           </label>
           <label>
-            Loop Repeat:
+            Loops:
             <input
               type="number"
               [(ngModel)]="loopRepeat"
