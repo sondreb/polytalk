@@ -31,6 +31,7 @@ const voiceMap = {
   ko: "Seoyeon",
   ru: "Tatyana",
   me: "Nada", // Using Serbian voice for Montenegrin
+  pl: "Ewa", // Added Polish voice
 };
 
 // Read the language service file
@@ -45,12 +46,21 @@ const contentMatch = content.match(
 );
 const languageData = eval("({" + contentMatch[2] + "})");
 
+// Add this helper function to sanitize keys
+function sanitizeKey(key) {
+  // Remove question marks and other invalid filename characters
+  return key.replace(/[?<>:"/\\|*]/g, '').trim();
+}
+
 async function generateAudio(text, language, category, key) {
   const voice = voiceMap[language];
   if (!voice) {
     console.log(`No voice mapping for language: ${language}`);
     return;
   }
+
+  // Sanitize the key for filename
+  const safeKey = sanitizeKey(key);
 
   const outputDir = path.join(
     __dirname,
@@ -63,8 +73,8 @@ async function generateAudio(text, language, category, key) {
   );
   fs.mkdirSync(outputDir, { recursive: true });
 
-  const outputPath = path.join(outputDir, `${key}.mp3`);
-  
+  const outputPath = path.join(outputDir, `${safeKey}.mp3`);
+
   // Check if file already exists
   if (fs.existsSync(outputPath)) {
     console.log(`Skipping existing file: ${outputPath}`);

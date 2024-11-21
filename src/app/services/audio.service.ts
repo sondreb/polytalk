@@ -18,8 +18,18 @@ export class AudioService {
     this.audio.onended = () => this.playNext();
   }
 
+  private sanitizeKey(key: string): string {
+    return key.replace(/[?<>:"/\\|*]/g, '').trim();
+  }
+
   setQueue(audioFiles: string[], repeat: number = 1) {
-    this.queue = audioFiles;
+    // Sanitize all filenames in the queue
+    this.queue = audioFiles.map(file => {
+      const dirPath = file.substring(0, file.lastIndexOf('/') + 1);
+      const filename = file.substring(file.lastIndexOf('/') + 1);
+      const sanitizedFilename = this.sanitizeKey(filename);
+      return dirPath + sanitizedFilename;
+    });
     this.repeatCount = repeat;
     this.currentRepeat = 1;
     this.currentIndex = 0;
@@ -31,8 +41,11 @@ export class AudioService {
 
   play(url?: string) {
     if (url) {
-      // Single file playback
-      this.audio.src = url;
+      // Sanitize single file url
+      const dirPath = url.substring(0, url.lastIndexOf('/') + 1);
+      const filename = url.substring(url.lastIndexOf('/') + 1);
+      const sanitizedUrl = dirPath + this.sanitizeKey(filename);
+      this.audio.src = sanitizedUrl;
       this.audio.play().then(() => {
         this.isPlaying.next(true);
       }).catch(error => {
@@ -40,7 +53,7 @@ export class AudioService {
         this.isPlaying.next(false);
       });
     } else if (this.queue.length > 0) {
-      // Start queue playback
+      // Queue already contains sanitized urls
       this.audio.src = this.queue[0];
       this.audio.play().then(() => {
         this.isPlaying.next(true);
