@@ -28,6 +28,7 @@ export class LanguageService {
     { code: 'pl', name: 'Polish', flag: '🇵🇱', flagImage: '/assets/flags/pl.png' },
     { code: 'ru', name: 'Russian', flag: '🇷🇺', flagImage: '/assets/flags/ru.png' },
     { code: 'me', name: 'Montenegrin', flag: '🇲🇪', flagImage: '/assets/flags/me.png' },
+    { code: 'ar', name: 'Arabic', flag: '🇸🇦', flagImage: '/assets/flags/sa.png' },
   ];
 
   private content: { [key: string]: LearningContent } = {
@@ -786,6 +787,81 @@ export class LanguageService {
         'Can you help me?': 'Czy możesz mi pomóc?',
         'I would like...': 'Chciałbym...',
         'The check, please': 'Rachunek poproszę',
+      }
+    },
+    ar: {
+      words: {
+        // Essential Nouns
+        'water': 'ماء (maa\')',
+        'food': 'طعام (ta\'am)',
+        'restaurant': 'مطعم (mat\'am)',
+        'bathroom': 'حمام (hammam)',
+        'hospital': 'مستشفى (mustashfa)',
+        'hotel': 'فندق (funduq)',
+        'airport': 'مطار (matar)',
+        'train': 'قطار (qitar)',
+        'bus': 'حافلة (hafila)',
+        'taxi': 'تاكسي (taksi)',
+        // Common Adjectives
+        'good': 'جيد (jayyid)',
+        'bad': 'سيء (sayyi\')',
+        'big': 'كبير (kabir)',
+        'small': 'صغير (saghir)',
+        'hot': 'حار (har)',
+        'cold': 'بارد (barid)',
+        // Essential Verbs
+        'to eat': 'يأكل (ya\'kul)',
+        'to drink': 'يشرب (yashrab)',
+        'to sleep': 'ينام (yanam)',
+        'to go': 'يذهب (yathhab)',
+        'to help': 'يساعد (yusa\'id)',
+        'thanks': 'شكراً (shukran)',
+      },
+      numbers: {
+        '0': 'صفر (sifr)',
+        '1': 'واحد (wahid)',
+        '2': 'اثنان (ithnan)',
+        '3': 'ثلاثة (thalatha)',
+        '4': 'أربعة (arba\'a)',
+        '5': 'خمسة (khamsa)',
+        '6': 'ستة (sitta)',
+        '7': 'سبعة (sab\'a)',
+        '8': 'ثمانية (thamaniya)',
+        '9': 'تسعة (tis\'a)',
+        '10': 'عشرة (ashara)',
+        '20': 'عشرون (ishrun)',
+        '30': 'ثلاثون (thalathun)',
+        '40': 'أربعون (arba\'un)',
+        '50': 'خمسون (khamsun)',
+        '100': 'مئة (mi\'a)',
+        '1000': 'ألف (alf)',
+      },
+      sentences: {
+        // Greetings
+        'Hello': 'مرحباً (marhaban)',
+        'Good morning': 'صباح الخير (sabah al-khayr)',
+        'Good afternoon': 'مساء الخير (masa\' al-khayr)',
+        'Good night': 'تصبح على خير (tusbih ala khayr)',
+        'Goodbye': 'مع السلامة (ma\'a as-salama)',
+        // Essential Phrases
+        'How are you?': 'كيف حالك؟ (kayf halak?)',
+        'I am fine': 'أنا بخير (ana bikhayr)',
+        'Thank you': 'شكراً (shukran)',
+        'You\'re welcome': 'عفواً (afwan)',
+        'Please': 'من فضلك (min fadlak)',
+        'Excuse me': 'عذراً (\'uthran)',
+        'I\'m sorry': 'آسف (asif)',
+        // Emergency Phrases
+        'I need help': 'أحتاج مساعدة (ahtaju musa\'ada)',
+        'I am lost': 'أنا ضائع (ana da\'i\')',
+        'I don\'t understand': 'لا أفهم (la afham)',
+        'Do you speak English?': 'هل تتكلم الإنجليزية؟ (hal tatakallam al-injliziyya?)',
+        'Where is the bathroom?': 'أين الحمام؟ (ayna al-hammam?)',
+        // Practical Phrases
+        'How much does it cost?': 'كم التكلفة؟ (kam at-taklufa?)',
+        'Can you help me?': 'هل يمكنك مساعدتي؟ (hal yumkinuka musa\'adati?)',
+        'I would like...': 'أريد... (urid...)',
+        'The check, please': 'الحساب من فضلك (al-hisab min fadlak)',
       }
     },
   };
