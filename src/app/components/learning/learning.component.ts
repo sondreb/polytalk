@@ -513,11 +513,12 @@ export class LearningComponent implements OnInit, OnDestroy {
         return;
       }
 
-      // Extract the word from the file path
+      // Extract the word from the file path and sanitize it
       const fileName = file.split('/').pop()?.replace('.mp3', '');
       if (fileName) {
         this.currentlyPlayingItem = this.currentItems.find(
-          (item) => item.native === fileName
+          (item) =>
+            this.sanitizeText(item.native) === this.sanitizeText(fileName)
         );
 
         // Scroll to the currently playing item
@@ -593,17 +594,18 @@ export class LearningComponent implements OnInit, OnDestroy {
     let audioFiles: string[] = [];
 
     this.currentItems.forEach((item) => {
+      const sanitizedFileName = this.sanitizeText(item.native);
       for (let i = 0; i < this.wordRepeat; i++) {
         if (this.playBothLanguages) {
           audioFiles.push(
-            `/assets/audio/en/${this.category}/${item.native}.mp3`
+            `/assets/audio/en/${this.category}/${sanitizedFileName}.mp3`
           );
           audioFiles.push(
-            `/assets/audio/${this.languageCode}/${this.category}/${item.native}.mp3`
+            `/assets/audio/${this.languageCode}/${this.category}/${sanitizedFileName}.mp3`
           );
         } else {
           audioFiles.push(
-            `/assets/audio/${this.languageCode}/${this.category}/${item.native}.mp3`
+            `/assets/audio/${this.languageCode}/${this.category}/${sanitizedFileName}.mp3`
           );
         }
       }
@@ -627,13 +629,20 @@ export class LearningComponent implements OnInit, OnDestroy {
     item: { native: string; translation: string },
     language: 'en' | 'native'
   ) {
-    const fileName = language === 'en' ? item.native : item.native;
+    const sanitizedFileName = this.sanitizeText(item.native);
     const langCode = language === 'en' ? 'en' : this.languageCode;
-    const audioFile = `/assets/audio/${langCode}/${this.category}/${fileName}.mp3`;
+    const audioFile = `/assets/audio/${langCode}/${this.category}/${sanitizedFileName}.mp3`;
     this.audioService.playSingleFile(audioFile);
   }
 
   selectCategory(category: string) {
     this.router.navigate(['/learn', this.languageCode, category]);
+  }
+
+  sanitizeText(text: string): string {
+    return text
+      .toLowerCase()
+      .replace(/[^a-z0-9\s]/g, '') // Remove special characters but keep spaces (\s)
+      .trim();
   }
 }
