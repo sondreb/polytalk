@@ -71,10 +71,15 @@ import { AudioService } from '../../services/audio.service';
             <button (click)="startPlayback()" [disabled]="isPlaying">
               Start Playback
             </button>
-            <button (click)="stopPlayback()" [disabled]="!isPlaying">Stop</button>
+            <button (click)="stopPlayback()" [disabled]="!isPlaying">
+              Stop
+            </button>
           </div>
         </div>
-        <div class="controls-placeholder" [class.visible]="isControlsSticky"></div>
+        <div
+          class="controls-placeholder"
+          [class.visible]="isControlsSticky"
+        ></div>
       </div>
 
       <div class="content card">
@@ -104,13 +109,13 @@ import { AudioService } from '../../services/audio.service';
   styles: [
     `
       .learning {
-        padding: 1rem 0; // Reduced from 2rem
+        padding: 1rem 0;
       }
       .controls {
         display: flex;
         justify-content: space-between;
         align-items: center;
-        margin-bottom: 1rem; // Reduced from 2rem
+        margin-bottom: 1rem;
       }
       .buttons {
         display: flex;
@@ -152,8 +157,8 @@ import { AudioService } from '../../services/audio.service';
       .settings {
         display: flex;
         gap: 1.5rem;
-        margin-bottom: 1rem; // Reduced from 1.5rem
-        padding: 0.75rem; // Reduced from 1rem
+        margin-bottom: 1rem;
+        padding: 0.75rem;
         background: rgba(99, 102, 241, 0.05);
         border-radius: 12px;
       }
@@ -240,7 +245,7 @@ import { AudioService } from '../../services/audio.service';
 
       @media (max-width: 768px) {
         .learning {
-          padding: 0.5rem 0; // Even smaller padding on mobile
+          padding: 0.5rem 0;
         }
         .controls {
           flex-direction: column;
@@ -266,14 +271,14 @@ import { AudioService } from '../../services/audio.service';
           min-width: 80px;
         }
         .item {
-          padding: 0.75rem 0.5rem; // Reduced horizontal padding
+          padding: 0.75rem 0.5rem;
         }
         .content.card {
-          padding: 0.25rem; // Even smaller padding on mobile
+          padding: 0.25rem;
         }
         .controls.card {
           padding: 0.5rem;
-          margin: 0 0.25rem; // Smaller margin on mobile
+          margin: 0 0.25rem;
         }
       }
       .buttons button {
@@ -323,11 +328,11 @@ import { AudioService } from '../../services/audio.service';
         display: flex;
         justify-content: center;
         gap: 0.5rem;
-        margin-bottom: 1rem; // Reduced from 2rem
+        margin-bottom: 1rem;
         padding: 0.75rem;
-        background: transparent; // Removed white background
+        background: transparent;
         border-radius: 12px;
-        box-shadow: none; // Removed shadow
+        box-shadow: none;
       }
       .tabs button {
         padding: 0.75rem 1.5rem;
@@ -376,8 +381,8 @@ import { AudioService } from '../../services/audio.service';
         flex-shrink: 0; /* Prevent button from shrinking */
       }
       .controls.card {
-        padding: 0.75rem; // Reduced from 1.5rem
-        margin: 0 0.5rem; // Added small horizontal margin
+        padding: 0.75rem;
+        margin: 0 0.5rem;
         display: flex;
         justify-content: space-between;
         align-items: center;
@@ -406,12 +411,12 @@ import { AudioService } from '../../services/audio.service';
       }
 
       .controls-placeholder.visible {
-        height: 85px;  /* Adjust this value to match your controls height */
+        height: 85px; /* Adjust this value to match your controls height */
       }
 
       @media (max-width: 768px) {
         .controls-placeholder.visible {
-          height: 200px;  /* Adjust for mobile layout where controls stack */
+          height: 200px; /* Adjust for mobile layout where controls stack */
         }
       }
 
@@ -464,8 +469,8 @@ export class LearningComponent implements OnInit, OnDestroy {
   currentItems: { native: string; translation: string }[] = [];
   currentItem?: { native: string; translation: string };
   isLooping: boolean = false;
-  wordRepeat = 1; // renamed from repeatCount
-  loopRepeat = 2; // renamed from interval
+  wordRepeat = 1;
+  loopRepeat = 2;
   isPlaying = false;
   playBothLanguages = true; // New property
   currentlyPlayingItem?: { native: string; translation: string };
@@ -514,14 +519,16 @@ export class LearningComponent implements OnInit, OnDestroy {
         this.currentlyPlayingItem = this.currentItems.find(
           (item) => item.native === fileName
         );
-        
+
         // Scroll to the currently playing item
         if (this.currentlyPlayingItem) {
-          const element = document.getElementById(`item-${this.currentlyPlayingItem.native}`);
+          const element = document.getElementById(
+            `item-${this.currentlyPlayingItem.native}`
+          );
           if (element) {
-            element.scrollIntoView({ 
-              behavior: 'smooth', 
-              block: 'center'
+            element.scrollIntoView({
+              behavior: 'smooth',
+              block: 'center',
             });
           }
         }
