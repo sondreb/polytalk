@@ -100,13 +100,13 @@ import { AudioService } from '../../services/audio.service';
   styles: [
     `
       .learning {
-        padding: 1rem 0;  // Reduced from 2rem
+        padding: 1rem 0; // Reduced from 2rem
       }
       .controls {
         display: flex;
         justify-content: space-between;
         align-items: center;
-        margin-bottom: 1rem;  // Reduced from 2rem
+        margin-bottom: 1rem; // Reduced from 2rem
       }
       .buttons {
         display: flex;
@@ -127,7 +127,11 @@ import { AudioService } from '../../services/audio.service';
         border-radius: 8px;
       }
       .item.playing {
-        background: linear-gradient(135deg, var(--gradient-start), var(--gradient-end));
+        background: linear-gradient(
+          135deg,
+          var(--gradient-start),
+          var(--gradient-end)
+        );
         color: white;
         transform: scale(1.02);
         box-shadow: 0 4px 12px rgba(99, 102, 241, 0.2);
@@ -143,12 +147,12 @@ import { AudioService } from '../../services/audio.service';
       .settings {
         display: flex;
         gap: 1.5rem;
-        margin-bottom: 1rem;  // Reduced from 1.5rem
-        padding: 0.75rem;    // Reduced from 1rem
+        margin-bottom: 1rem; // Reduced from 1.5rem
+        padding: 0.75rem; // Reduced from 1rem
         background: rgba(99, 102, 241, 0.05);
         border-radius: 12px;
       }
-      
+
       .settings label {
         display: flex;
         align-items: center;
@@ -156,8 +160,8 @@ import { AudioService } from '../../services/audio.service';
         font-weight: 500;
         color: var(--text-color);
       }
-      
-      .settings input[type="number"] {
+
+      .settings input[type='number'] {
         width: 70px;
         padding: 0.5rem;
         border: 2px solid rgba(99, 102, 241, 0.2);
@@ -170,27 +174,27 @@ import { AudioService } from '../../services/audio.service';
         text-align: center;
         -moz-appearance: textfield; /* Firefox */
       }
-      
-      .settings input[type="number"]::-webkit-outer-spin-button,
-      .settings input[type="number"]::-webkit-inner-spin-button {
+
+      .settings input[type='number']::-webkit-outer-spin-button,
+      .settings input[type='number']::-webkit-inner-spin-button {
         -webkit-appearance: none;
         margin: 0;
       }
-      
-      .settings input[type="number"]:focus {
+
+      .settings input[type='number']:focus {
         outline: none;
         border-color: var(--primary-color);
         box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
       }
-      
+
       .checkbox-label {
         display: flex;
         align-items: center;
         gap: 0.75rem;
         cursor: pointer;
       }
-      
-      .checkbox-label input[type="checkbox"] {
+
+      .checkbox-label input[type='checkbox'] {
         appearance: none;
         -webkit-appearance: none;
         width: 1.5rem;
@@ -202,14 +206,18 @@ import { AudioService } from '../../services/audio.service';
         position: relative;
         transition: all 0.2s ease;
       }
-      
-      .checkbox-label input[type="checkbox"]:checked {
-        background: linear-gradient(135deg, var(--gradient-start), var(--gradient-end));
+
+      .checkbox-label input[type='checkbox']:checked {
+        background: linear-gradient(
+          135deg,
+          var(--gradient-start),
+          var(--gradient-end)
+        );
         border-color: transparent;
       }
-      
-      .checkbox-label input[type="checkbox"]:checked::after {
-        content: "✓";
+
+      .checkbox-label input[type='checkbox']:checked::after {
+        content: '✓';
         position: absolute;
         top: 50%;
         left: 50%;
@@ -218,16 +226,16 @@ import { AudioService } from '../../services/audio.service';
         font-size: 1rem;
         font-weight: bold;
       }
-      
-      .checkbox-label input[type="checkbox"]:focus {
+
+      .checkbox-label input[type='checkbox']:focus {
         outline: none;
         border-color: var(--primary-color);
         box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
       }
-      
+
       @media (max-width: 768px) {
         .learning {
-          padding: 0.5rem 0;  // Even smaller padding on mobile
+          padding: 0.5rem 0; // Even smaller padding on mobile
         }
         .controls {
           flex-direction: column;
@@ -239,12 +247,12 @@ import { AudioService } from '../../services/audio.service';
           gap: 1rem;
           padding: 0.75rem;
         }
-        
+
         .settings label {
           width: 100%;
           justify-content: space-between;
         }
-        
+
         .checkbox-label {
           width: 100%;
         }
@@ -253,14 +261,14 @@ import { AudioService } from '../../services/audio.service';
           min-width: 80px;
         }
         .item {
-          padding: 0.75rem 0.5rem;  // Reduced horizontal padding
+          padding: 0.75rem 0.5rem; // Reduced horizontal padding
         }
         .content.card {
-          padding: 0.25rem;  // Even smaller padding on mobile
+          padding: 0.25rem; // Even smaller padding on mobile
         }
         .controls.card {
           padding: 0.5rem;
-          margin: 0 0.25rem;  // Smaller margin on mobile
+          margin: 0 0.25rem; // Smaller margin on mobile
         }
       }
       .buttons button {
@@ -274,8 +282,8 @@ import { AudioService } from '../../services/audio.service';
       .buttons button:disabled {
         opacity: 0.9;
         cursor: not-allowed;
-        background: #94a3b8;  /* Slate 400 - lighter gray with better contrast */
-        color: #f1f5f9;       /* Slate 100 - very light color for text */
+        background: #94a3b8; /* Slate 400 - lighter gray with better contrast */
+        color: #f1f5f9; /* Slate 100 - very light color for text */
         border: none;
         box-shadow: none;
         transform: none;
@@ -283,7 +291,7 @@ import { AudioService } from '../../services/audio.service';
 
       .buttons button:disabled:hover {
         transform: none;
-        background: #94a3b8;  /* Keep the same color on hover */
+        background: #94a3b8; /* Keep the same color on hover */
       }
 
       .buttons button:not(:disabled):hover {
@@ -310,11 +318,11 @@ import { AudioService } from '../../services/audio.service';
         display: flex;
         justify-content: center;
         gap: 0.5rem;
-        margin-bottom: 1rem;  // Reduced from 2rem
+        margin-bottom: 1rem; // Reduced from 2rem
         padding: 0.75rem;
-        background: transparent;  // Removed white background
+        background: transparent; // Removed white background
         border-radius: 12px;
-        box-shadow: none;  // Removed shadow
+        box-shadow: none; // Removed shadow
       }
       .tabs button {
         padding: 0.75rem 1.5rem;
@@ -329,7 +337,11 @@ import { AudioService } from '../../services/audio.service';
         min-width: 100px;
       }
       .tabs button.active {
-        background: linear-gradient(135deg, var(--gradient-start), var(--gradient-end));
+        background: linear-gradient(
+          135deg,
+          var(--gradient-start),
+          var(--gradient-end)
+        );
         color: white;
         font-weight: 600;
       }
@@ -340,7 +352,7 @@ import { AudioService } from '../../services/audio.service';
       .translation {
         display: flex;
         align-items: center;
-        gap: 1rem;  /* Increased from 0.5rem to 1rem for more spacing */
+        gap: 1rem; /* Increased from 0.5rem to 1rem for more spacing */
       }
 
       .play-button {
@@ -351,12 +363,16 @@ import { AudioService } from '../../services/audio.service';
         align-items: center;
         justify-content: center;
         border-radius: 50%;
-        background: linear-gradient(135deg, var(--gradient-start), var(--gradient-end));
-        flex-shrink: 0;  /* Prevent button from shrinking */
+        background: linear-gradient(
+          135deg,
+          var(--gradient-start),
+          var(--gradient-end)
+        );
+        flex-shrink: 0; /* Prevent button from shrinking */
       }
       .controls.card {
-        padding: 0.75rem;  // Reduced from 1.5rem
-        margin: 0 0.5rem;  // Added small horizontal margin
+        padding: 0.75rem; // Reduced from 1.5rem
+        margin: 0 0.5rem; // Added small horizontal margin
         display: flex;
         justify-content: space-between;
         align-items: center;
@@ -385,7 +401,7 @@ import { AudioService } from '../../services/audio.service';
           padding: 0.5rem;
           gap: 0.75rem;
         }
-        
+
         .settings {
           flex-direction: column;
           gap: 0.75rem;
@@ -412,11 +428,12 @@ export class LearningComponent implements OnInit, OnDestroy {
   selectedLanguage?: Language;
   tabs = ['Words', 'Numbers', 'Sentences'];
   isControlsSticky = false;
-  private readonly CONTROLS_SCROLL_THRESHOLD = 200; // Adjust as needed
+  private readonly CONTROLS_SCROLL_THRESHOLD = 166; // Reduced from 200 for earlier activation
 
   @HostListener('window:scroll', ['$event'])
   onWindowScroll() {
-    const scrollPosition = window.pageYOffset || document.documentElement.scrollTop;
+    const scrollPosition =
+      window.pageYOffset || document.documentElement.scrollTop;
     this.isControlsSticky = scrollPosition > this.CONTROLS_SCROLL_THRESHOLD;
   }
 
@@ -439,7 +456,7 @@ export class LearningComponent implements OnInit, OnDestroy {
     this.audioService.isPlayingState.subscribe(
       (playing) => (this.isPlaying = playing)
     );
-    this.audioService.currentFileState.subscribe(file => {
+    this.audioService.currentFileState.subscribe((file) => {
       if (!file) {
         this.currentlyPlayingItem = undefined;
         return;
@@ -448,8 +465,8 @@ export class LearningComponent implements OnInit, OnDestroy {
       // Extract the word from the file path
       const fileName = file.split('/').pop()?.replace('.mp3', '');
       if (fileName) {
-        this.currentlyPlayingItem = this.currentItems.find(item => 
-          item.native === fileName
+        this.currentlyPlayingItem = this.currentItems.find(
+          (item) => item.native === fileName
         );
       }
     });
@@ -542,7 +559,10 @@ export class LearningComponent implements OnInit, OnDestroy {
     }
   }
 
-  playItem(item: { native: string; translation: string }, language: 'en' | 'native') {
+  playItem(
+    item: { native: string; translation: string },
+    language: 'en' | 'native'
+  ) {
     const fileName = language === 'en' ? item.native : item.native;
     const langCode = language === 'en' ? 'en' : this.languageCode;
     const audioFile = `/assets/audio/${langCode}/${this.category}/${fileName}.mp3`;
