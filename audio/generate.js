@@ -21,6 +21,7 @@ const polly = new AWS.Polly();
 
 // Map language codes to Polly voices
 const voiceMap = {
+  en: "Joanna", // Added English voice
   es: "Lucia",
   fr: "Lea",
   de: "Vicki",
@@ -51,6 +52,25 @@ async function generateAudio(text, language, category, key) {
     return;
   }
 
+  const outputDir = path.join(
+    __dirname,
+    "..",
+    "public",
+    "assets",
+    "audio",
+    language,
+    category
+  );
+  fs.mkdirSync(outputDir, { recursive: true });
+
+  const outputPath = path.join(outputDir, `${key}.mp3`);
+  
+  // Check if file already exists
+  if (fs.existsSync(outputPath)) {
+    console.log(`Skipping existing file: ${outputPath}`);
+    return;
+  }
+
   const params = {
     Text: text.split("(")[0].trim(), // Remove pronunciation guides
     OutputFormat: "mp3",
@@ -59,17 +79,6 @@ async function generateAudio(text, language, category, key) {
 
   try {
     const data = await polly.synthesizeSpeech(params).promise();
-    const outputDir = path.join(
-      __dirname,
-      "..",
-      "public",
-      "assets",
-      language,
-      category
-    );
-    fs.mkdirSync(outputDir, { recursive: true });
-
-    const outputPath = path.join(outputDir, `${key}.mp3`);
     fs.writeFileSync(outputPath, data.AudioStream);
     console.log(`Generated: ${outputPath}`);
   } catch (err) {
@@ -82,24 +91,27 @@ async function generateAudio(text, language, category, key) {
 
 async function main() {
   for (const [langCode, langData] of Object.entries(languageData)) {
-    // Generate words
+    // Generate English audio for each category
     for (const [key, value] of Object.entries(langData.words)) {
+      await generateAudio(key, "en", "words", key);
       await generateAudio(value, langCode, "words", key);
+      await sleep(100); // Add delay between requests
     }
 
-    // Generate numbers
     for (const [key, value] of Object.entries(langData.numbers)) {
+      await generateAudio(key, "en", "numbers", key);
       await generateAudio(value, langCode, "numbers", key);
+      await sleep(100);
     }
 
-    // Generate sentences
     for (const [key, value] of Object.entries(langData.sentences)) {
+      await generateAudio(key, "en", "sentences", key);
       await generateAudio(value, langCode, "sentences", key);
+      await sleep(100);
     }
   }
 }
 
-// Add small delay between requests to avoid rate limiting
 async function sleep(ms) {
   return new Promise((resolve) => setTimeout(resolve, ms));
 }
