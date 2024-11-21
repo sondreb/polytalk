@@ -2,7 +2,11 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
-import { Language, LanguageService, LearningContent } from '../../services/language.service';
+import {
+  Language,
+  LanguageService,
+  LearningContent,
+} from '../../services/language.service';
 import { AudioService } from '../../services/audio.service';
 
 @Component({
@@ -12,16 +16,20 @@ import { AudioService } from '../../services/audio.service';
   template: `
     <section class="learning">
       <h2 class="language-header">
-        <img [src]="selectedLanguage?.flagImage" 
-             [alt]="selectedLanguage?.name + ' flag'"
-             class="flag-image">
+        <img
+          [src]="selectedLanguage?.flagImage"
+          [alt]="selectedLanguage?.name + ' flag'"
+          class="flag-image"
+        />
         {{ selectedLanguage?.name }}
       </h2>
 
       <div class="tabs">
-        <button *ngFor="let tab of tabs" 
-                [class.active]="category === tab.toLowerCase()"
-                (click)="selectCategory(tab.toLowerCase())">
+        <button
+          *ngFor="let tab of tabs"
+          [class.active]="category === tab.toLowerCase()"
+          (click)="selectCategory(tab.toLowerCase())"
+        >
           {{ tab }}
         </button>
       </div>
@@ -29,211 +37,236 @@ import { AudioService } from '../../services/audio.service';
       <div class="controls card">
         <div class="settings">
           <label>
-            Repeat Count:
-            <input type="number" [(ngModel)]="repeatCount" min="1" max="10">
+            Word Repeat:
+            <input
+              type="number"
+              [(ngModel)]="wordRepeat"
+              (ngModelChange)="saveSettings()"
+              min="1"
+              max="10"
+            />
           </label>
           <label>
-            Interval (seconds):
-            <input type="number" [(ngModel)]="interval" min="1" max="10">
+            Loop Repeat:
+            <input
+              type="number"
+              [(ngModel)]="loopRepeat"
+              (ngModelChange)="saveSettings()"
+              min="1"
+              max="10"
+            />
           </label>
           <label class="checkbox-label">
-            <input type="checkbox" [(ngModel)]="playBothLanguages">
-            Play both English and {{selectedLanguage?.name}}
+            <input
+              type="checkbox"
+              [(ngModel)]="playBothLanguages"
+              (ngModelChange)="saveSettings()"
+            />
+            Play both English and {{ selectedLanguage?.name }}
           </label>
         </div>
-        
+
         <div class="buttons">
           <button (click)="startPlayback()" [disabled]="isPlaying">
             Start Playback
           </button>
-          <button (click)="stopPlayback()" [disabled]="!isPlaying">
-            Stop
-          </button>
+          <button (click)="stopPlayback()" [disabled]="!isPlaying">Stop</button>
         </div>
       </div>
 
       <div class="content card">
-        <div *ngFor="let item of currentItems" class="item"
-             [class.active]="item === currentItem">
+        <div
+          *ngFor="let item of currentItems"
+          class="item"
+          [class.active]="item === currentItem"
+        >
           <div class="native">
-            <button class="play-button" (click)="playItem(item, 'en')">▶</button>
+            <button class="play-button" (click)="playItem(item, 'en')">
+              ▶
+            </button>
             <span>{{ item.native }}</span>
           </div>
           <div class="translation">
             <span>{{ item.translation }}</span>
-            <button class="play-button" (click)="playItem(item, 'native')">▶</button>
+            <button class="play-button" (click)="playItem(item, 'native')">
+              ▶
+            </button>
           </div>
         </div>
       </div>
     </section>
   `,
-  styles: [`
-    .learning {
-      padding: 2rem 0;
-    }
-    .controls {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 2rem;
-    }
-    .buttons {
-      display: flex;
-      gap: 1rem;
-    }
-    .item {
-      display: flex;
-      justify-content: space-between;
-      padding: 1rem;
-      border-bottom: 1px solid var(--background-color);
-    }
-    .item.active {
-      background: var(--background-color);
-      border-radius: 8px;
-    }
-    .translation {
-      color: var(--primary-color);
-      font-weight: bold;
-    }
-    .settings {
-      display: flex;
-      gap: 1rem;
-      margin-bottom: 1rem;
-    }
-    .settings label {
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-    }
-    .settings input {
-      width: 60px;
-      padding: 0.3rem;
-      border: 1px solid var(--background-color);
-      border-radius: 4px;
-    }
-    .play-button {
-      padding: 0.5rem;
-      min-width: 40px;
-      border-radius: 50%;
-    }
-    .language-header {
-      text-align: center;
-      margin-bottom: 2rem;
-      font-size: 1.5rem;
-      color: var(--primary-color);
-    }
-    .flag-image {
-      width: 32px;
-      height: 24px;
-      vertical-align: middle;
-      margin-right: 8px;
-      box-shadow: 0 1px 3px rgba(0,0,0,0.2);
-    }
-    .tabs {
-      display: flex;
-      justify-content: center;
-      gap: 0.5rem;
-      margin-bottom: 2rem;
-      padding: 0.5rem;
-      background: var(--background-color);
-      border-radius: 12px;
-    }
-    .tabs button {
-      padding: 0.75rem 1.5rem;
-      border: 1px solid transparent;
-      background: transparent;
-      border-radius: 8px;
-      cursor: pointer;
-      font-size: 1rem;
-      transition: all 0.2s ease;
-      color: var(--text-color);
-      font-weight: 500;
-      min-width: 100px;
-    }
-    .tabs button.active {
-      background: white;
-      color: var(--primary-color);
-      border-color: var(--primary-color);
-      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-    }
-    .tabs button:hover:not(.active) {
-      background: rgba(255,255,255,0.5);
-      border-color: var(--background-color-darker);
-    }
-    .native, .translation {
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-    }
-    .checkbox-label {
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-    }
-    .checkbox-label input[type="checkbox"] {
-      width: auto;
-    }
-    @media (max-width: 768px) {
+  styles: [
+    `
       .learning {
-        padding: 1rem 0;
+        padding: 2rem 0;
       }
       .controls {
-        flex-direction: column;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 2rem;
+      }
+      .buttons {
+        display: flex;
         gap: 1rem;
       }
+      .item {
+        display: flex;
+        justify-content: space-between;
+        padding: 1rem;
+        border-bottom: 1px solid var(--background-color);
+      }
+      .item.active {
+        background: var(--background-color);
+        border-radius: 8px;
+      }
+      .translation {
+        color: var(--primary-color);
+        font-weight: bold;
+      }
       .settings {
-        flex-direction: column;
+        display: flex;
+        gap: 1rem;
+        margin-bottom: 1rem;
+      }
+      .settings label {
+        display: flex;
+        align-items: center;
         gap: 0.5rem;
       }
+      .settings input {
+        width: 60px;
+        padding: 0.3rem;
+        border: 1px solid var(--background-color);
+        border-radius: 4px;
+      }
+      .play-button {
+        padding: 0.5rem;
+        min-width: 40px;
+        border-radius: 50%;
+      }
+      .language-header {
+        text-align: center;
+        margin-bottom: 2rem;
+        font-size: 1.5rem;
+        color: var(--primary-color);
+      }
+      .flag-image {
+        width: 32px;
+        height: 24px;
+        vertical-align: middle;
+        margin-right: 8px;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+      }
+      .tabs {
+        display: flex;
+        justify-content: center;
+        gap: 0.5rem;
+        margin-bottom: 2rem;
+        padding: 0.5rem;
+        background: var(--background-color);
+        border-radius: 12px;
+      }
       .tabs button {
-        padding: 0.5rem 1rem;
-        min-width: 80px;
+        padding: 0.75rem 1.5rem;
+        border: 1px solid transparent;
+        background: transparent;
+        border-radius: 8px;
+        cursor: pointer;
+        font-size: 1rem;
+        transition: all 0.2s ease;
+        color: var(--text-color);
+        font-weight: 500;
+        min-width: 100px;
       }
-      .item {
-        padding: 0.75rem;
+      .tabs button.active {
+        background: white;
+        color: var(--primary-color);
+        border-color: var(--primary-color);
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
       }
-    }
-    .buttons button {
-      padding: 0.75rem 1.5rem;
-      border-radius: 8px;
-      cursor: pointer;
-      transition: all 0.2s ease;
-      min-width: 120px;
-    }
+      .tabs button:hover:not(.active) {
+        background: rgba(255, 255, 255, 0.5);
+        border-color: var(--background-color-darker);
+      }
+      .native,
+      .translation {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+      }
+      .checkbox-label {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+      }
+      .checkbox-label input[type='checkbox'] {
+        width: auto;
+      }
+      @media (max-width: 768px) {
+        .learning {
+          padding: 1rem 0;
+        }
+        .controls {
+          flex-direction: column;
+          gap: 1rem;
+        }
+        .settings {
+          flex-direction: column;
+          gap: 0.5rem;
+        }
+        .tabs button {
+          padding: 0.5rem 1rem;
+          min-width: 80px;
+        }
+        .item {
+          padding: 0.75rem;
+        }
+      }
+      .buttons button {
+        padding: 0.75rem 1.5rem;
+        border-radius: 8px;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        min-width: 120px;
+      }
 
-    .buttons button:disabled {
-      opacity: 0.7;
-      cursor: not-allowed;
-      background-color: #d8d8d8;
-      border: 1px solid #bbb;
-      color: #666;
-      box-shadow: none;
-      transform: none;
-    }
+      .buttons button:disabled {
+        opacity: 0.7;
+        cursor: not-allowed;
+        background-color: #d8d8d8;
+        border: 1px solid #bbb;
+        color: #666;
+        box-shadow: none;
+        transform: none;
+      }
 
-    .buttons button:disabled:hover {
-      transform: none;
-      background-color: #d8d8d8;
-    }
+      .buttons button:disabled:hover {
+        transform: none;
+        background-color: #d8d8d8;
+      }
 
-    .buttons button:not(:disabled):hover {
-      background-color: var(--primary-color);
-      color: white;
-    }
-  `]
+      .buttons button:not(:disabled):hover {
+        background-color: var(--primary-color);
+        color: white;
+      }
+    `,
+  ],
 })
 export class LearningComponent implements OnInit, OnDestroy {
   languageCode: string = '';
   category: string = '';
   content?: LearningContent;
-  currentItems: {native: string, translation: string}[] = [];
-  currentItem?: {native: string, translation: string};
+  currentItems: { native: string; translation: string }[] = [];
+  currentItem?: { native: string; translation: string };
   isLooping: boolean = false;
-  repeatCount = 1;
-  interval = 2;
+  wordRepeat = 1; // renamed from repeatCount
+  loopRepeat = 2; // renamed from interval
   isPlaying = false;
-  playBothLanguages = true;  // New property
+  playBothLanguages = true; // New property
   private playbackTimeout: any;
+  private readonly SETTINGS_KEY = 'polytalk-settings';
   selectedLanguage?: Language;
   tabs = ['Words', 'Numbers', 'Sentences'];
 
@@ -242,17 +275,19 @@ export class LearningComponent implements OnInit, OnDestroy {
     private router: Router,
     private languageService: LanguageService,
     private audioService: AudioService
-  ) {}
+  ) {
+    this.loadSettings();
+  }
 
   ngOnInit() {
-    this.route.params.subscribe(params => {
+    this.route.params.subscribe((params) => {
       this.languageCode = params['language'];
       this.category = params['category'];
       this.content = this.languageService.getContent(this.languageCode);
       this.loadItems();
     });
     this.audioService.isPlayingState.subscribe(
-      playing => this.isPlaying = playing
+      (playing) => (this.isPlaying = playing)
     );
   }
 
@@ -262,17 +297,18 @@ export class LearningComponent implements OnInit, OnDestroy {
 
   loadItems() {
     if (!this.content) return;
-    
+
     // Get language details
-    this.selectedLanguage = this.languageService.getLanguages()
-      .find(lang => lang.code === this.languageCode);
-    
+    this.selectedLanguage = this.languageService
+      .getLanguages()
+      .find((lang) => lang.code === this.languageCode);
+
     const items = this.content[this.category as keyof LearningContent];
     this.currentItems = Object.entries(items).map(([native, translation]) => ({
       native,
-      translation
+      translation,
     }));
-    
+
     if (this.currentItems.length > 0) {
       this.currentItem = this.currentItems[0];
     }
@@ -287,21 +323,47 @@ export class LearningComponent implements OnInit, OnDestroy {
     // Implementation for loop playback
   }
 
+  private loadSettings() {
+    const settings = localStorage.getItem(this.SETTINGS_KEY);
+    if (settings) {
+      const parsed = JSON.parse(settings);
+      this.wordRepeat = parsed.wordRepeat || 1;
+      this.loopRepeat = parsed.loopRepeat || 2;
+      this.playBothLanguages = parsed.playBothLanguages ?? true;
+    }
+  }
+
+  saveSettings() {
+    const settings = {
+      wordRepeat: this.wordRepeat,
+      loopRepeat: this.loopRepeat,
+      playBothLanguages: this.playBothLanguages,
+    };
+    localStorage.setItem(this.SETTINGS_KEY, JSON.stringify(settings));
+  }
+
   startPlayback() {
     let audioFiles: string[] = [];
-    
-    this.currentItems.forEach(item => {
-      if (this.playBothLanguages) {
-        // Add English audio first, then translated version
-        audioFiles.push(`/assets/audio/en/${this.category}/${item.native}.mp3`);
-        audioFiles.push(`/assets/audio/${this.languageCode}/${this.category}/${item.native}.mp3`);
-      } else {
-        // Only add translated version
-        audioFiles.push(`/assets/audio/${this.languageCode}/${this.category}/${item.native}.mp3`);
+
+    this.currentItems.forEach((item) => {
+      for (let i = 0; i < this.wordRepeat; i++) {
+        if (this.playBothLanguages) {
+          audioFiles.push(
+            `/assets/audio/en/${this.category}/${item.native}.mp3`
+          );
+          audioFiles.push(
+            `/assets/audio/${this.languageCode}/${this.category}/${item.native}.mp3`
+          );
+        } else {
+          audioFiles.push(
+            `/assets/audio/${this.languageCode}/${this.category}/${item.native}.mp3`
+          );
+        }
       }
     });
 
-    this.audioService.setQueue(audioFiles, this.repeatCount);
+    this.audioService.setDelay(0.25); // Fixed 250ms delay
+    this.audioService.setQueue(audioFiles, this.loopRepeat);
     this.audioService.play();
   }
 
@@ -312,7 +374,10 @@ export class LearningComponent implements OnInit, OnDestroy {
     }
   }
 
-  playItem(item: {native: string, translation: string}, language: 'en' | 'native') {
+  playItem(
+    item: { native: string; translation: string },
+    language: 'en' | 'native'
+  ) {
     const fileName = language === 'en' ? item.native : item.native;
     const langCode = language === 'en' ? 'en' : this.languageCode;
     const audioFile = `/assets/audio/${langCode}/${this.category}/${fileName}.mp3`;

@@ -11,6 +11,8 @@ export class AudioService {
   private repeatCount = 1;
   private currentRepeat = 1;
   private currentIndex = 0;
+  private delay = 250; // Default delay in milliseconds
+  private playbackTimeout: any;
 
   constructor() {
     this.audio.onended = () => this.playNext();
@@ -21,6 +23,10 @@ export class AudioService {
     this.repeatCount = repeat;
     this.currentRepeat = 1;
     this.currentIndex = 0;
+  }
+
+  setDelay(seconds: number) {
+    this.delay = Math.max(0.25, seconds) * 1000; // Convert to milliseconds, minimum 250ms
   }
 
   play(url?: string) {
@@ -46,6 +52,9 @@ export class AudioService {
   }
 
   stop() {
+    if (this.playbackTimeout) {
+      clearTimeout(this.playbackTimeout);
+    }
     this.audio.pause();
     this.audio.currentTime = 0;
     this.isPlaying.next(false);
@@ -71,13 +80,16 @@ export class AudioService {
 
     // Play the next file
     if (this.currentIndex < this.queue.length) {
-      this.audio.src = this.queue[this.currentIndex];
-      this.audio.play().then(() => {
-        this.isPlaying.next(true);
-      }).catch(error => {
-        console.error('Error playing audio:', error);
-        this.isPlaying.next(false);
-      });
+      // Add delay before playing next audio
+      this.playbackTimeout = setTimeout(() => {
+        this.audio.src = this.queue[this.currentIndex];
+        this.audio.play().then(() => {
+          this.isPlaying.next(true);
+        }).catch(error => {
+          console.error('Error playing audio:', error);
+          this.isPlaying.next(false);
+        });
+      }, this.delay);
     }
   }
 
