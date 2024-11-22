@@ -28,7 +28,11 @@ import { LanguageService, Language } from '../../services/language.service';
   styles: [
     `
       .languages {
-        padding: 2rem 0;
+        padding: 2rem 1rem; /* Added horizontal padding */
+      }
+      .grid {
+        max-width: 1200px; /* Optional: limit maximum width */
+        margin: 0 auto; /* Center the grid */
       }
       h1 {
         text-align: center;
