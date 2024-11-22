@@ -106,7 +106,7 @@ import { Observable, BehaviorSubject } from 'rxjs';
         </div>
       </div>
 
-      <div class="offline-controls card">
+      <div class="offline-controls">
         <button 
           (click)="downloadAllAudio()" 
           [disabled]="isDownloading"
@@ -476,7 +476,6 @@ import { Observable, BehaviorSubject } from 'rxjs';
 
       .offline-controls {
         margin: 2rem 0.5rem;
-        padding: 1rem;
         text-align: center;
       }
       
