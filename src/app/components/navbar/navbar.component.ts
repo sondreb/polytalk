@@ -7,21 +7,27 @@ import { CommonModule } from '@angular/common';
   standalone: true,
   imports: [RouterLink, CommonModule],
   template: `
-    <nav>
-      <div class="nav-content">
-        <a routerLink="/" class="brand">PolyTalk.Me</a>
-        <div class="nav-links">
-          <a routerLink="/languages">Languages</a>
-          <button *ngIf="showInstall" (click)="onInstallClick()" class="install-button">
-            Install App
-          </button>
-        </div>
+    <nav class="navbar">
+      <a routerLink="/" class="brand">PolyTalk.Me</a>
+      <div class="nav-links">
+        <a routerLink="/languages" class="nav-link">
+          <span class="full-text">Languages</span>
+          <span class="icon-only">🌐</span>
+        </a>
+        <button
+          *ngIf="showInstall"
+          (click)="onInstallClick()"
+          class="install-button"
+        >
+          <span>Install</span>
+          <span class="app-text">App</span>
+        </button>
       </div>
     </nav>
   `,
   styles: [
     `
-      nav {
+      .navbar {
         background: rgba(255, 255, 255, 0.8);
         backdrop-filter: blur(10px);
         box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
@@ -29,6 +35,16 @@ import { CommonModule } from '@angular/common';
         position: sticky;
         top: 0;
         z-index: 100;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        max-width: 1200px;
+        margin: 0 auto;
+      }
+      .nav-links {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
       }
       .nav-content {
         max-width: 1200px;
@@ -40,7 +56,11 @@ import { CommonModule } from '@angular/common';
       .brand {
         font-size: 1.5rem;
         font-weight: bold;
-        background: linear-gradient(135deg, var(--gradient-start), var(--gradient-end));
+        background: linear-gradient(
+          135deg,
+          var(--gradient-start),
+          var(--gradient-end)
+        );
         -webkit-background-clip: text;
         -webkit-text-fill-color: transparent;
         text-decoration: none;
@@ -53,12 +73,20 @@ import { CommonModule } from '@angular/common';
         transition: all 0.3s ease;
       }
       .nav-links a:hover {
-        background: linear-gradient(135deg, var(--gradient-start), var(--gradient-end));
+        background: linear-gradient(
+          135deg,
+          var(--gradient-start),
+          var(--gradient-end)
+        );
         color: white;
       }
       .install-button {
         margin-left: 1rem;
-        background: linear-gradient(135deg, var(--gradient-start), var(--gradient-end));
+        background: linear-gradient(
+          135deg,
+          var(--gradient-start),
+          var(--gradient-end)
+        );
         background-size: 200% 100%;
         background-position: 0% 0%;
         color: white;
@@ -68,9 +96,33 @@ import { CommonModule } from '@angular/common';
         transition: all 0.3s ease;
       }
       .install-button:hover {
-        background: linear-gradient(135deg, var(--secondary-color), var(--secondary-dark));
+        background: linear-gradient(
+          135deg,
+          var(--secondary-color),
+          var(--secondary-dark)
+        );
         background-size: 200% 100%;
         background-position: 100% 0%;
+      }
+      .nav-link .icon-only {
+        display: none;
+      }
+      .nav-link .full-text {
+        display: inline;
+      }
+      .app-text {
+        display: inline;
+      }
+      @media (max-width: 450px) {
+        .nav-link .icon-only {
+          display: inline;
+        }
+        .nav-link .full-text {
+          display: none;
+        }
+        .app-text {
+          display: none;
+        }
       }
     `,
   ],
