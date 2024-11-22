@@ -7,7 +7,7 @@
       "installMode": "prefetch",
       "resources": {
         "files": [
-          "/favicon.ico",
+          "/favicon.png",
           "/index.html",
           "/manifest.webmanifest",
           "/*.css",
@@ -25,16 +25,22 @@
           "/*.(svg|cur|jpg|jpeg|png|apng|webp|avif|gif|otf|ttf|woff|woff2)"
         ]
       }
-    },
+    }
+  ],
+  "dataGroups": [
     {
-      "name": "audio-assets",
-      "installMode": "lazy",
-      "updateMode": "prefetch",
-      "resources": {
-        "files": [
-          "/assets/audio/**/*.mp3"
-        ]
+      "name": "audio-files",
+      "urls": ["/assets/audio/**"],
+      "cacheConfig": {
+        "maxSize": 500,
+        "strategy": "cache-first"
       }
     }
+  ],
+  "navigationUrls": [
+    "/**",
+    "!/**/*.*",
+    "!/**/*__*",
+    "!/**/*__*/**"
   ]
 }
