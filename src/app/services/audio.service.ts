@@ -58,42 +58,81 @@ export class AudioService {
     this.delay = Math.max(0.25, seconds) * 1000; // Convert to milliseconds, minimum 250ms
   }
 
-  play(url?: string) {
+  private async getAudioBlob(url: string): Promise<Blob> {
+    try {
+      // Try to fetch from cache first
+      const cache = await caches.open('audio-cache');
+      let response = await cache.match(url);
+
+      if (!response) {
+        // If not in cache, fetch from network
+        response = await fetch(url);
+        
+        // Clone the response before consuming it
+        const responseToCache = response.clone();
+        
+        // Store in cache for future use
+        await cache.put(url, responseToCache);
+      }
+
+      return await response.blob();
+    } catch (error) {
+      console.error('Error fetching audio:', error);
+      throw error;
+    }
+  }
+
+  async play(url?: string) {
     // Resume audio context if it was suspended
     this.silentAudio.resume();
 
     if (url) {
-      // Sanitize single file url
-      const dirPath = url.substring(0, url.lastIndexOf('/') + 1);
-      const filename = url.substring(url.lastIndexOf('/') + 1);
-      const sanitizedUrl = dirPath + this.sanitizeKey(filename);
-      this.audio.src = sanitizedUrl;
-      this.currentFile.next(sanitizedUrl); // Emit current file
-      this.audio.play().then(() => {
+      try {
+        // Sanitize single file url
+        const dirPath = url.substring(0, url.lastIndexOf('/') + 1);
+        const filename = url.substring(url.lastIndexOf('/') + 1);
+        const sanitizedUrl = dirPath + this.sanitizeKey(filename);
+        
+        // Get audio blob
+        const blob = await this.getAudioBlob(sanitizedUrl);
+        this.audio.src = URL.createObjectURL(blob);
+        this.currentFile.next(sanitizedUrl);
+        
+        await this.audio.play();
         this.isPlaying.next(true);
-      }).catch(error => {
+      } catch (error) {
         console.error('Error playing audio:', error);
         this.isPlaying.next(false);
-      });
+      }
     } else if (this.queue.length > 0) {
-      // Queue already contains sanitized urls
-      this.audio.src = this.queue[0];
-      this.currentFile.next(this.queue[0]); // Emit current file
-      this.audio.play().then(() => {
+      try {
+        // Get audio blob for first item in queue
+        const blob = await this.getAudioBlob(this.queue[0]);
+        this.audio.src = URL.createObjectURL(blob);
+        this.currentFile.next(this.queue[0]);
+        
+        await this.audio.play();
         this.isPlaying.next(true);
-      }).catch(error => {
+      } catch (error) {
         console.error('Error playing audio:', error);
         this.isPlaying.next(false);
-      });
+      }
     }
   }
 
-  playSingleFile(audioFile: string) {
-    const audio = new Audio(audioFile);
-    this.currentFile.next(audioFile); // Emit current file
-    audio.play().catch(error => console.error('Error playing audio:', error));
-    // Clear current file after playback
-    audio.onended = () => this.currentFile.next('');
+  async playSingleFile(audioFile: string) {
+    try {
+      const blob = await this.getAudioBlob(audioFile);
+      const audio = new Audio(URL.createObjectURL(blob));
+      this.currentFile.next(audioFile);
+      
+      await audio.play();
+      
+      // Clear current file after playback
+      audio.onended = () => this.currentFile.next('');
+    } catch (error) {
+      console.error('Error playing audio:', error);
+    }
   }
 
   stop() {
@@ -110,7 +149,7 @@ export class AudioService {
     this.silentAudio.suspend();
   }
 
-  private playNext() {
+  private async playNext() {
     this.currentIndex++;
     
     // If we've reached the end of the queue
@@ -129,15 +168,18 @@ export class AudioService {
     // Play the next file
     if (this.currentIndex < this.queue.length) {
       // Add delay before playing next audio
-      this.playbackTimeout = setTimeout(() => {
-        this.audio.src = this.queue[this.currentIndex];
-        this.currentFile.next(this.queue[this.currentIndex]); // Emit current file
-        this.audio.play().then(() => {
+      this.playbackTimeout = setTimeout(async () => {
+        try {
+          const blob = await this.getAudioBlob(this.queue[this.currentIndex]);
+          this.audio.src = URL.createObjectURL(blob);
+          this.currentFile.next(this.queue[this.currentIndex]);
+          
+          await this.audio.play();
           this.isPlaying.next(true);
-        }).catch(error => {
+        } catch (error) {
           console.error('Error playing audio:', error);
           this.isPlaying.next(false);
-        });
+        }
       }, this.delay);
     }
   }
