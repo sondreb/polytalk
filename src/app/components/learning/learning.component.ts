@@ -8,6 +8,7 @@ import {
   LearningContent,
 } from '../../services/language.service';
 import { AudioService } from '../../services/audio.service';
+import { Observable, BehaviorSubject } from 'rxjs';
 
 @Component({
   selector: 'app-learning',
@@ -103,6 +104,19 @@ import { AudioService } from '../../services/audio.service';
             </button>
           </div>
         </div>
+      </div>
+
+      <div class="offline-controls card">
+        <button 
+          (click)="downloadAllAudio()" 
+          [disabled]="isDownloading"
+          class="download-button"
+        >
+          <span *ngIf="!isDownloading">Enable offline</span>
+          <span *ngIf="isDownloading">
+            Downloading... {{ downloadProgress | async }}%
+          </span>
+        </button>
       </div>
     </section>
   `,
@@ -459,6 +473,34 @@ import { AudioService } from '../../services/audio.service';
         font-weight: 500;
         color: var(--text-color);
       }
+
+      .offline-controls {
+        margin: 2rem 0.5rem;
+        padding: 1rem;
+        text-align: center;
+      }
+      
+      .download-button {
+        padding: 0.75rem 1.5rem;
+        border-radius: 8px;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        min-width: 200px;
+        background: linear-gradient(135deg, var(--gradient-start), var(--gradient-end));
+        color: white;
+        border: none;
+      }
+      
+      .download-button:disabled {
+        opacity: 0.7;
+        cursor: wait;
+      }
+      
+      @media (max-width: 768px) {
+        .offline-controls {
+          margin: 1rem 0.25rem;
+        }
+      }
     `,
   ],
 })
@@ -480,6 +522,8 @@ export class LearningComponent implements OnInit, OnDestroy {
   tabs = ['Words', 'Numbers', 'Sentences'];
   isControlsSticky = false;
   private readonly CONTROLS_SCROLL_THRESHOLD = 166; // Reduced from 200 for earlier activation
+  isDownloading = false;
+  downloadProgress = new BehaviorSubject<number>(0);
 
   @HostListener('window:scroll', ['$event'])
   onWindowScroll() {
@@ -649,4 +693,52 @@ export class LearningComponent implements OnInit, OnDestroy {
   //     .replace(/[^a-z0-9\s]/g, '') // Remove special characters but keep spaces (\s)
   //     .trim();
   // }
+
+  async downloadAllAudio() {
+    if (this.isDownloading) return;
+    
+    this.isDownloading = true;
+    this.downloadProgress.next(0);
+    
+    try {
+      // Generate all possible audio file URLs
+      const audioFiles: string[] = [];
+      
+      this.currentItems.forEach(item => {
+        const sanitizedFileName = this.sanitizeKey(item.native);
+        // Add both English and target language versions
+        audioFiles.push(`/assets/audio/en/${this.category}/${sanitizedFileName}.mp3`);
+        audioFiles.push(`/assets/audio/${this.languageCode}/${this.category}/${sanitizedFileName}.mp3`);
+      });
+      
+      // Open cache
+      const cache = await caches.open('audio-cache');
+      
+      // Download and cache each file
+      let completed = 0;
+      
+      for (const file of audioFiles) {
+        try {
+          // Check if already cached
+          const cached = await cache.match(file);
+          if (!cached) {
+            const response = await fetch(file);
+            await cache.put(file, response);
+          }
+          
+          completed++;
+          this.downloadProgress.next(Math.round((completed / audioFiles.length) * 100));
+        } catch (error) {
+          console.error(`Error caching file ${file}:`, error);
+        }
+      }
+      
+    } catch (error) {
+      console.error('Error downloading audio files:', error);
+    } finally {
+      this.isDownloading = false;
+      // Reset progress after a short delay
+      setTimeout(() => this.downloadProgress.next(0), 2000);
+    }
+  }
 }
