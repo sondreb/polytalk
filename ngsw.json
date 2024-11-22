@@ -1,6 +1,6 @@
 {
   "configVersion": 1,
-  "timestamp": 1732283821059,
+  "timestamp": 1732284584637,
   "index": "/index.html",
   "assetGroups": [
     {
@@ -11,6 +11,7 @@
         "ignoreVary": true
       },
       "urls": [
+        "/favicon.png",
         "/index.html",
         "/main-7XCS3YST.js",
         "/manifest.webmanifest",
@@ -1000,23 +1001,26 @@
         "/assets/flags/yt.png",
         "/assets/flags/za.png",
         "/assets/flags/zm.png",
-        "/assets/flags/zw.png",
-        "/favicon.png"
+        "/assets/flags/zw.png"
       ],
-      "patterns": []
-    },
-    {
-      "name": "audio-assets",
-      "installMode": "lazy",
-      "updateMode": "prefetch",
-      "cacheQueryOptions": {
-        "ignoreVary": true
-      },
-      "urls": [],
       "patterns": []
     }
   ],
-  "dataGroups": [],
+  "dataGroups": [
+    {
+      "name": "audio-files",
+      "patterns": [
+        "\\/assets\\/audio\\/.*"
+      ],
+      "strategy": "cache-first",
+      "maxSize": 500,
+      "maxAge": 0,
+      "cacheQueryOptions": {
+        "ignoreVary": true
+      },
+      "version": 1
+    }
+  ],
   "hashTable": {
     "/assets/audio/ar/numbers/0.mp3": "d8fee9790b34390cb04d0c759cb2f56b4b865f73",
     "/assets/audio/ar/numbers/1.mp3": "fd0afc8f3076400f528945f39fa2fe6edf930d85",
@@ -1993,7 +1997,7 @@
     "/assets/flags/zm.png": "54a51f75d6fcd773fe6fae97a003c1ef8678b534",
     "/assets/flags/zw.png": "c44732cbf86a0e57773e71a9649dc9519324c742",
     "/favicon.png": "6e8076b4e3ae8dc62c15baaefed63b717257f91e",
-    "/index.html": "8f52d29debca400e4f767a4be8e47e1e5405275b",
+    "/index.html": "942f2e47b4fb571587c8a79b4ed8d71253463978",
     "/main-7XCS3YST.js": "f180e53f9b070e7b120358bd67b431bc9317d4ee",
     "/manifest.webmanifest": "bee929cc6bc9228e0dd4f5208457bb0dfc5faa20",
     "/polyfills-FFHMD2TL.js": "f49b49a155bc7d192db62a4c15d0a612b460a667",
