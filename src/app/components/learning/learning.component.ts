@@ -700,18 +700,23 @@ export class LearningComponent implements OnInit, OnDestroy {
     this.downloadProgress.next(0);
     
     try {
-      // Generate all possible audio file URLs
-      const audioFiles: string[] = [];
-      
-      this.currentItems.forEach(item => {
-        const sanitizedFileName = this.sanitizeKey(item.native);
-        // Add both English and target language versions
-        audioFiles.push(`/assets/audio/en/${this.category}/${sanitizedFileName}.mp3`);
-        audioFiles.push(`/assets/audio/${this.languageCode}/${this.category}/${sanitizedFileName}.mp3`);
-      });
-      
-      // Open cache
       const cache = await caches.open('audio-cache');
+      const audioFiles: string[] = [];
+      const allCategories = ['words', 'numbers', 'sentences'];
+      
+      // Get content for current language
+      const content = this.languageService.getContent(this.languageCode);
+      
+      // Build list of all audio files across all categories
+      allCategories.forEach(category => {
+        const items = content ? content[category as keyof LearningContent] : {};
+        Object.keys(items).forEach(native => {
+          const sanitizedFileName = this.sanitizeKey(native);
+          // Add both English and target language versions
+          audioFiles.push(`/assets/audio/en/${category}/${sanitizedFileName}.mp3`);
+          audioFiles.push(`/assets/audio/${this.languageCode}/${category}/${sanitizedFileName}.mp3`);
+        });
+      });
       
       // Download and cache each file
       let completed = 0;
