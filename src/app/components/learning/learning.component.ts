@@ -8,7 +8,7 @@ import {
   LearningContent,
 } from '../../services/language.service';
 import { AudioService } from '../../services/audio.service';
-import { Observable, BehaviorSubject } from 'rxjs';
+import { Observable, BehaviorSubject, from } from 'rxjs';
 
 @Component({
   selector: 'app-learning',
@@ -89,6 +89,10 @@ import { Observable, BehaviorSubject } from 'rxjs';
           class="item"
           [class.active]="item === currentItem"
           [class.playing]="item === currentlyPlayingItem"
+          [class.offline]="isOffline && (
+            unavailableAudio.has('/assets/audio/en/' + category + '/' + sanitizeKey(item.native) + '.mp3') ||
+            unavailableAudio.has('/assets/audio/' + languageCode + '/' + category + '/' + sanitizeKey(item.native) + '.mp3')
+          )"
           [id]="'item-' + item.native"
         >
           <div class="native">
@@ -500,6 +504,33 @@ import { Observable, BehaviorSubject } from 'rxjs';
           margin: 1rem 0.25rem;
         }
       }
+      .item.offline {
+        opacity: 0.5;
+        position: relative;
+      }
+
+      .item.offline::after {
+        content: "⚠️ Offline";
+        position: absolute;
+        right: 1rem;
+        top: 50%;
+        transform: translateY(-50%);
+        font-size: 0.8rem;
+        color: #666;
+      }
+
+      .item.offline .play-button {
+        opacity: 0.5;
+        cursor: not-allowed;
+        background: #ccc;
+      }
+
+      @media (max-width: 768px) {
+        .item.offline::after {
+          font-size: 0.7rem;
+          right: 0.5rem;
+        }
+      }
     `,
   ],
 })
@@ -523,6 +554,8 @@ export class LearningComponent implements OnInit, OnDestroy {
   private readonly CONTROLS_SCROLL_THRESHOLD = 166; // Reduced from 200 for earlier activation
   isDownloading = false;
   downloadProgress = new BehaviorSubject<number>(0);
+  isOffline = false;
+  unavailableAudio = new Set<string>();
 
   @HostListener('window:scroll', ['$event'])
   onWindowScroll() {
@@ -538,6 +571,10 @@ export class LearningComponent implements OnInit, OnDestroy {
     private audioService: AudioService
   ) {
     this.loadSettings();
+    // Add offline detection
+    this.isOffline = !navigator.onLine;
+    window.addEventListener('online', () => this.handleConnectionChange(true));
+    window.addEventListener('offline', () => this.handleConnectionChange(false));
   }
 
   ngOnInit() {
@@ -630,32 +667,77 @@ export class LearningComponent implements OnInit, OnDestroy {
     localStorage.setItem(this.SETTINGS_KEY, JSON.stringify(settings));
   }
 
-  startPlayback() {
-    // Reset currently playing item
-    this.currentlyPlayingItem = undefined;
-    let audioFiles: string[] = [];
+  async startPlayback() {
+    if (this.isOffline) {
+      // Check all audio files first
+      const audioFiles: string[] = [];
+      const unavailableFiles: string[] = [];
 
-    this.currentItems.forEach((item) => {
-      const sanitizedFileName = this.sanitizeKey(item.native);
-      for (let i = 0; i < this.wordRepeat; i++) {
+      for (const item of this.currentItems) {
+        const sanitizedFileName = this.sanitizeKey(item.native);
         if (this.playBothLanguages) {
-          audioFiles.push(
-            `/assets/audio/en/${this.category}/${sanitizedFileName}.mp3`
-          );
-          audioFiles.push(
-            `/assets/audio/${this.languageCode}/${this.category}/${sanitizedFileName}.mp3`
-          );
+          const enFile = `/assets/audio/en/${this.category}/${sanitizedFileName}.mp3`;
+          const nativeFile = `/assets/audio/${this.languageCode}/${this.category}/${sanitizedFileName}.mp3`;
+          
+          if (!await this.checkAudioAvailability(enFile)) {
+            unavailableFiles.push(enFile);
+          } else {
+            audioFiles.push(enFile);
+          }
+          
+          if (!await this.checkAudioAvailability(nativeFile)) {
+            unavailableFiles.push(nativeFile);
+          } else {
+            audioFiles.push(nativeFile);
+          }
         } else {
-          audioFiles.push(
-            `/assets/audio/${this.languageCode}/${this.category}/${sanitizedFileName}.mp3`
-          );
+          const nativeFile = `/assets/audio/${this.languageCode}/${this.category}/${sanitizedFileName}.mp3`;
+          if (!await this.checkAudioAvailability(nativeFile)) {
+            unavailableFiles.push(nativeFile);
+          } else {
+            audioFiles.push(nativeFile);
+          }
         }
       }
-    });
 
-    this.audioService.setDelay(0.25); // Fixed 250ms delay
-    this.audioService.setQueue(audioFiles, this.loopRepeat);
-    this.audioService.play();
+      if (unavailableFiles.length > 0) {
+        unavailableFiles.forEach(file => this.unavailableAudio.add(file));
+        if (audioFiles.length === 0) {
+          return; // Don't start playback if no files are available
+        }
+      }
+
+      this.audioService.setDelay(0.25);
+      this.audioService.setQueue(audioFiles, this.loopRepeat);
+      this.audioService.play();
+    } else {
+      // Original playback logic for online mode
+      // Reset currently playing item
+      this.currentlyPlayingItem = undefined;
+      let audioFiles: string[] = [];
+
+      this.currentItems.forEach((item) => {
+        const sanitizedFileName = this.sanitizeKey(item.native);
+        for (let i = 0; i < this.wordRepeat; i++) {
+          if (this.playBothLanguages) {
+            audioFiles.push(
+              `/assets/audio/en/${this.category}/${sanitizedFileName}.mp3`
+            );
+            audioFiles.push(
+              `/assets/audio/${this.languageCode}/${this.category}/${sanitizedFileName}.mp3`
+            );
+          } else {
+            audioFiles.push(
+              `/assets/audio/${this.languageCode}/${this.category}/${sanitizedFileName}.mp3`
+            );
+          }
+        }
+      });
+
+      this.audioService.setDelay(0.25); // Fixed 250ms delay
+      this.audioService.setQueue(audioFiles, this.loopRepeat);
+      this.audioService.play();
+    }
   }
 
   stopPlayback() {
@@ -667,13 +749,22 @@ export class LearningComponent implements OnInit, OnDestroy {
     }
   }
 
-  playItem(
+  async playItem(
     item: { native: string; translation: string },
     language: 'en' | 'native'
   ) {
     const sanitizedFileName = this.sanitizeKey(item.native);
     const langCode = language === 'en' ? 'en' : this.languageCode;
     const audioFile = `/assets/audio/${langCode}/${this.category}/${sanitizedFileName}.mp3`;
+
+    if (this.isOffline) {
+      const isAvailable = await this.checkAudioAvailability(audioFile);
+      if (!isAvailable) {
+        this.unavailableAudio.add(audioFile);
+        return; // Don't attempt to play
+      }
+    }
+
     this.audioService.playSingleFile(audioFile);
   }
 
@@ -743,6 +834,26 @@ export class LearningComponent implements OnInit, OnDestroy {
       this.isDownloading = false;
       // Reset progress after a short delay
       setTimeout(() => this.downloadProgress.next(0), 2000);
+    }
+  }
+
+  private handleConnectionChange(isOnline: boolean) {
+    this.isOffline = !isOnline;
+    if (isOnline) {
+      this.unavailableAudio.clear();
+    }
+  }
+
+  async checkAudioAvailability(audioPath: string): Promise<boolean> {
+    if (!this.isOffline) return true;
+    
+    try {
+      const cache = await caches.open('audio-cache');
+      const cached = await cache.match(audioPath);
+      return cached !== undefined;
+    } catch (error) {
+      console.error('Error checking cache:', error);
+      return false;
     }
   }
 }
