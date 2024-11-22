@@ -18,43 +18,9 @@
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-status-bar-style" content="black" />
     <meta name="apple-mobile-web-app-title" content="Polytalk" />
-    <style>
-      /* Add minimal offline page styling */
-      .offline-container {
-        display: none;
-        text-align: center;
-        padding: 2rem;
-        font-family: system-ui, -apple-system, sans-serif;
-      }
-      .offline-container h1 {
-        color: #6366f1;
-      }
-      body.offline .offline-container {
-        display: block;
-      }
-      body.offline app-root {
-        display: none;
-      }
-    </style>
   </head>
   <body>
     <app-root></app-root>
-    <div class="offline-container">
-      <h1>Polytalk</h1>
-      <p>You are currently offline.</p>
-      <p>Please check your internet connection to continue using the app.</p>
-    </div>
-    <script>
-      // Check if the app is offline
-      window.addEventListener('offline', () => {
-        document.body.classList.add('offline');
-      });
-      window.addEventListener('online', () => {
-        document.body.classList.remove('offline');
-        // Reload the app when coming back online
-        window.location.reload();
-      });
-    </script>
     <noscript
       >Please enable JavaScript to continue using this application.</noscript
     >
