@@ -1,5 +1,6 @@
 /* You can add global styles to this file, and also import other style files */
 
+/* Custom Scrollbar Styles */
 :root {
   --primary-color: #6366f1;
   --primary-dark: #4f46e5;
@@ -12,6 +13,7 @@
   --accent-color: #f43f5e;
   --gradient-start: #6366f1;
   --gradient-end: #8b5cf6;
+  color-scheme: light;  /* This tells browsers to use their native light scrollbars */
 }
 
 body {
