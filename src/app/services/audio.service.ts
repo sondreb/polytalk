@@ -121,20 +121,17 @@ export class AudioService {
   }
 
   async play(url?: string) {
-    // Resume audio context if it was suspended
     this.silentAudio.resume();
 
     if (url) {
       try {
-        // Sanitize single file url
         const dirPath = url.substring(0, url.lastIndexOf('/') + 1);
         const filename = url.substring(url.lastIndexOf('/') + 1);
         const sanitizedUrl = dirPath + this.sanitizeKey(filename);
 
-        // Get audio blob
         const blob = await this.getAudioBlob(sanitizedUrl);
         this.audio.src = URL.createObjectURL(blob);
-        // Apply current playback rate
+        // Set playback rate directly from current settings
         this.settingsService.settings$.subscribe((settings) => {
           this.audio.playbackRate = settings.playbackSpeed;
         });
@@ -145,19 +142,19 @@ export class AudioService {
       } catch (error) {
         console.error('Error playing audio:', error);
         this.isPlaying.next(false);
-        // Remove from cache if playback failed
         const cache = await caches.open('audio-cache');
         await cache.delete(url);
       }
     } else if (this.queue.length > 0) {
       try {
-        // Get audio blob for first item in queue
         const blob = await this.getAudioBlob(this.queue[0]);
         this.audio.src = URL.createObjectURL(blob);
-        // Apply current playback rate
+        // Set playback rate directly from current settings
+        // Set playback rate directly from current settings
         this.settingsService.settings$.subscribe((settings) => {
           this.audio.playbackRate = settings.playbackSpeed;
         });
+        // this.audio.playbackRate = this.settingsService.settings$.value.playbackSpeed;
         this.currentFile.next(this.queue[0]);
 
         await this.audio.play();
@@ -165,7 +162,6 @@ export class AudioService {
       } catch (error) {
         console.error('Error playing audio:', error);
         this.isPlaying.next(false);
-        // Remove from cache if playback failed
         const cache = await caches.open('audio-cache');
         await cache.delete(this.queue[0]);
       }
@@ -206,26 +202,28 @@ export class AudioService {
   private async playNext() {
     this.currentIndex++;
 
-    // If we've reached the end of the queue
     if (this.currentIndex >= this.queue.length) {
-      // If we haven't reached the repeat count, start over
       if (this.currentRepeat < this.repeatCount) {
         this.currentRepeat++;
         this.currentIndex = 0;
       } else {
-        // We're done with all repeats
         this.stop();
         return;
       }
     }
 
-    // Play the next file
     if (this.currentIndex < this.queue.length) {
-      // Add delay before playing next audio
       this.playbackTimeout = setTimeout(async () => {
         try {
           const blob = await this.getAudioBlob(this.queue[this.currentIndex]);
           this.audio.src = URL.createObjectURL(blob);
+          // Set playback rate directly from current settings
+          // Set playback rate directly from current settings
+          this.settingsService.settings$.subscribe((settings) => {
+            this.audio.playbackRate = settings.playbackSpeed;
+          });
+          // this.audio.playbackRate =
+          //   this.settingsService.settings$.value.playbackSpeed;
           this.currentFile.next(this.queue[this.currentIndex]);
 
           await this.audio.play();
