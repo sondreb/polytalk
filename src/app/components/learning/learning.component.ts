@@ -290,7 +290,7 @@ import { Observable, BehaviorSubject, from } from 'rxjs';
         padding: 1.25rem;
         border-bottom: 1px solid rgba(99, 102, 241, 0.1);
         transition: all 0.3s ease;
-        scroll-margin-bottom: 150px; // Changed from scroll-margin-top
+        scroll-margin-bottom: 150px;
       }
       .item:hover {
         background: rgba(99, 102, 241, 0.05);
