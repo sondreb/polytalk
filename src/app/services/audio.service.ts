@@ -244,4 +244,14 @@ export class AudioService {
   get currentFileState() {
     return this.currentFile.asObservable();
   }
+
+  async clearAudioCache(): Promise<void> {
+    try {
+      const cache = await caches.open('audio-cache');
+      await cache.keys().then((keys) => keys.forEach(key => cache.delete(key)));
+    } catch (error) {
+      console.error('Error clearing audio cache:', error);
+      throw error;
+    }
+  }
 }

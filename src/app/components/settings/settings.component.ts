@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { SettingsService } from '../../services/settings.service';
+import { AudioService } from '../../services/audio.service';
 
 @Component({
   selector: 'app-settings',
@@ -34,6 +35,15 @@ import { SettingsService } from '../../services/settings.service';
           (change)="updatePlaybackSpeed()"
         />
       </div>
+
+      <div class="setting-item">
+        <button (click)="clearCache()" [disabled]="isClearingCache">
+          {{ isClearingCache ? 'Clearing...' : 'Clear Audio Cache' }}
+        </button>
+        <span *ngIf="cacheMessage" [class]="cacheMessageClass">{{
+          cacheMessage
+        }}</span>
+      </div>
     </div>
   `,
   styles: [
@@ -53,14 +63,37 @@ import { SettingsService } from '../../services/settings.service';
       input[type='range'] {
         width: 100%;
       }
+      button {
+        padding: 0.5rem 1rem;
+        margin-bottom: 0.5rem;
+        cursor: pointer;
+      }
+      button:disabled {
+        cursor: not-allowed;
+        opacity: 0.7;
+      }
+      .success {
+        color: green;
+        margin-left: 1em;
+      }
+      .error {
+        color: red;
+        margin-left: 1em;
+      }
     `,
   ],
 })
 export class SettingsComponent {
   wordDelay?: number;
   playbackSpeed?: number;
+  isClearingCache = false;
+  cacheMessage = '';
+  cacheMessageClass = '';
 
-  constructor(private settingsService: SettingsService) {
+  constructor(
+    private settingsService: SettingsService,
+    private audioService: AudioService
+  ) {
     this.settingsService.settings$.subscribe((settings) => {
       this.wordDelay = settings.wordDelay;
       this.playbackSpeed = settings.playbackSpeed;
@@ -73,5 +106,21 @@ export class SettingsComponent {
 
   updatePlaybackSpeed() {
     this.settingsService.updateSettings({ playbackSpeed: this.playbackSpeed });
+  }
+
+  async clearCache() {
+    this.isClearingCache = true;
+    this.cacheMessage = '';
+    try {
+      await this.audioService.clearAudioCache();
+      this.cacheMessage = 'Cache cleared successfully!';
+      this.cacheMessageClass = 'success';
+    } catch (error) {
+      this.cacheMessage = 'Failed to clear cache';
+      this.cacheMessageClass = 'error';
+    } finally {
+      this.isClearingCache = false;
+      setTimeout(() => (this.cacheMessage = ''), 3000); // Clear message after 3 seconds
+    }
   }
 }
