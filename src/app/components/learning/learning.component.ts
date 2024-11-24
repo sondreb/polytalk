@@ -135,7 +135,7 @@ import { Observable, BehaviorSubject, from } from 'rxjs';
                   '.mp3'
               ))
           "
-          [id]="'item-' + item.native"
+          [id]="'item-' + item.key"
         >
           <div class="native">
             <button class="play-button" (click)="playItem(item, 'en')">
@@ -699,13 +699,13 @@ export class LearningComponent implements OnInit, OnDestroy {
       const fileName = file.split('/').pop()?.replace('.mp3', '');
       if (fileName) {
         this.currentlyPlayingItem = this.currentItems.find(
-          (item) => this.sanitizeKey(item.native) === this.sanitizeKey(fileName)
+          (item) => this.sanitizeKey(item.key) === this.sanitizeKey(fileName)
         );
 
         // Scroll to the currently playing item
         if (this.currentlyPlayingItem) {
           const element = document.getElementById(
-            `item-${this.currentlyPlayingItem.native}`
+            `item-${this.currentlyPlayingItem.key}`
           );
           if (element) {
             element.scrollIntoView({
