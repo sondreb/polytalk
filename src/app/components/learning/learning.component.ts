@@ -28,7 +28,10 @@ import { Observable, BehaviorSubject, from } from 'rxjs';
               [(ngModel)]="fromLanguageCode"
               (ngModelChange)="onLanguageChange('from', $event)"
             >
-              <option *ngFor="let lang of availableLanguages" [value]="lang.code">
+              <option
+                *ngFor="let lang of availableLanguages"
+                [value]="lang.code"
+              >
                 {{ lang.name }}
               </option>
             </select>
@@ -46,7 +49,10 @@ import { Observable, BehaviorSubject, from } from 'rxjs';
               [(ngModel)]="toLanguageCode"
               (ngModelChange)="onLanguageChange('to', $event)"
             >
-              <option *ngFor="let lang of availableLanguages" [value]="lang.code">
+              <option
+                *ngFor="let lang of availableLanguages"
+                [value]="lang.code"
+              >
                 {{ lang.name }}
               </option>
             </select>
@@ -109,7 +115,10 @@ import { Observable, BehaviorSubject, from } from 'rxjs';
               </div>
             </div>
           </div>
-          <div class="controls-placeholder" [class.visible]="isControlsSticky"></div>
+          <div
+            class="controls-placeholder"
+            [class.visible]="isControlsSticky"
+          ></div>
         </div>
 
         <div class="content card">
@@ -231,7 +240,7 @@ import { Observable, BehaviorSubject, from } from 'rxjs';
         padding: 1.25rem;
         border-bottom: 1px solid rgba(99, 102, 241, 0.1);
         transition: all 0.3s ease;
-        scroll-margin-top: 200px;
+        scroll-margin-top: 240px; // Increased from 200px to match new threshold
       }
       .item:hover {
         background: rgba(99, 102, 241, 0.05);
@@ -697,7 +706,8 @@ import { Observable, BehaviorSubject, from } from 'rxjs';
         box-sizing: border-box;
         margin: 0;
         border-radius: 12px;
-        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05), 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05),
+          0 10px 15px -3px rgba(0, 0, 0, 0.1);
         border: 1px solid rgba(99, 102, 241, 0.1);
       }
 
@@ -753,7 +763,7 @@ export class LearningComponent implements OnInit, OnDestroy {
   selectedLanguage?: Language;
   tabs = ['Words', 'Numbers', 'Sentences'];
   isControlsSticky = false;
-  private readonly CONTROLS_SCROLL_THRESHOLD = 166; // Reduced from 200 for earlier activation
+  private readonly CONTROLS_SCROLL_THRESHOLD = 240; // Increased from 166 to 300
   isDownloading = false;
   downloadProgress = new BehaviorSubject<number>(0);
   isOffline = false;
