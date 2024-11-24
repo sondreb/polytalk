@@ -42,6 +42,7 @@ const voiceMap = {
   ro: "Carmen", // Added Romanian voice
   is: "Dora", // Added Icelandic voice
   pt: "Camila", // Added Portuguese voice
+  cy: "Gwyneth", // Added Welsh voice
 };
 
 // Read the language service file
