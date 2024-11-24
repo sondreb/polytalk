@@ -85,6 +85,12 @@ export class LanguageService {
       flag: '🇮🇳',
       flagImage: '/assets/flags/in.png',
     },
+    {
+      code: 'no',
+      name: 'Norwegian',
+      flag: '🇳🇴',
+      flagImage: '/assets/flags/no.png',
+    },
   ];
 
   private content: { [key: string]: LearningContent } = {

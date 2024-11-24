@@ -34,6 +34,9 @@ const voiceMap = {
   pl: "Ewa", // Added Polish voice
   ar: "Zeina", // Added Arabic voice
   hi: "Aditi", // Added Hindi voice
+  no: "Liv", // Added Norwegian voice
+  da: "Naja", // Added Danish voice
+  sv: "Astrid", // Added Swedish voice
 };
 
 // Read the language service file
