@@ -200,32 +200,68 @@ import { Observable, BehaviorSubject, from } from 'rxjs';
         background: var(--surface-color);
         width: 100%;
         box-sizing: border-box;
+        height: 72px; /* Fixed height */
       }
 
-      .controls.card.sticky {
-        position: fixed;
-        top: 64px;
-        left: 50%;
-        transform: translateX(-50%);
-        max-width: 1200px;
-        width: calc(100% - 2rem);
-        margin: 0 auto;
-        background: rgba(255, 255, 255, 0.8);
-        backdrop-filter: blur(10px);
-        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-        z-index: 99;
+      .settings {
+        display: flex;
+        gap: 1rem;
+        align-items: center;
+        background: transparent;
         border-radius: 12px;
       }
 
       @media (max-width: 768px) {
-        .content-wrapper {
-          padding: 0 0.5rem;
+        .settings {
+          gap: 0.5rem; /* Reduce gap on mobile */
         }
 
-        .controls.card.sticky {
-          width: calc(100% - 1rem);
-          border-radius: 0;
+        .settings label {
+          gap: 0.25rem; /* Reduce gap between label elements */
         }
+
+        .buttons button {
+          padding: 0.75rem;
+          min-width: unset;
+        }
+
+        .button-text {
+          display: none; /* Hide button text on mobile */
+        }
+
+        .checkbox-text {
+          display: none; /* Hide checkbox text on mobile */
+        }
+      }
+
+      /* Remove/update these media queries that were changing the layout */
+      @media (max-width: 768px) {
+        .controls.card {
+          flex-direction: row;
+          gap: 0.5rem;
+        }
+
+        .settings {
+          flex-direction: row;
+          width: auto;
+        }
+      }
+
+      .controls-wrapper {
+        position: relative;
+        height: 72px; /* Match the height of controls */
+      }
+
+      .sticky-container {
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        z-index: 99;
+        background: rgba(255, 255, 255, 0.8);
+        backdrop-filter: blur(10px);
+        box-shadow: 0 -1px 3px rgba(0, 0, 0, 0.1);
+        height: 72px; /* Match the height */
       }
 
       .buttons {
@@ -283,7 +319,7 @@ import { Observable, BehaviorSubject, from } from 'rxjs';
       }
 
       .settings input[type='number'] {
-        width: 70px;
+        width: 20px;
         padding: 0.5rem;
         border: 2px solid rgba(99, 102, 241, 0.2);
         border-radius: 8px;
@@ -357,21 +393,6 @@ import { Observable, BehaviorSubject, from } from 'rxjs';
       @media (max-width: 768px) {
         .learning {
           padding: 0.5rem 0;
-        }
-        .controls {
-          flex-direction: column;
-          gap: 1rem;
-          margin-bottom: 0.75rem;
-        }
-        .settings {
-          flex-direction: column;
-          gap: 1rem;
-          padding: 0.75rem;
-        }
-
-        .settings label {
-          width: 100%;
-          justify-content: space-between;
         }
 
         .checkbox-label {
@@ -535,24 +556,10 @@ import { Observable, BehaviorSubject, from } from 'rxjs';
       }
 
       @media (max-width: 768px) {
-        .controls.card.sticky {
-          top: 56px; /* Adjust for smaller navbar */
-        }
-        .controls.card {
-          flex-direction: column;
-          padding: 0.5rem;
-          gap: 0.75rem;
-        }
-
         .settings {
-          flex-direction: column;
+          flex-direction: row;
           gap: 0.75rem;
           width: 100%;
-        }
-
-        .settings label {
-          width: 100%;
-          justify-content: space-between;
         }
       }
       .settings {
@@ -625,12 +632,6 @@ import { Observable, BehaviorSubject, from } from 'rxjs';
         background: #ccc;
       }
 
-      @media (max-width: 768px) {
-        .item.offline::after {
-          font-size: 0.7rem;
-          right: 0.5rem;
-        }
-      }
       .language-header {
         display: flex;
         align-items: center;
@@ -714,18 +715,6 @@ import { Observable, BehaviorSubject, from } from 'rxjs';
         border-bottom: 1px solid rgba(99, 102, 241, 0.1);
         transition: all 0.3s ease;
         scroll-margin-bottom: 150px;
-      }
-
-      @media (max-width: 768px) {
-        .sticky-container.sticky {
-          top: 56px;
-        }
-
-        .controls.card {
-          flex-direction: column;
-          padding: 0.5rem;
-          gap: 0.75rem;
-        }
       }
 
       /* Override card hover effect for controls */
