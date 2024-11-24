@@ -768,26 +768,26 @@ export class LearningComponent implements OnInit, OnDestroy {
       for (const item of this.currentItems) {
         const sanitizedFileName = this.sanitizeKey(item.native);
         if (this.playBothLanguages) {
-          const enFile = `/assets/audio/en/${this.category}/${sanitizedFileName}.mp3`;
-          const nativeFile = `/assets/audio/${this.languageCode}/${this.category}/${sanitizedFileName}.mp3`;
+          const fromFile = `/assets/audio/${this.fromLanguageCode}/${this.category}/${sanitizedFileName}.mp3`;
+          const toFile = `/assets/audio/${this.toLanguageCode}/${this.category}/${sanitizedFileName}.mp3`;
           
-          if (!await this.checkAudioAvailability(enFile)) {
-            unavailableFiles.push(enFile);
+          if (!await this.checkAudioAvailability(fromFile)) {
+            unavailableFiles.push(fromFile);
           } else {
-            audioFiles.push(enFile);
+            audioFiles.push(fromFile);
           }
           
-          if (!await this.checkAudioAvailability(nativeFile)) {
-            unavailableFiles.push(nativeFile);
+          if (!await this.checkAudioAvailability(toFile)) {
+            unavailableFiles.push(toFile);
           } else {
-            audioFiles.push(nativeFile);
+            audioFiles.push(toFile);
           }
         } else {
-          const nativeFile = `/assets/audio/${this.languageCode}/${this.category}/${sanitizedFileName}.mp3`;
-          if (!await this.checkAudioAvailability(nativeFile)) {
-            unavailableFiles.push(nativeFile);
+          const toFile = `/assets/audio/${this.toLanguageCode}/${this.category}/${sanitizedFileName}.mp3`;
+          if (!await this.checkAudioAvailability(toFile)) {
+            unavailableFiles.push(toFile);
           } else {
-            audioFiles.push(nativeFile);
+            audioFiles.push(toFile);
           }
         }
       }
@@ -804,7 +804,6 @@ export class LearningComponent implements OnInit, OnDestroy {
       this.audioService.play();
     } else {
       // Original playback logic for online mode
-      // Reset currently playing item
       this.currentlyPlayingItem = undefined;
       let audioFiles: string[] = [];
 
@@ -813,14 +812,14 @@ export class LearningComponent implements OnInit, OnDestroy {
         for (let i = 0; i < this.wordRepeat; i++) {
           if (this.playBothLanguages) {
             audioFiles.push(
-              `/assets/audio/en/${this.category}/${sanitizedFileName}.mp3`
+              `/assets/audio/${this.fromLanguageCode}/${this.category}/${sanitizedFileName}.mp3`
             );
             audioFiles.push(
-              `/assets/audio/${this.languageCode}/${this.category}/${sanitizedFileName}.mp3`
+              `/assets/audio/${this.toLanguageCode}/${this.category}/${sanitizedFileName}.mp3`
             );
           } else {
             audioFiles.push(
-              `/assets/audio/${this.languageCode}/${this.category}/${sanitizedFileName}.mp3`
+              `/assets/audio/${this.toLanguageCode}/${this.category}/${sanitizedFileName}.mp3`
             );
           }
         }
@@ -846,7 +845,7 @@ export class LearningComponent implements OnInit, OnDestroy {
     language: 'en' | 'native'
   ) {
     const sanitizedFileName = this.sanitizeKey(item.native);
-    const langCode = language === 'en' ? 'en' : this.languageCode;
+    const langCode = language === 'en' ? this.fromLanguageCode : this.toLanguageCode;
     const audioFile = `/assets/audio/${langCode}/${this.category}/${sanitizedFileName}.mp3`;
 
     if (this.isOffline) {
