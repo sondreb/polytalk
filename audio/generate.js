@@ -37,6 +37,7 @@ const voiceMap = {
   no: "Liv", // Added Norwegian voice
   da: "Naja", // Added Danish voice
   sv: "Astrid", // Added Swedish voice
+  nl: "Ruben", // Added Dutch voice
 };
 
 // Read the language service file
