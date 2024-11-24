@@ -744,7 +744,8 @@ import { Observable, BehaviorSubject, from } from 'rxjs';
 
       /* Override card hover effect for controls - updated to explicitly handle inner elements */
       .controls.card:hover,
-      .content.card:hover {  /* Added content.card here */
+      .content.card:hover {
+        /* Added content.card here */
         transform: none;
         box-shadow: none;
       }
@@ -752,7 +753,6 @@ import { Observable, BehaviorSubject, from } from 'rxjs';
       /* Keep hover effect only for play buttons and other interactive elements */
       .buttons button:not(:disabled):hover {
         transform: translateY(-2px);
-        box-shadow: 0 4px 12px rgba(99, 102, 241, 0.2);
       }
 
       .play-button:hover {
@@ -989,7 +989,6 @@ export class LearningComponent implements OnInit, OnDestroy {
         }
       }
 
-      this.audioService.setDelay(0.25);
       this.audioService.setQueue(audioFiles, this.loopRepeat);
       this.audioService.play();
     } else {
@@ -1015,7 +1014,6 @@ export class LearningComponent implements OnInit, OnDestroy {
         }
       });
 
-      this.audioService.setDelay(0.25); // Fixed 250ms delay
       this.audioService.setQueue(audioFiles, this.loopRepeat);
       this.audioService.play();
     }

@@ -11,7 +11,7 @@ export interface AppSettings {
 })
 export class SettingsService {
   private defaultSettings: AppSettings = {
-    wordDelay: 1000,
+    wordDelay: 400,
     playbackSpeed: 1.0,
   };
 

@@ -15,7 +15,7 @@ import { SettingsService } from '../../services/settings.service';
         <label>Word Delay (ms): {{ wordDelay }}</label>
         <input
           type="range"
-          [min]="500"
+          [min]="100"
           [max]="3000"
           [step]="100"
           [(ngModel)]="wordDelay"

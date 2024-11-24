@@ -1,8 +1,9 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
+import { SettingsService } from './settings.service';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class AudioService {
   private audio = new Audio();
@@ -12,14 +13,20 @@ export class AudioService {
   private repeatCount = 1;
   private currentRepeat = 1;
   private currentIndex = 0;
-  private delay = 250; // Default delay in milliseconds
+  private delay = 250; // Will be updated from settings
   private playbackTimeout: any;
   private currentFile = new BehaviorSubject<string>('');
 
-  constructor() {
+  constructor(private settingsService: SettingsService) {
     // Initialize Web Audio API context
     this.silentAudio = new AudioContext();
-    
+
+    // Subscribe to settings changes
+    this.settingsService.settings$.subscribe((settings) => {
+      this.delay = settings.wordDelay;
+      this.audio.playbackRate = settings.playbackSpeed;
+    });
+
     // Create silent buffer
     const silentBuffer = this.silentAudio.createBuffer(
       1,
@@ -43,7 +50,7 @@ export class AudioService {
 
   setQueue(audioFiles: string[], repeat: number = 1) {
     // Sanitize all filenames in the queue
-    this.queue = audioFiles.map(file => {
+    this.queue = audioFiles.map((file) => {
       const dirPath = file.substring(0, file.lastIndexOf('/') + 1);
       const filename = file.substring(file.lastIndexOf('/') + 1);
       const sanitizedFilename = this.sanitizeKey(filename);
@@ -54,9 +61,10 @@ export class AudioService {
     this.currentIndex = 0;
   }
 
-  setDelay(seconds: number) {
-    this.delay = Math.max(0.25, seconds) * 1000; // Convert to milliseconds, minimum 250ms
-  }
+  // Remove setDelay method as it's now handled by settings
+  // setDelay(seconds: number) {
+  //   this.delay = Math.max(0.25, seconds) * 1000;
+  // }
 
   private async validateAudioBlob(blob: Blob): Promise<boolean> {
     return new Promise((resolve) => {
@@ -99,12 +107,12 @@ export class AudioService {
       // Fetch from network
       response = await fetch(url);
       blob = await response.clone().blob();
-      
+
       // Validate blob before caching
       if (await this.validateAudioBlob(blob)) {
         await cache.put(url, response);
       }
-      
+
       return blob;
     } catch (error) {
       console.error('Error fetching audio:', error);
@@ -122,12 +130,16 @@ export class AudioService {
         const dirPath = url.substring(0, url.lastIndexOf('/') + 1);
         const filename = url.substring(url.lastIndexOf('/') + 1);
         const sanitizedUrl = dirPath + this.sanitizeKey(filename);
-        
+
         // Get audio blob
         const blob = await this.getAudioBlob(sanitizedUrl);
         this.audio.src = URL.createObjectURL(blob);
+        // Apply current playback rate
+        this.settingsService.settings$.subscribe((settings) => {
+          this.audio.playbackRate = settings.playbackSpeed;
+        });
         this.currentFile.next(sanitizedUrl);
-        
+
         await this.audio.play();
         this.isPlaying.next(true);
       } catch (error) {
@@ -142,8 +154,12 @@ export class AudioService {
         // Get audio blob for first item in queue
         const blob = await this.getAudioBlob(this.queue[0]);
         this.audio.src = URL.createObjectURL(blob);
+        // Apply current playback rate
+        this.settingsService.settings$.subscribe((settings) => {
+          this.audio.playbackRate = settings.playbackSpeed;
+        });
         this.currentFile.next(this.queue[0]);
-        
+
         await this.audio.play();
         this.isPlaying.next(true);
       } catch (error) {
@@ -161,9 +177,11 @@ export class AudioService {
       const blob = await this.getAudioBlob(audioFile);
       const audio = new Audio(URL.createObjectURL(blob));
       this.currentFile.next(audioFile);
-      
+
+      // Apply current playback rate
+      audio.playbackRate = this.audio.playbackRate;
       await audio.play();
-      
+
       // Clear current file after playback
       audio.onended = () => this.currentFile.next('');
     } catch (error) {
@@ -187,7 +205,7 @@ export class AudioService {
 
   private async playNext() {
     this.currentIndex++;
-    
+
     // If we've reached the end of the queue
     if (this.currentIndex >= this.queue.length) {
       // If we haven't reached the repeat count, start over
@@ -209,7 +227,7 @@ export class AudioService {
           const blob = await this.getAudioBlob(this.queue[this.currentIndex]);
           this.audio.src = URL.createObjectURL(blob);
           this.currentFile.next(this.queue[this.currentIndex]);
-          
+
           await this.audio.play();
           this.isPlaying.next(true);
         } catch (error) {
