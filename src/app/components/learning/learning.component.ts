@@ -69,58 +69,6 @@ import { Observable, BehaviorSubject, from } from 'rxjs';
           </button>
         </div>
 
-        <div class="controls-wrapper">
-          <div class="sticky-container" [class.sticky]="isControlsSticky">
-            <div class="content-wrapper">
-              <div class="controls card">
-                <div class="settings">
-                  <label>
-                    Word Repeat:
-                    <input
-                      type="number"
-                      [(ngModel)]="wordRepeat"
-                      (ngModelChange)="saveSettings()"
-                      min="1"
-                      max="10"
-                    />
-                  </label>
-                  <label>
-                    Loops:
-                    <input
-                      type="number"
-                      [(ngModel)]="loopRepeat"
-                      (ngModelChange)="saveSettings()"
-                      min="1"
-                      max="10"
-                    />
-                  </label>
-                  <label class="checkbox-label">
-                    <input
-                      type="checkbox"
-                      [(ngModel)]="playBothLanguages"
-                      (ngModelChange)="saveSettings()"
-                    />
-                    Play both languages
-                  </label>
-                </div>
-
-                <div class="buttons">
-                  <button (click)="startPlayback()" [disabled]="isPlaying">
-                    Start Playback
-                  </button>
-                  <button (click)="stopPlayback()" [disabled]="!isPlaying">
-                    Stop
-                  </button>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div
-            class="controls-placeholder"
-            [class.visible]="isControlsSticky"
-          ></div>
-        </div>
-
         <div class="content card">
           <div
             *ngFor="let item of currentItems"
@@ -174,6 +122,54 @@ import { Observable, BehaviorSubject, from } from 'rxjs';
               Downloading... {{ downloadProgress | async }}%
             </span>
           </button>
+        </div>
+
+        <div class="controls-wrapper">
+          <div class="sticky-container">
+            <div class="content-wrapper">
+              <div class="controls card">
+                <div class="settings">
+                  <label>
+                    Word Repeat:
+                    <input
+                      type="number"
+                      [(ngModel)]="wordRepeat"
+                      (ngModelChange)="saveSettings()"
+                      min="1"
+                      max="10"
+                    />
+                  </label>
+                  <label>
+                    Loops:
+                    <input
+                      type="number"
+                      [(ngModel)]="loopRepeat"
+                      (ngModelChange)="saveSettings()"
+                      min="1"
+                      max="10"
+                    />
+                  </label>
+                  <label class="checkbox-label">
+                    <input
+                      type="checkbox"
+                      [(ngModel)]="playBothLanguages"
+                      (ngModelChange)="saveSettings()"
+                    />
+                    Play both languages
+                  </label>
+                </div>
+
+                <div class="buttons">
+                  <button (click)="startPlayback()" [disabled]="isPlaying">
+                    Start Playback
+                  </button>
+                  <button (click)="stopPlayback()" [disabled]="!isPlaying">
+                    Stop
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </section>
@@ -240,7 +236,7 @@ import { Observable, BehaviorSubject, from } from 'rxjs';
         padding: 1.25rem;
         border-bottom: 1px solid rgba(99, 102, 241, 0.1);
         transition: all 0.3s ease;
-        scroll-margin-top: 240px; // Increased from 200px to match new threshold
+        scroll-margin-bottom: 150px; // Changed from scroll-margin-top
       }
       .item:hover {
         background: rgba(99, 102, 241, 0.05);
@@ -680,19 +676,14 @@ import { Observable, BehaviorSubject, from } from 'rxjs';
       }
 
       .sticky-container {
-        transition: all 0.3s ease;
-        width: 100%;
-      }
-
-      .sticky-container.sticky {
         position: fixed;
-        top: 64px;
+        bottom: 0;
         left: 0;
         right: 0;
         z-index: 99;
         background: rgba(255, 255, 255, 0.8);
         backdrop-filter: blur(10px);
-        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        box-shadow: 0 -1px 3px rgba(0, 0, 0, 0.1);
       }
 
       .controls.card {
@@ -701,30 +692,22 @@ import { Observable, BehaviorSubject, from } from 'rxjs';
         justify-content: space-between;
         align-items: center;
         gap: 1rem;
-        background: var(--surface-color);
+        background: transparent;
         width: 100%;
         box-sizing: border-box;
         margin: 0;
-        border-radius: 12px;
-        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05),
-          0 10px 15px -3px rgba(0, 0, 0, 0.1);
-        border: 1px solid rgba(99, 102, 241, 0.1);
-      }
-
-      .sticky-container.sticky .controls.card {
-        border-radius: 0;
-        box-shadow: none;
+        border-radius: 12px 12px 0 0;
         border: none;
-        background: transparent;
+        box-shadow: none;
       }
 
-      .controls-placeholder {
-        height: 0;
-        transition: height 0.3s ease;
-      }
-
-      .controls-placeholder.visible {
-        height: 85px;
+      .item {
+        display: flex;
+        justify-content: space-between;
+        padding: 1.25rem;
+        border-bottom: 1px solid rgba(99, 102, 241, 0.1);
+        transition: all 0.3s ease;
+        scroll-margin-bottom: 150px;
       }
 
       @media (max-width: 768px) {
@@ -736,10 +719,6 @@ import { Observable, BehaviorSubject, from } from 'rxjs';
           flex-direction: column;
           padding: 0.5rem;
           gap: 0.75rem;
-        }
-
-        .controls-placeholder.visible {
-          height: 200px;
         }
       }
     `,
@@ -762,8 +741,6 @@ export class LearningComponent implements OnInit, OnDestroy {
   private readonly FROM_LANGUAGE_KEY = 'polytalk-from-language';
   selectedLanguage?: Language;
   tabs = ['Words', 'Numbers', 'Sentences'];
-  isControlsSticky = false;
-  private readonly CONTROLS_SCROLL_THRESHOLD = 240; // Increased from 166 to 300
   isDownloading = false;
   downloadProgress = new BehaviorSubject<number>(0);
   isOffline = false;
@@ -773,13 +750,6 @@ export class LearningComponent implements OnInit, OnDestroy {
   fromLanguage?: Language;
   toLanguage?: Language;
   availableLanguages: Language[] = [];
-
-  @HostListener('window:scroll', ['$event'])
-  onWindowScroll() {
-    const scrollPosition =
-      window.pageYOffset || document.documentElement.scrollTop;
-    this.isControlsSticky = scrollPosition > this.CONTROLS_SCROLL_THRESHOLD;
-  }
 
   constructor(
     private route: ActivatedRoute,
