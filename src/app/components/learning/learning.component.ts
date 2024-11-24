@@ -155,16 +155,18 @@ import { Observable, BehaviorSubject, from } from 'rxjs';
                       [(ngModel)]="playBothLanguages"
                       (ngModelChange)="saveSettings()"
                     />
-                    Play both languages
+                    <span class="checkbox-text">Both</span>
                   </label>
                 </div>
 
                 <div class="buttons">
                   <button (click)="startPlayback()" [disabled]="isPlaying">
-                    Start Playback
+                    <span class="icon">▶</span>
+                    <span class="button-text">Start</span>
                   </button>
                   <button (click)="stopPlayback()" [disabled]="!isPlaying">
-                    Stop
+                    <span class="icon">■</span>
+                    <span class="button-text">Stop</span>
                   </button>
                 </div>
               </div>
@@ -396,6 +398,10 @@ import { Observable, BehaviorSubject, from } from 'rxjs';
         cursor: pointer;
         transition: all 0.2s ease;
         min-width: 120px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.5rem;
       }
 
       .buttons button:disabled {
@@ -737,6 +743,30 @@ import { Observable, BehaviorSubject, from } from 'rxjs';
       .play-button:hover {
         transform: translateY(-2px);
         box-shadow: 0 4px 12px rgba(99, 102, 241, 0.2);
+      }
+
+      .icon {
+        font-size: 1.2rem;
+        line-height: 1;
+      }
+
+      @media (max-width: 1024px) {
+        .button-text {
+          display: none;
+        }
+
+        .buttons button {
+          min-width: unset;
+          padding: 0.75rem;
+        }
+
+        .checkbox-label .checkbox-text {
+          display: none;
+        }
+
+        .checkbox-label::after {
+          content: 'Both';
+        }
       }
     `,
   ],
