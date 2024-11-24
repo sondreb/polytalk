@@ -157,7 +157,7 @@ import { Observable, BehaviorSubject, from } from 'rxjs';
                       [(ngModel)]="playBothLanguages"
                       (ngModelChange)="saveSettings()"
                     />
-                    <span class="checkbox-text">Both</span>
+                    <span class="checkbox-text">Bilingual</span>
                   </label>
                 </div>
 
@@ -779,7 +779,7 @@ import { Observable, BehaviorSubject, from } from 'rxjs';
         }
 
         .checkbox-label::after {
-          content: 'Both';
+          content: 'Bilingual';
         }
       }
 
