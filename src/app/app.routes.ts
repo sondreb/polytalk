@@ -6,5 +6,5 @@ import { LearningComponent } from './components/learning/learning.component';
 export const routes: Routes = [
   { path: '', component: HomeComponent },
   { path: 'languages', component: LanguageSelectionComponent },
-  { path: 'learn/:language/:category', component: LearningComponent }
+  { path: 'learn/:fromLanguage/:toLanguage/:category', component: LearningComponent }
 ];

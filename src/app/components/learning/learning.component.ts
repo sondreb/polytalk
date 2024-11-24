@@ -16,14 +16,41 @@ import { Observable, BehaviorSubject, from } from 'rxjs';
   imports: [CommonModule, FormsModule],
   template: `
     <section class="learning">
-      <h2 class="language-header">
-        <img
-          [src]="selectedLanguage?.flagImage"
-          [alt]="selectedLanguage?.name + ' flag'"
-          class="flag-image"
-        />
-        {{ selectedLanguage?.name }}
-      </h2>
+      <div class="language-header">
+        <div class="language-selector">
+          <img
+            [src]="fromLanguage?.flagImage"
+            [alt]="fromLanguage?.name + ' flag'"
+            class="flag-image"
+          />
+          <select
+            [(ngModel)]="fromLanguageCode"
+            (ngModelChange)="onLanguageChange('from', $event)"
+          >
+            <option *ngFor="let lang of availableLanguages" [value]="lang.code">
+              {{ lang.name }}
+            </option>
+          </select>
+        </div>
+
+        <div class="language-direction">→</div>
+
+        <div class="language-selector">
+          <img
+            [src]="toLanguage?.flagImage"
+            [alt]="toLanguage?.name + ' flag'"
+            class="flag-image"
+          />
+          <select
+            [(ngModel)]="toLanguageCode"
+            (ngModelChange)="onLanguageChange('to', $event)"
+          >
+            <option *ngFor="let lang of availableLanguages" [value]="lang.code">
+              {{ lang.name }}
+            </option>
+          </select>
+        </div>
+      </div>
 
       <div class="tabs">
         <button
@@ -531,6 +558,50 @@ import { Observable, BehaviorSubject, from } from 'rxjs';
           right: 0.5rem;
         }
       }
+      .language-header {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 2rem;
+        margin-bottom: 2rem;
+        padding: 1rem;
+      }
+
+      .language-selector {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+      }
+
+      .language-direction {
+        font-size: 1.5rem;
+        color: var(--primary-color);
+        font-weight: bold;
+      }
+
+      select {
+        padding: 0.5rem;
+        border-radius: 8px;
+        border: 2px solid rgba(99, 102, 241, 0.2);
+        background: var(--surface-color);
+        font-size: 1rem;
+        color: var(--text-color);
+        cursor: pointer;
+        min-width: 150px;
+      }
+
+      select:focus {
+        outline: none;
+        border-color: var(--primary-color);
+        box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+      }
+
+      @media (max-width: 768px) {
+        .language-header {
+          flex-direction: column;
+          gap: 1rem;
+        }
+      }
     `,
   ],
 })
@@ -548,6 +619,7 @@ export class LearningComponent implements OnInit, OnDestroy {
   currentlyPlayingItem?: { native: string; translation: string };
   private playbackTimeout: any;
   private readonly SETTINGS_KEY = 'polytalk-settings';
+  private readonly FROM_LANGUAGE_KEY = 'polytalk-from-language';
   selectedLanguage?: Language;
   tabs = ['Words', 'Numbers', 'Sentences'];
   isControlsSticky = false;
@@ -556,6 +628,11 @@ export class LearningComponent implements OnInit, OnDestroy {
   downloadProgress = new BehaviorSubject<number>(0);
   isOffline = false;
   unavailableAudio = new Set<string>();
+  fromLanguageCode: string = 'en';
+  toLanguageCode: string = '';
+  fromLanguage?: Language;
+  toLanguage?: Language;
+  availableLanguages: Language[] = [];
 
   @HostListener('window:scroll', ['$event'])
   onWindowScroll() {
@@ -578,12 +655,17 @@ export class LearningComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
+    this.availableLanguages = this.languageService.getLanguages();
+    
     this.route.params.subscribe((params) => {
-      this.languageCode = params['language'];
+      this.fromLanguageCode = params['fromLanguage'];
+      this.toLanguageCode = params['toLanguage'];
       this.category = params['category'];
-      this.content = this.languageService.getContent(this.languageCode);
+      
+      this.updateLanguages();
       this.loadItems();
     });
+
     this.audioService.isPlayingState.subscribe(
       (playing) => (this.isPlaying = playing)
     );
@@ -621,14 +703,16 @@ export class LearningComponent implements OnInit, OnDestroy {
   }
 
   loadItems() {
-    if (!this.content) return;
+    if (!this.toLanguageCode) return;
 
-    // Get language details
-    this.selectedLanguage = this.languageService
+    const content = this.languageService.getContent(this.toLanguageCode);
+    if (!content) return;
+
+    this.toLanguage = this.languageService
       .getLanguages()
-      .find((lang) => lang.code === this.languageCode);
+      .find((lang) => lang.code === this.toLanguageCode);
 
-    const items = this.content[this.category as keyof LearningContent];
+    const items = content[this.category as keyof LearningContent];
     this.currentItems = Object.entries(items).map(([native, translation]) => ({
       native,
       translation,
@@ -655,6 +739,14 @@ export class LearningComponent implements OnInit, OnDestroy {
       this.wordRepeat = parsed.wordRepeat || 1;
       this.loopRepeat = parsed.loopRepeat || 2;
       this.playBothLanguages = parsed.playBothLanguages ?? true;
+    }
+
+    // Load from language from storage
+    const savedFromLanguage = localStorage.getItem(this.FROM_LANGUAGE_KEY);
+    if (savedFromLanguage && this.fromLanguageCode === 'en') {
+      // Only override if current is default 'en'
+      this.fromLanguageCode = savedFromLanguage;
+      this.updateLanguages();
     }
   }
 
@@ -769,7 +861,12 @@ export class LearningComponent implements OnInit, OnDestroy {
   }
 
   selectCategory(category: string) {
-    this.router.navigate(['/learn', this.languageCode, category]);
+    this.router.navigate([
+      '/learn',
+      this.fromLanguageCode,
+      this.toLanguageCode,
+      category
+    ]);
   }
 
   sanitizeKey(key: string) {
@@ -855,5 +952,31 @@ export class LearningComponent implements OnInit, OnDestroy {
       console.error('Error checking cache:', error);
       return false;
     }
+  }
+
+  updateLanguages() {
+    this.fromLanguage = this.availableLanguages.find(
+      (lang) => lang.code === this.fromLanguageCode
+    );
+    this.toLanguage = this.availableLanguages.find(
+      (lang) => lang.code === this.toLanguageCode
+    );
+  }
+
+  onLanguageChange(type: 'from' | 'to', value: string) {
+    if (type === 'from') {
+      this.fromLanguageCode = value;
+      // Save from language preference
+      localStorage.setItem(this.FROM_LANGUAGE_KEY, value);
+    } else {
+      this.toLanguageCode = value;
+    }
+    this.updateLanguages();
+    this.router.navigate([
+      '/learn',
+      this.fromLanguageCode,
+      this.toLanguageCode,
+      this.category
+    ]);
   }
 }

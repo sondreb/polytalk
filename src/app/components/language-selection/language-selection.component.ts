@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { LanguageService, Language } from '../../services/language.service';
@@ -13,7 +13,7 @@ import { LanguageService, Language } from '../../services/language.service';
         <div
           *ngFor="let language of languages"
           class="card language-card"
-          [routerLink]="['/learn', language.code, 'words']"
+          [routerLink]="['/learn', fromLanguageCode, language.code, 'words']"
         >
           <img
             [src]="language.flagImage"
@@ -62,10 +62,20 @@ import { LanguageService, Language } from '../../services/language.service';
     `,
   ],
 })
-export class LanguageSelectionComponent {
+export class LanguageSelectionComponent implements OnInit {
   languages: Language[];
+  fromLanguageCode: string = 'en';
+  private readonly FROM_LANGUAGE_KEY = 'polytalk-from-language';
 
   constructor(private languageService: LanguageService) {
     this.languages = this.languageService.getLanguages();
+  }
+
+  ngOnInit() {
+    // Load saved from language, default to 'en' if not found
+    const savedFromLanguage = localStorage.getItem(this.FROM_LANGUAGE_KEY);
+    if (savedFromLanguage) {
+      this.fromLanguageCode = savedFromLanguage;
+    }
   }
 }
