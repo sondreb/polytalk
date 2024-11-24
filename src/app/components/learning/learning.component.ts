@@ -91,7 +91,7 @@ import { Observable, BehaviorSubject, from } from 'rxjs';
                 [(ngModel)]="playBothLanguages"
                 (ngModelChange)="saveSettings()"
               />
-              Play both English and {{ selectedLanguage?.name }}
+              Play both languages
             </label>
           </div>
 
@@ -116,10 +116,25 @@ import { Observable, BehaviorSubject, from } from 'rxjs';
           class="item"
           [class.active]="item === currentItem"
           [class.playing]="item === currentlyPlayingItem"
-          [class.offline]="isOffline && (
-            unavailableAudio.has('/assets/audio/en/' + category + '/' + sanitizeKey(item.native) + '.mp3') ||
-            unavailableAudio.has('/assets/audio/' + languageCode + '/' + category + '/' + sanitizeKey(item.native) + '.mp3')
-          )"
+          [class.offline]="
+            isOffline &&
+            (unavailableAudio.has(
+              '/assets/audio/en/' +
+                category +
+                '/' +
+                sanitizeKey(item.native) +
+                '.mp3'
+            ) ||
+              unavailableAudio.has(
+                '/assets/audio/' +
+                  languageCode +
+                  '/' +
+                  category +
+                  '/' +
+                  sanitizeKey(item.native) +
+                  '.mp3'
+              ))
+          "
           [id]="'item-' + item.native"
         >
           <div class="native">
@@ -138,8 +153,8 @@ import { Observable, BehaviorSubject, from } from 'rxjs';
       </div>
 
       <div class="offline-controls">
-        <button 
-          (click)="downloadAllAudio()" 
+        <button
+          (click)="downloadAllAudio()"
           [disabled]="isDownloading"
           class="download-button"
         >
@@ -367,7 +382,6 @@ import { Observable, BehaviorSubject, from } from 'rxjs';
         width: 48px;
         height: 36px;
         border-radius: 4px;
-        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
       }
       .tabs {
         display: flex;
@@ -509,23 +523,27 @@ import { Observable, BehaviorSubject, from } from 'rxjs';
         margin: 2rem 0.5rem;
         text-align: center;
       }
-      
+
       .download-button {
         padding: 0.75rem 1.5rem;
         border-radius: 8px;
         cursor: pointer;
         transition: all 0.2s ease;
         min-width: 200px;
-        background: linear-gradient(135deg, var(--gradient-start), var(--gradient-end));
+        background: linear-gradient(
+          135deg,
+          var(--gradient-start),
+          var(--gradient-end)
+        );
         color: white;
         border: none;
       }
-      
+
       .download-button:disabled {
         opacity: 0.7;
         cursor: wait;
       }
-      
+
       @media (max-width: 768px) {
         .offline-controls {
           margin: 1rem 0.25rem;
@@ -537,7 +555,7 @@ import { Observable, BehaviorSubject, from } from 'rxjs';
       }
 
       .item.offline::after {
-        content: "⚠️ Offline";
+        content: '⚠️ Offline';
         position: absolute;
         right: 1rem;
         top: 50%;
@@ -651,17 +669,19 @@ export class LearningComponent implements OnInit, OnDestroy {
     // Add offline detection
     this.isOffline = !navigator.onLine;
     window.addEventListener('online', () => this.handleConnectionChange(true));
-    window.addEventListener('offline', () => this.handleConnectionChange(false));
+    window.addEventListener('offline', () =>
+      this.handleConnectionChange(false)
+    );
   }
 
   ngOnInit() {
     this.availableLanguages = this.languageService.getLanguages();
-    
+
     this.route.params.subscribe((params) => {
       this.fromLanguageCode = params['fromLanguage'];
       this.toLanguageCode = params['toLanguage'];
       this.category = params['category'];
-      
+
       this.updateLanguages();
       this.loadItems();
     });
@@ -707,23 +727,23 @@ export class LearningComponent implements OnInit, OnDestroy {
 
     const toContent = this.languageService.getContent(this.toLanguageCode);
     const fromContent = this.languageService.getContent(this.fromLanguageCode);
-    
+
     if (!toContent || !fromContent) return;
-  
+
     this.toLanguage = this.languageService
       .getLanguages()
       .find((lang) => lang.code === this.toLanguageCode);
-  
+
     const toItems = toContent[this.category as keyof LearningContent];
     const fromItems = fromContent[this.category as keyof LearningContent];
-    
+
     // Keep the English key as 'native' for audio file references
     this.currentItems = Object.entries(toItems).map(([key, toTranslation]) => ({
       native: fromItems[key], // Translation in 'from' language
       translation: toTranslation, // Translation in 'to' language
-      key: key // Keep the English key for audio files
+      key: key, // Keep the English key for audio files
     }));
-  
+
     if (this.currentItems.length > 0) {
       this.currentItem = this.currentItems[0];
     }
@@ -776,21 +796,21 @@ export class LearningComponent implements OnInit, OnDestroy {
         if (this.playBothLanguages) {
           const fromFile = `/assets/audio/${this.fromLanguageCode}/${this.category}/${sanitizedFileName}.mp3`;
           const toFile = `/assets/audio/${this.toLanguageCode}/${this.category}/${sanitizedFileName}.mp3`;
-          
-          if (!await this.checkAudioAvailability(fromFile)) {
+
+          if (!(await this.checkAudioAvailability(fromFile))) {
             unavailableFiles.push(fromFile);
           } else {
             audioFiles.push(fromFile);
           }
-          
-          if (!await this.checkAudioAvailability(toFile)) {
+
+          if (!(await this.checkAudioAvailability(toFile))) {
             unavailableFiles.push(toFile);
           } else {
             audioFiles.push(toFile);
           }
         } else {
           const toFile = `/assets/audio/${this.toLanguageCode}/${this.category}/${sanitizedFileName}.mp3`;
-          if (!await this.checkAudioAvailability(toFile)) {
+          if (!(await this.checkAudioAvailability(toFile))) {
             unavailableFiles.push(toFile);
           } else {
             audioFiles.push(toFile);
@@ -799,7 +819,7 @@ export class LearningComponent implements OnInit, OnDestroy {
       }
 
       if (unavailableFiles.length > 0) {
-        unavailableFiles.forEach(file => this.unavailableAudio.add(file));
+        unavailableFiles.forEach((file) => this.unavailableAudio.add(file));
         if (audioFiles.length === 0) {
           return; // Don't start playback if no files are available
         }
@@ -851,7 +871,8 @@ export class LearningComponent implements OnInit, OnDestroy {
     language: 'en' | 'native'
   ) {
     const sanitizedFileName = this.sanitizeKey(item.key); // Use English key for file name
-    const langCode = language === 'en' ? this.fromLanguageCode : this.toLanguageCode;
+    const langCode =
+      language === 'en' ? this.fromLanguageCode : this.toLanguageCode;
     const audioFile = `/assets/audio/${langCode}/${this.category}/${sanitizedFileName}.mp3`;
 
     if (this.isOffline) {
@@ -870,7 +891,7 @@ export class LearningComponent implements OnInit, OnDestroy {
       '/learn',
       this.fromLanguageCode,
       this.toLanguageCode,
-      category
+      category,
     ]);
   }
 
@@ -888,32 +909,36 @@ export class LearningComponent implements OnInit, OnDestroy {
 
   async downloadAllAudio() {
     if (this.isDownloading) return;
-    
+
     this.isDownloading = true;
     this.downloadProgress.next(0);
-    
+
     try {
       const cache = await caches.open('audio-cache');
       const audioFiles: string[] = [];
       const allCategories = ['words', 'numbers', 'sentences'];
-      
+
       // Get content for current language
       const content = this.languageService.getContent(this.languageCode);
-      
+
       // Build list of all audio files across all categories
-      allCategories.forEach(category => {
+      allCategories.forEach((category) => {
         const items = content ? content[category as keyof LearningContent] : {};
-        Object.keys(items).forEach(native => {
+        Object.keys(items).forEach((native) => {
           const sanitizedFileName = this.sanitizeKey(native);
           // Add both English and target language versions
-          audioFiles.push(`/assets/audio/en/${category}/${sanitizedFileName}.mp3`);
-          audioFiles.push(`/assets/audio/${this.languageCode}/${category}/${sanitizedFileName}.mp3`);
+          audioFiles.push(
+            `/assets/audio/en/${category}/${sanitizedFileName}.mp3`
+          );
+          audioFiles.push(
+            `/assets/audio/${this.languageCode}/${category}/${sanitizedFileName}.mp3`
+          );
         });
       });
-      
+
       // Download and cache each file
       let completed = 0;
-      
+
       for (const file of audioFiles) {
         try {
           // Check if already cached
@@ -922,14 +947,15 @@ export class LearningComponent implements OnInit, OnDestroy {
             const response = await fetch(file);
             await cache.put(file, response);
           }
-          
+
           completed++;
-          this.downloadProgress.next(Math.round((completed / audioFiles.length) * 100));
+          this.downloadProgress.next(
+            Math.round((completed / audioFiles.length) * 100)
+          );
         } catch (error) {
           console.error(`Error caching file ${file}:`, error);
         }
       }
-      
     } catch (error) {
       console.error('Error downloading audio files:', error);
     } finally {
@@ -948,7 +974,7 @@ export class LearningComponent implements OnInit, OnDestroy {
 
   async checkAudioAvailability(audioPath: string): Promise<boolean> {
     if (!this.isOffline) return true;
-    
+
     try {
       const cache = await caches.open('audio-cache');
       const cached = await cache.match(audioPath);
@@ -981,7 +1007,7 @@ export class LearningComponent implements OnInit, OnDestroy {
       '/learn',
       this.fromLanguageCode,
       this.toLanguageCode,
-      this.category
+      this.category,
     ]);
   }
 }
