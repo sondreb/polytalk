@@ -742,13 +742,14 @@ import { Observable, BehaviorSubject, from } from 'rxjs';
         scroll-margin-bottom: 150px;
       }
 
-      /* Override card hover effect for controls */
-      .controls.card:hover {
+      /* Override card hover effect for controls - updated to explicitly handle inner elements */
+      .controls.card:hover,
+      .content.card:hover {  /* Added content.card here */
         transform: none;
         box-shadow: none;
       }
 
-      /* Keep hover effect only for play buttons and other buttons inside controls */
+      /* Keep hover effect only for play buttons and other interactive elements */
       .buttons button:not(:disabled):hover {
         transform: translateY(-2px);
         box-shadow: 0 4px 12px rgba(99, 102, 241, 0.2);
