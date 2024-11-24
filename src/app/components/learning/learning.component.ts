@@ -130,7 +130,8 @@ import { Observable, BehaviorSubject, from } from 'rxjs';
               <div class="controls card">
                 <div class="settings">
                   <label>
-                    Word Repeat:
+                    <span class="label-text">Word Repeat:</span>
+                    <span class="label-icon">🔁</span>
                     <input
                       type="number"
                       [(ngModel)]="wordRepeat"
@@ -140,7 +141,8 @@ import { Observable, BehaviorSubject, from } from 'rxjs';
                     />
                   </label>
                   <label>
-                    Loops:
+                    <span class="label-text">Loops:</span>
+                    <span class="label-icon">↺</span>
                     <input
                       type="number"
                       [(ngModel)]="loopRepeat"
@@ -190,25 +192,39 @@ import { Observable, BehaviorSubject, from } from 'rxjs';
       }
 
       .controls.card {
-        padding: 0.75rem;
+        padding: 0.5rem; /* Reduced from 0.75rem */
         margin: 0;
         display: flex;
         justify-content: space-between;
         align-items: center;
-        gap: 1rem;
+        gap: 0.5rem; /* Reduced from 1rem */
         transition: all 0.3s ease;
         background: var(--surface-color);
         width: 100%;
         box-sizing: border-box;
-        height: 72px; /* Fixed height */
+        height: 64px; /* Reduced from 72px */
       }
 
       .settings {
         display: flex;
-        gap: 1rem;
+        gap: 0.75rem; /* Reduced from 1rem */
         align-items: center;
         background: transparent;
         border-radius: 12px;
+      }
+
+      .label-icon {
+        display: none;
+        font-size: 1.2rem;
+      }
+
+      .settings label {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem; /* Reduced from 0.75rem */
+        margin: 0;
+        font-weight: 500;
+        color: var(--text-color);
       }
 
       @media (max-width: 768px) {
@@ -249,7 +265,7 @@ import { Observable, BehaviorSubject, from } from 'rxjs';
 
       .controls-wrapper {
         position: relative;
-        height: 72px; /* Match the height of controls */
+        height: 72px;
       }
 
       .sticky-container {
@@ -261,7 +277,7 @@ import { Observable, BehaviorSubject, from } from 'rxjs';
         background: rgba(255, 255, 255, 0.8);
         backdrop-filter: blur(10px);
         box-shadow: 0 -1px 3px rgba(0, 0, 0, 0.1);
-        height: 72px; /* Match the height */
+        height: 72px;
       }
 
       .buttons {
@@ -755,6 +771,16 @@ import { Observable, BehaviorSubject, from } from 'rxjs';
 
         .checkbox-label::after {
           content: 'Both';
+        }
+      }
+
+      @media (max-width: 768px) {
+        .label-text {
+          display: none;
+        }
+
+        .label-icon {
+          display: inline-block;
         }
       }
     `,
