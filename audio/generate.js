@@ -40,6 +40,7 @@ const voiceMap = {
   nl: "Ruben", // Added Dutch voice
   tr: "Filiz", // Added Turkish voice
   ro: "Carmen", // Added Romanian voice
+  is: "Dora", // Added Icelandic voice
 };
 
 // Read the language service file
