@@ -19,12 +19,6 @@ export interface LearningContent {
 export class LanguageService {
   private languages: Language[] = [
     {
-      code: 'af',
-      name: 'Afrikaans',
-      flag: '🇿🇦',
-      flagImage: '/assets/flags/za.png',
-    },
-    {
       code: 'en',
       name: 'English',
       flag: '🇬🇧',
@@ -48,84 +42,15 @@ export class LanguageService {
       flag: '🇩🇪',
       flagImage: '/assets/flags/de.png',
     },
+    {
+      code: 'sr',
+      name: 'Serbian',
+      flag: '🇷🇸',
+      flagImage: '/assets/flags/rs.png',
+    },
   ];
 
   private content: { [key: string]: LearningContent } = {
-    af: {
-      words: {
-        // Essential Nouns
-        water: 'water',
-        food: 'kos',
-        restaurant: 'restaurant',
-        bathroom: 'badkamer',
-        hospital: 'hospitaal',
-        hotel: 'hotel',
-        airport: 'lughawe',
-        train: 'trein',
-        bus: 'bus',
-        taxi: 'taxi',
-        // Common Adjectives
-        good: 'goed',
-        bad: 'sleg',
-        big: 'groot',
-        small: 'klein',
-        hot: 'warm',
-        cold: 'koud',
-        // Essential Verbs
-        'to eat': 'eet',
-        'to drink': 'drink',
-        'to sleep': 'slaap',
-        'to go': 'gaan',
-        'to help': 'help',
-        thanks: 'dankie',
-      },
-      numbers: {
-        '0': 'nul',
-        '1': 'een',
-        '2': 'twee',
-        '3': 'drie',
-        '4': 'vier',
-        '5': 'vyf',
-        '6': 'ses',
-        '7': 'sewe',
-        '8': 'agt',
-        '9': 'nege',
-        '10': 'tien',
-        '20': 'twintig',
-        '30': 'dertig',
-        '40': 'veertig',
-        '50': 'vyftig',
-        '100': 'honderd',
-        '1000': 'duisend',
-      },
-      sentences: {
-        // Greetings
-        Hello: 'Hallo',
-        'Good morning': 'Goeie môre',
-        'Good afternoon': 'Goeie middag',
-        'Good night': 'Goeie nag',
-        Goodbye: 'Totsiens',
-        // Essential Phrases
-        'How are you?': 'Hoe gaan dit?',
-        'I am fine': 'Dit gaan goed',
-        'Thank you': 'Dankie',
-        "You're welcome": 'Plesier',
-        Please: 'Asseblief',
-        'Excuse me': 'Verskoon my',
-        "I'm sorry": 'Ek is jammer',
-        // Emergency Phrases
-        'I need help': 'Ek het hulp nodig',
-        'I am lost': 'Ek is verdwaal',
-        "I don't understand": 'Ek verstaan nie',
-        'Do you speak English?': 'Praat jy Engels?',
-        'Where is the bathroom?': 'Waar is die badkamer?',
-        // Practical Phrases
-        'How much does it cost?': 'Hoeveel kos dit?',
-        'Can you help me?': 'Kan jy my help?',
-        'I would like...': 'Ek wil graag...',
-        'The check, please': 'Die rekening, asseblief',
-      }
-    },
     en: {
       words: {
         // Essential Nouns
@@ -424,6 +349,81 @@ export class LanguageService {
         'Can you help me?': 'Können Sie mir helfen?',
         'I would like...': 'Ich möchte...',
         'The check, please': 'Die Rechnung, bitte',
+      },
+    },
+    sr: {
+      words: {
+        // Essential Nouns
+        water: 'voda',
+        food: 'hrana',
+        restaurant: 'restoran',
+        bathroom: 'kupatilo',
+        hospital: 'bolnica',
+        hotel: 'hotel',
+        airport: 'aerodrom',
+        train: 'voz',
+        bus: 'autobus',
+        taxi: 'taksi',
+        // Common Adjectives
+        good: 'dobro',
+        bad: 'loše',
+        big: 'veliko',
+        small: 'malo',
+        hot: 'vruće',
+        cold: 'hladno',
+        // Essential Verbs
+        'to eat': 'jesti',
+        'to drink': 'piti',
+        'to sleep': 'spavati',
+        'to go': 'ići',
+        'to help': 'pomoći',
+        thanks: 'hvala',
+      },
+      numbers: {
+        '0': 'nula',
+        '1': 'jedan',
+        '2': 'dva',
+        '3': 'tri',
+        '4': 'četiri',
+        '5': 'pet',
+        '6': 'šest',
+        '7': 'sedam',
+        '8': 'osam',
+        '9': 'devet',
+        '10': 'deset',
+        '20': 'dvadeset',
+        '30': 'trideset',
+        '40': 'četrdeset',
+        '50': 'pedeset',
+        '100': 'sto',
+        '1000': 'hiljada',
+      },
+      sentences: {
+        // Greetings
+        Hello: 'Zdravo',
+        'Good morning': 'Dobro jutro',
+        'Good afternoon': 'Dobar dan',
+        'Good night': 'Laku noć',
+        Goodbye: 'Doviđenja',
+        // Essential Phrases
+        'How are you?': 'Kako ste?',
+        'I am fine': 'Dobro sam',
+        'Thank you': 'Hvala',
+        "You're welcome": 'Nema na čemu',
+        Please: 'Molim',
+        'Excuse me': 'Izvinite',
+        "I'm sorry": 'Žao mi je',
+        // Emergency Phrases
+        'I need help': 'Treba mi pomoć',
+        'I am lost': 'Izgubio sam se',
+        "I don't understand": 'Ne razumem',
+        'Do you speak English?': 'Da li govorite engleski?',
+        'Where is the bathroom?': 'Gde je kupatilo?',
+        // Practical Phrases
+        'How much does it cost?': 'Koliko košta?',
+        'Can you help me?': 'Možete li mi pomoći?',
+        'I would like...': 'Želeo bih...',
+        'The check, please': 'Račun, molim',
       },
     },
   };
