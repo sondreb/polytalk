@@ -721,6 +721,23 @@ import { Observable, BehaviorSubject, from } from 'rxjs';
           gap: 0.75rem;
         }
       }
+
+      /* Override card hover effect for controls */
+      .controls.card:hover {
+        transform: none;
+        box-shadow: none;
+      }
+
+      /* Keep hover effect only for play buttons and other buttons inside controls */
+      .buttons button:not(:disabled):hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(99, 102, 241, 0.2);
+      }
+
+      .play-button:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(99, 102, 241, 0.2);
+      }
     `,
   ],
 })
