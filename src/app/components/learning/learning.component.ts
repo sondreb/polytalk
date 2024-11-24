@@ -66,7 +66,7 @@ import { Observable, BehaviorSubject, from } from 'rxjs';
         <div class="controls card" [class.sticky]="isControlsSticky">
           <div class="settings">
             <label>
-              Word Repeat:
+              {{ getLabel('wordRepeat') }}:
               <input
                 type="number"
                 [(ngModel)]="wordRepeat"
@@ -76,7 +76,7 @@ import { Observable, BehaviorSubject, from } from 'rxjs';
               />
             </label>
             <label>
-              Loops:
+              {{ getLabel('loops') }}:
               <input
                 type="number"
                 [(ngModel)]="loopRepeat"
@@ -91,16 +91,16 @@ import { Observable, BehaviorSubject, from } from 'rxjs';
                 [(ngModel)]="playBothLanguages"
                 (ngModelChange)="saveSettings()"
               />
-              Play both English and {{ selectedLanguage?.name }}
+              {{ getLabel('playBothLanguages') }}
             </label>
           </div>
 
           <div class="buttons">
             <button (click)="startPlayback()" [disabled]="isPlaying">
-              Start Playback
+              {{ getLabel('startPlayback') }}
             </button>
             <button (click)="stopPlayback()" [disabled]="!isPlaying">
-              Stop
+              {{ getLabel('stop') }}
             </button>
           </div>
         </div>
@@ -634,6 +634,39 @@ export class LearningComponent implements OnInit, OnDestroy {
   toLanguage?: Language;
   availableLanguages: Language[] = [];
 
+  private readonly uiLabels: { [key: string]: { [lang: string]: string } } = {
+    wordRepeat: {
+      en: 'Word Repeat',
+      no: 'Gjenta ord',
+      es: 'Repetir palabra',
+      // Add more translations as needed
+    },
+    loops: {
+      en: 'Loops',
+      no: 'Løkker',
+      es: 'Bucles',
+      // Add more translations as needed
+    },
+    playBothLanguages: {
+      en: 'Play both languages',
+      no: 'Spill begge språk',
+      es: 'Reproducir ambos idiomas',
+      // Add more translations as needed
+    },
+    startPlayback: {
+      en: 'Start Playback',
+      no: 'Start avspilling',
+      es: 'Comenzar reproducción',
+      // Add more translations as needed
+    },
+    stop: {
+      en: 'Stop',
+      no: 'Stopp',
+      es: 'Parar',
+      // Add more translations as needed
+    }
+  };
+
   @HostListener('window:scroll', ['$event'])
   onWindowScroll() {
     const scrollPosition =
@@ -977,5 +1010,12 @@ export class LearningComponent implements OnInit, OnDestroy {
       this.toLanguageCode,
       this.category
     ]);
+  }
+
+  getLabel(key: string): string {
+    const translations = this.uiLabels[key];
+    if (!translations) return key;
+
+    return translations[this.fromLanguageCode] || translations['en'] || key;
   }
 }
