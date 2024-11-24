@@ -36,6 +36,9 @@ const voiceMap = {
   fa: "fa-IR-DilaraNeural",
   he: "he-IL-HilaNeural",
   af: "af-ZA-AdriNeural",
+  sr: "sr-RS-SophieNeural",
+  sq: "sq-AL-AnilaNeural",
+  uk: "uk-UA-PolinaNeural"
 };
 
 async function getAuthToken() {
