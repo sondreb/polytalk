@@ -434,11 +434,20 @@ import { Observable, BehaviorSubject, from } from 'rxjs';
         border-radius: 8px;
         cursor: pointer;
         transition: all 0.2s ease;
-        min-width: 120px;
+        min-width: 120px; /* Consistent min-width for both buttons */
+        width: 120px; /* Fixed width for both buttons */
         display: flex;
         align-items: center;
         justify-content: center;
         gap: 0.5rem;
+      }
+
+      @media (max-width: 768px) {
+        .buttons button {
+          width: 48px; /* Fixed width for mobile */
+          min-width: 48px;
+          padding: 0.75rem;
+        }
       }
 
       .buttons button:disabled {
