@@ -609,14 +609,14 @@ export class LearningComponent implements OnInit, OnDestroy {
   languageCode: string = '';
   category: string = '';
   content?: LearningContent;
-  currentItems: { native: string; translation: string }[] = [];
-  currentItem?: { native: string; translation: string };
+  currentItems: { native: string; translation: string; key: string }[] = [];
+  currentItem?: { native: string; translation: string; key: string };
   isLooping: boolean = false;
   wordRepeat = 1;
   loopRepeat = 2;
   isPlaying = false;
   playBothLanguages = true; // New property
-  currentlyPlayingItem?: { native: string; translation: string };
+  currentlyPlayingItem?: { native: string; translation: string; key: string };
   private playbackTimeout: any;
   private readonly SETTINGS_KEY = 'polytalk-settings';
   private readonly FROM_LANGUAGE_KEY = 'polytalk-from-language';
@@ -705,19 +705,25 @@ export class LearningComponent implements OnInit, OnDestroy {
   loadItems() {
     if (!this.toLanguageCode) return;
 
-    const content = this.languageService.getContent(this.toLanguageCode);
-    if (!content) return;
-
+    const toContent = this.languageService.getContent(this.toLanguageCode);
+    const fromContent = this.languageService.getContent(this.fromLanguageCode);
+    
+    if (!toContent || !fromContent) return;
+  
     this.toLanguage = this.languageService
       .getLanguages()
       .find((lang) => lang.code === this.toLanguageCode);
-
-    const items = content[this.category as keyof LearningContent];
-    this.currentItems = Object.entries(items).map(([native, translation]) => ({
-      native,
-      translation,
+  
+    const toItems = toContent[this.category as keyof LearningContent];
+    const fromItems = fromContent[this.category as keyof LearningContent];
+    
+    // Keep the English key as 'native' for audio file references
+    this.currentItems = Object.entries(toItems).map(([key, toTranslation]) => ({
+      native: fromItems[key], // Translation in 'from' language
+      translation: toTranslation, // Translation in 'to' language
+      key: key // Keep the English key for audio files
     }));
-
+  
     if (this.currentItems.length > 0) {
       this.currentItem = this.currentItems[0];
     }
@@ -766,7 +772,7 @@ export class LearningComponent implements OnInit, OnDestroy {
       const unavailableFiles: string[] = [];
 
       for (const item of this.currentItems) {
-        const sanitizedFileName = this.sanitizeKey(item.native);
+        const sanitizedFileName = this.sanitizeKey(item.key); // Use English key for file name
         if (this.playBothLanguages) {
           const fromFile = `/assets/audio/${this.fromLanguageCode}/${this.category}/${sanitizedFileName}.mp3`;
           const toFile = `/assets/audio/${this.toLanguageCode}/${this.category}/${sanitizedFileName}.mp3`;
@@ -808,7 +814,7 @@ export class LearningComponent implements OnInit, OnDestroy {
       let audioFiles: string[] = [];
 
       this.currentItems.forEach((item) => {
-        const sanitizedFileName = this.sanitizeKey(item.native);
+        const sanitizedFileName = this.sanitizeKey(item.key);
         for (let i = 0; i < this.wordRepeat; i++) {
           if (this.playBothLanguages) {
             audioFiles.push(
@@ -841,10 +847,10 @@ export class LearningComponent implements OnInit, OnDestroy {
   }
 
   async playItem(
-    item: { native: string; translation: string },
+    item: { native: string; translation: string; key: string },
     language: 'en' | 'native'
   ) {
-    const sanitizedFileName = this.sanitizeKey(item.native);
+    const sanitizedFileName = this.sanitizeKey(item.key); // Use English key for file name
     const langCode = language === 'en' ? this.fromLanguageCode : this.toLanguageCode;
     const audioFile = `/assets/audio/${langCode}/${this.category}/${sanitizedFileName}.mp3`;
 
