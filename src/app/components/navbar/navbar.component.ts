@@ -62,7 +62,7 @@ import { CommonModule } from '@angular/common';
       .nav-links {
         display: flex;
         align-items: center;
-        gap: 1rem;
+        gap: 0.25rem;  /* Changed from 0.5rem to 0.25rem */
         flex-shrink: 0;  /* Added: prevent nav links from shrinking */
       }
       .nav-content {
