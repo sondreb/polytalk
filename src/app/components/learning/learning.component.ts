@@ -16,153 +16,156 @@ import { Observable, BehaviorSubject, from } from 'rxjs';
   imports: [CommonModule, FormsModule],
   template: `
     <section class="learning">
-      <div class="language-header">
-        <div class="language-selector">
-          <img
-            [src]="fromLanguage?.flagImage"
-            [alt]="fromLanguage?.name + ' flag'"
-            class="flag-image"
-          />
-          <select
-            [(ngModel)]="fromLanguageCode"
-            (ngModelChange)="onLanguageChange('from', $event)"
-          >
-            <option *ngFor="let lang of availableLanguages" [value]="lang.code">
-              {{ lang.name }}
-            </option>
-          </select>
-        </div>
-
-        <div class="language-direction">→</div>
-
-        <div class="language-selector">
-          <img
-            [src]="toLanguage?.flagImage"
-            [alt]="toLanguage?.name + ' flag'"
-            class="flag-image"
-          />
-          <select
-            [(ngModel)]="toLanguageCode"
-            (ngModelChange)="onLanguageChange('to', $event)"
-          >
-            <option *ngFor="let lang of availableLanguages" [value]="lang.code">
-              {{ lang.name }}
-            </option>
-          </select>
-        </div>
-      </div>
-
-      <div class="tabs">
-        <button
-          *ngFor="let tab of tabs"
-          [class.active]="category === tab.toLowerCase()"
-          (click)="selectCategory(tab.toLowerCase())"
-        >
-          {{ tab }}
-        </button>
-      </div>
-
-      <div class="controls-wrapper">
-        <div class="controls card" [class.sticky]="isControlsSticky">
-          <div class="settings">
-            <label>
-              Word Repeat:
-              <input
-                type="number"
-                [(ngModel)]="wordRepeat"
-                (ngModelChange)="saveSettings()"
-                min="1"
-                max="10"
-              />
-            </label>
-            <label>
-              Loops:
-              <input
-                type="number"
-                [(ngModel)]="loopRepeat"
-                (ngModelChange)="saveSettings()"
-                min="1"
-                max="10"
-              />
-            </label>
-            <label class="checkbox-label">
-              <input
-                type="checkbox"
-                [(ngModel)]="playBothLanguages"
-                (ngModelChange)="saveSettings()"
-              />
-              Play both languages
-            </label>
+      <div class="content-wrapper">
+        <div class="language-header">
+          <div class="language-selector">
+            <img
+              [src]="fromLanguage?.flagImage"
+              [alt]="fromLanguage?.name + ' flag'"
+              class="flag-image"
+            />
+            <select
+              [(ngModel)]="fromLanguageCode"
+              (ngModelChange)="onLanguageChange('from', $event)"
+            >
+              <option *ngFor="let lang of availableLanguages" [value]="lang.code">
+                {{ lang.name }}
+              </option>
+            </select>
           </div>
 
-          <div class="buttons">
-            <button (click)="startPlayback()" [disabled]="isPlaying">
-              Start Playback
-            </button>
-            <button (click)="stopPlayback()" [disabled]="!isPlaying">
-              Stop
-            </button>
+          <div class="language-direction">→</div>
+
+          <div class="language-selector">
+            <img
+              [src]="toLanguage?.flagImage"
+              [alt]="toLanguage?.name + ' flag'"
+              class="flag-image"
+            />
+            <select
+              [(ngModel)]="toLanguageCode"
+              (ngModelChange)="onLanguageChange('to', $event)"
+            >
+              <option *ngFor="let lang of availableLanguages" [value]="lang.code">
+                {{ lang.name }}
+              </option>
+            </select>
           </div>
         </div>
-        <div
-          class="controls-placeholder"
-          [class.visible]="isControlsSticky"
-        ></div>
-      </div>
 
-      <div class="content card">
-        <div
-          *ngFor="let item of currentItems"
-          class="item"
-          [class.active]="item === currentItem"
-          [class.playing]="item === currentlyPlayingItem"
-          [class.offline]="
-            isOffline &&
-            (unavailableAudio.has(
-              '/assets/audio/en/' +
-                category +
-                '/' +
-                sanitizeKey(item.native) +
-                '.mp3'
-            ) ||
-              unavailableAudio.has(
-                '/assets/audio/' +
-                  languageCode +
-                  '/' +
+        <div class="tabs">
+          <button
+            *ngFor="let tab of tabs"
+            [class.active]="category === tab.toLowerCase()"
+            (click)="selectCategory(tab.toLowerCase())"
+          >
+            {{ tab }}
+          </button>
+        </div>
+
+        <div class="controls-wrapper">
+          <div class="sticky-container" [class.sticky]="isControlsSticky">
+            <div class="content-wrapper">
+              <div class="controls card">
+                <div class="settings">
+                  <label>
+                    Word Repeat:
+                    <input
+                      type="number"
+                      [(ngModel)]="wordRepeat"
+                      (ngModelChange)="saveSettings()"
+                      min="1"
+                      max="10"
+                    />
+                  </label>
+                  <label>
+                    Loops:
+                    <input
+                      type="number"
+                      [(ngModel)]="loopRepeat"
+                      (ngModelChange)="saveSettings()"
+                      min="1"
+                      max="10"
+                    />
+                  </label>
+                  <label class="checkbox-label">
+                    <input
+                      type="checkbox"
+                      [(ngModel)]="playBothLanguages"
+                      (ngModelChange)="saveSettings()"
+                    />
+                    Play both languages
+                  </label>
+                </div>
+
+                <div class="buttons">
+                  <button (click)="startPlayback()" [disabled]="isPlaying">
+                    Start Playback
+                  </button>
+                  <button (click)="stopPlayback()" [disabled]="!isPlaying">
+                    Stop
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="controls-placeholder" [class.visible]="isControlsSticky"></div>
+        </div>
+
+        <div class="content card">
+          <div
+            *ngFor="let item of currentItems"
+            class="item"
+            [class.active]="item === currentItem"
+            [class.playing]="item === currentlyPlayingItem"
+            [class.offline]="
+              isOffline &&
+              (unavailableAudio.has(
+                '/assets/audio/en/' +
                   category +
                   '/' +
                   sanitizeKey(item.native) +
                   '.mp3'
-              ))
-          "
-          [id]="'item-' + item.key"
-        >
-          <div class="native">
-            <button class="play-button" (click)="playItem(item, 'en')">
-              ▶
-            </button>
-            <span>{{ item.native }}</span>
-          </div>
-          <div class="translation">
-            <span>{{ item.translation }}</span>
-            <button class="play-button" (click)="playItem(item, 'native')">
-              ▶
-            </button>
+              ) ||
+                unavailableAudio.has(
+                  '/assets/audio/' +
+                    languageCode +
+                    '/' +
+                    category +
+                    '/' +
+                    sanitizeKey(item.native) +
+                    '.mp3'
+                ))
+            "
+            [id]="'item-' + item.key"
+          >
+            <div class="native">
+              <button class="play-button" (click)="playItem(item, 'en')">
+                ▶
+              </button>
+              <span>{{ item.native }}</span>
+            </div>
+            <div class="translation">
+              <span>{{ item.translation }}</span>
+              <button class="play-button" (click)="playItem(item, 'native')">
+                ▶
+              </button>
+            </div>
           </div>
         </div>
-      </div>
 
-      <div class="offline-controls">
-        <button
-          (click)="downloadAllAudio()"
-          [disabled]="isDownloading"
-          class="download-button"
-        >
-          <span *ngIf="!isDownloading">Enable offline</span>
-          <span *ngIf="isDownloading">
-            Downloading... {{ downloadProgress | async }}%
-          </span>
-        </button>
+        <div class="offline-controls">
+          <button
+            (click)="downloadAllAudio()"
+            [disabled]="isDownloading"
+            class="download-button"
+          >
+            <span *ngIf="!isDownloading">Enable offline</span>
+            <span *ngIf="isDownloading">
+              Downloading... {{ downloadProgress | async }}%
+            </span>
+          </button>
+        </div>
       </div>
     </section>
   `,
@@ -170,13 +173,54 @@ import { Observable, BehaviorSubject, from } from 'rxjs';
     `
       .learning {
         padding: 1rem 0;
+        width: 100%;
       }
-      .controls {
+
+      .content-wrapper {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 0 1rem;
+      }
+
+      .controls.card {
+        padding: 0.75rem;
+        margin: 0;
         display: flex;
         justify-content: space-between;
         align-items: center;
-        margin-bottom: 1rem;
+        gap: 1rem;
+        transition: all 0.3s ease;
+        background: var(--surface-color);
+        width: 100%;
+        box-sizing: border-box;
       }
+
+      .controls.card.sticky {
+        position: fixed;
+        top: 64px;
+        left: 50%;
+        transform: translateX(-50%);
+        max-width: 1200px;
+        width: calc(100% - 2rem);
+        margin: 0 auto;
+        background: rgba(255, 255, 255, 0.8);
+        backdrop-filter: blur(10px);
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        z-index: 99;
+        border-radius: 12px;
+      }
+
+      @media (max-width: 768px) {
+        .content-wrapper {
+          padding: 0 0.5rem;
+        }
+
+        .controls.card.sticky {
+          width: calc(100% - 1rem);
+          border-radius: 0;
+        }
+      }
+
       .buttons {
         display: flex;
         gap: 1rem;
@@ -618,6 +662,74 @@ import { Observable, BehaviorSubject, from } from 'rxjs';
         .language-header {
           flex-direction: column;
           gap: 1rem;
+        }
+      }
+
+      .controls-wrapper {
+        position: relative;
+        margin-bottom: 1rem;
+      }
+
+      .sticky-container {
+        transition: all 0.3s ease;
+        width: 100%;
+      }
+
+      .sticky-container.sticky {
+        position: fixed;
+        top: 64px;
+        left: 0;
+        right: 0;
+        z-index: 99;
+        background: rgba(255, 255, 255, 0.8);
+        backdrop-filter: blur(10px);
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+      }
+
+      .controls.card {
+        padding: 0.75rem;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 1rem;
+        background: var(--surface-color);
+        width: 100%;
+        box-sizing: border-box;
+        margin: 0;
+        border-radius: 12px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05), 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+        border: 1px solid rgba(99, 102, 241, 0.1);
+      }
+
+      .sticky-container.sticky .controls.card {
+        border-radius: 0;
+        box-shadow: none;
+        border: none;
+        background: transparent;
+      }
+
+      .controls-placeholder {
+        height: 0;
+        transition: height 0.3s ease;
+      }
+
+      .controls-placeholder.visible {
+        height: 85px;
+      }
+
+      @media (max-width: 768px) {
+        .sticky-container.sticky {
+          top: 56px;
+        }
+
+        .controls.card {
+          flex-direction: column;
+          padding: 0.5rem;
+          gap: 0.75rem;
+        }
+
+        .controls-placeholder.visible {
+          height: 200px;
         }
       }
     `,

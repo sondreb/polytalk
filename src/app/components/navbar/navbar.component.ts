@@ -8,20 +8,22 @@ import { CommonModule } from '@angular/common';
   imports: [RouterLink, CommonModule],
   template: `
     <nav class="navbar">
-      <a routerLink="/" class="brand">PolyTalk.Me</a>
-      <div class="nav-links">
-        <a routerLink="/languages" class="nav-link">
-          <span class="full-text">Languages</span>
-          <span class="icon-only">🌐</span>
-        </a>
-        <button
-          *ngIf="showInstall"
-          (click)="onInstallClick()"
-          class="install-button"
-        >
-          <span>Install</span>
-          <span class="app-text">App</span>
-        </button>
+      <div class="content-wrapper">
+        <a routerLink="/" class="brand">PolyTalk.Me</a>
+        <div class="nav-links">
+          <a routerLink="/languages" class="nav-link">
+            <span class="full-text">Languages</span>
+            <span class="icon-only">🌐</span>
+          </a>
+          <button
+            *ngIf="showInstall"
+            (click)="onInstallClick()"
+            class="install-button"
+          >
+            <span>Install</span>
+            <span class="app-text">App</span>
+          </button>
+        </div>
       </div>
     </nav>
   `,
@@ -35,11 +37,20 @@ import { CommonModule } from '@angular/common';
         position: sticky;
         top: 0;
         z-index: 100;
+        width: 100%;
+      }
+      .content-wrapper {
+        max-width: 1200px;
+        margin: 0 auto;
         display: flex;
         justify-content: space-between;
         align-items: center;
-        max-width: 1200px;
-        margin: 0 auto;
+        padding: 0 1rem;
+      }
+      @media (max-width: 768px) {
+        .content-wrapper {
+          padding: 0 0.5rem;
+        }
       }
       .nav-links {
         display: flex;
