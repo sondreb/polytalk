@@ -22,14 +22,14 @@ export class SettingsService {
   settings$ = this.settings.asObservable();
 
   private loadSettings(): AppSettings | null {
-    const saved = localStorage.getItem('polytalk-settings');
+    const saved = localStorage.getItem('polytalk-extra-settings');
     return saved ? JSON.parse(saved) : null;
   }
 
   updateSettings(newSettings: Partial<AppSettings>) {
     const current = this.settings.value;
     const updated = { ...current, ...newSettings };
-    localStorage.setItem('polytalk-settings', JSON.stringify(updated));
+    localStorage.setItem('polytalk-extra-settings', JSON.stringify(updated));
     this.settings.next(updated);
   }
 }
