@@ -1080,21 +1080,23 @@ export class LearningComponent implements OnInit, OnDestroy {
       const audioFiles: string[] = [];
       const allCategories = ['words', 'numbers', 'sentences'];
 
-      // Get content for current language
-      const content = this.languageService.getContent(this.languageCode);
+      // Get content for both languages
+      const fromContent = this.languageService.getContent(this.fromLanguageCode);
+      const toContent = this.languageService.getContent(this.toLanguageCode);
 
       // Build list of all audio files across all categories
       allCategories.forEach((category) => {
-        const items = content ? content[category as keyof LearningContent] : {};
-        Object.keys(items).forEach((native) => {
-          const sanitizedFileName = this.sanitizeKey(native);
-          // Add both English and target language versions
-          audioFiles.push(
-            `/assets/audio/en/${category}/${sanitizedFileName}.mp3`
-          );
-          audioFiles.push(
-            `/assets/audio/${this.languageCode}/${category}/${sanitizedFileName}.mp3`
-          );
+        const fromItems = fromContent ? fromContent[category as keyof LearningContent] : {};
+        const toItems = toContent ? toContent[category as keyof LearningContent] : {};
+        
+        // Use the keys from both languages
+        const allKeys = new Set([...Object.keys(fromItems), ...Object.keys(toItems)]);
+        
+        allKeys.forEach((key) => {
+          const sanitizedFileName = this.sanitizeKey(key);
+          // Add both language versions
+          audioFiles.push(`/assets/audio/${this.fromLanguageCode}/${category}/${sanitizedFileName}.mp3`);
+          audioFiles.push(`/assets/audio/${this.toLanguageCode}/${category}/${sanitizedFileName}.mp3`);
         });
       });
 
@@ -1107,13 +1109,13 @@ export class LearningComponent implements OnInit, OnDestroy {
           const cached = await cache.match(file);
           if (!cached) {
             const response = await fetch(file);
-            await cache.put(file, response);
+            if (response.ok) { // Only cache successful responses
+              await cache.put(file, response);
+            }
           }
 
           completed++;
-          this.downloadProgress.next(
-            Math.round((completed / audioFiles.length) * 100)
-          );
+          this.downloadProgress.next(Math.round((completed / audioFiles.length) * 100));
         } catch (error) {
           console.error(`Error caching file ${file}:`, error);
         }
