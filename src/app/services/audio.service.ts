@@ -58,24 +58,54 @@ export class AudioService {
     this.delay = Math.max(0.25, seconds) * 1000; // Convert to milliseconds, minimum 250ms
   }
 
+  private async validateAudioBlob(blob: Blob): Promise<boolean> {
+    return new Promise((resolve) => {
+      const audio = new Audio(URL.createObjectURL(blob));
+      const timeoutId = setTimeout(() => {
+        audio.onerror = null;
+        audio.oncanplaythrough = null;
+        resolve(false);
+      }, 3000); // 3 second timeout
+
+      audio.onerror = () => {
+        clearTimeout(timeoutId);
+        resolve(false);
+      };
+
+      audio.oncanplaythrough = () => {
+        clearTimeout(timeoutId);
+        resolve(true);
+      };
+    });
+  }
+
   private async getAudioBlob(url: string): Promise<Blob> {
     try {
       // Try to fetch from cache first
       const cache = await caches.open('audio-cache');
       let response = await cache.match(url);
+      let blob: Blob;
 
-      if (!response) {
-        // If not in cache, fetch from network
-        response = await fetch(url);
-        
-        // Clone the response before consuming it
-        const responseToCache = response.clone();
-        
-        // Store in cache for future use
-        await cache.put(url, responseToCache);
+      if (response) {
+        blob = await response.blob();
+        // Validate cached blob
+        if (await this.validateAudioBlob(blob)) {
+          return blob;
+        }
+        // If validation fails, remove from cache
+        await cache.delete(url);
       }
 
-      return await response.blob();
+      // Fetch from network
+      response = await fetch(url);
+      blob = await response.clone().blob();
+      
+      // Validate blob before caching
+      if (await this.validateAudioBlob(blob)) {
+        await cache.put(url, response);
+      }
+      
+      return blob;
     } catch (error) {
       console.error('Error fetching audio:', error);
       throw error;
@@ -103,6 +133,9 @@ export class AudioService {
       } catch (error) {
         console.error('Error playing audio:', error);
         this.isPlaying.next(false);
+        // Remove from cache if playback failed
+        const cache = await caches.open('audio-cache');
+        await cache.delete(url);
       }
     } else if (this.queue.length > 0) {
       try {
@@ -116,6 +149,9 @@ export class AudioService {
       } catch (error) {
         console.error('Error playing audio:', error);
         this.isPlaying.next(false);
+        // Remove from cache if playback failed
+        const cache = await caches.open('audio-cache');
+        await cache.delete(this.queue[0]);
       }
     }
   }
