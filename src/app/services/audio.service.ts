@@ -242,17 +242,16 @@ export class AudioService {
     this.isPlaying.next(false);
     this.currentFile.next('');
     
-    // Force stop and unload any playing audio
+    // Just pause and reset the current audio instead of destroying it
     if (this.audio) {
       this.audio.pause();
       this.audio.currentTime = 0;
-      this.audio.src = ''; // Clear source
-      this.audio.load(); // Force reload
-      this.audio = null;
     }
 
-    // Clear queue and audio elements pool
+    // Clear queue but keep the audio instance
     this.queue = [];
+    this.currentIndex = 0;
+    this.currentRepeat = 1;
 
     // Update media session state
     if ('mediaSession' in navigator) {
@@ -264,12 +263,13 @@ export class AudioService {
   cleanup() {
     this.stop();
     
-    // Remove all event listeners
+    // Only null out audio instance during actual cleanup
     if (this.audio) {
       this.audio.onended = null;
       this.audio.onerror = null;
       this.audio.onplay = null;
       this.audio.onpause = null;
+      this.audio = null;
     }
 
     // Clear media session handlers
@@ -288,6 +288,10 @@ export class AudioService {
   }
 
   private async playNext() {
+    if (!this.isPlaying.value) {
+      return; // Don't continue if playback was stopped
+    }
+
     this.currentIndex++;
 
     if (this.currentIndex >= this.queue.length) {

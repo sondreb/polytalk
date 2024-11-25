@@ -1043,6 +1043,8 @@ export class LearningComponent implements OnInit, OnDestroy {
   }
 
   async startPlayback() {
+    if (this.isPlaying) return; // Don't start if already playing
+
     if (this.isOffline) {
       // Check all audio files first
       const audioFiles: string[] = [];
@@ -1083,7 +1085,6 @@ export class LearningComponent implements OnInit, OnDestroy {
       }
 
       this.audioService.setQueue(audioFiles, this.loopRepeat);
-      this.audioService.play();
     } else {
       // Original playback logic for online mode
       this.currentlyPlayingItem = undefined;
@@ -1108,15 +1109,13 @@ export class LearningComponent implements OnInit, OnDestroy {
       });
 
       this.audioService.setQueue(audioFiles, this.loopRepeat);
-      this.audioService.play();
     }
+
+    this.audioService.play();
   }
 
   stopPlayback() {
-    // Reset currently playing item
     this.currentlyPlayingItem = undefined;
-    
-    // Stop audio playback
     this.audioService.stop();
     
     if (this.playbackTimeout) {
