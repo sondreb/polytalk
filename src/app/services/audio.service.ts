@@ -1,5 +1,4 @@
-import { effect, Injectable } from '@angular/core';
-import { BehaviorSubject } from 'rxjs';
+import { effect, Injectable, signal, computed } from '@angular/core';
 import { SettingsService } from './settings.service';
 
 @Injectable({
@@ -9,14 +8,18 @@ export class AudioService {
   private audio: any = new Audio();
   private silentAudio: AudioContext;
   private queue: string[] = [];
-  private isPlaying = new BehaviorSubject<boolean>(false);
+  private isPlayingSignal = signal<boolean>(false);
   private repeatCount = 1;
   private currentRepeat = 1;
   private currentIndex = 0;
   private delay = 250; // Will be updated from settings
   private playbackTimeout: any;
-  private currentFile = new BehaviorSubject<string>('');
+  private currentFileSignal = signal<string>('');
   private audioQueue: { title: string; url: string }[] = [];
+
+  // Public computed signals for components to use
+  readonly isPlaying = computed(() => this.isPlayingSignal());
+  readonly currentFile = computed(() => this.currentFileSignal());
 
   constructor(private settingsService: SettingsService) {
     // Initialize Web Audio API context
@@ -67,14 +70,14 @@ export class AudioService {
       });
 
       navigator.mediaSession.setActionHandler('nexttrack', () => {
-        if (this.isPlaying.value) {
+        if (this.isPlayingSignal()) {
           clearTimeout(this.playbackTimeout);
           this.playNext();
         }
       });
 
       navigator.mediaSession.setActionHandler('previoustrack', () => {
-        if (this.isPlaying.value && this.currentIndex > 0) {
+        if (this.isPlayingSignal() && this.currentIndex > 0) {
           clearTimeout(this.playbackTimeout);
           this.currentIndex -= 2; // Go back two steps because playNext will increment
           if (this.currentIndex < -1) this.currentIndex = -1;
@@ -91,7 +94,7 @@ export class AudioService {
 
       // Update position state periodically
       setInterval(() => {
-        if (this.audio && this.isPlaying.value) {
+        if (this.audio && this.isPlayingSignal()) {
           navigator.mediaSession.setPositionState({
             duration: this.audio.duration || 0,
             position: this.audio.currentTime || 0,
@@ -103,7 +106,7 @@ export class AudioService {
 
     // Add event listeners for better audio state management
     this.audio.addEventListener('play', () => {
-      this.isPlaying.next(true);
+      this.isPlayingSignal.set(true);
       if ('mediaSession' in navigator) {
         navigator.mediaSession.playbackState = 'playing';
         this.updateMediaMetadata();
@@ -117,7 +120,7 @@ export class AudioService {
     });
 
     this.audio.addEventListener('pause', () => {
-      this.isPlaying.next(false);
+      this.isPlayingSignal.set(false);
       if ('mediaSession' in navigator) {
         navigator.mediaSession.playbackState = 'paused';
         if ('setActive' in navigator.mediaSession) {
@@ -137,7 +140,7 @@ export class AudioService {
     // Add error handling
     this.audio.addEventListener('error', (e: any) => {
       console.error('Audio playback error:', e);
-      this.isPlaying.next(false);
+      this.isPlayingSignal.set(false);
       if ('mediaSession' in navigator) {
         navigator.mediaSession.playbackState = 'none';
       }
@@ -243,15 +246,15 @@ export class AudioService {
         const blob = await this.getAudioBlob(sanitizedUrl);
         this.audio.src = URL.createObjectURL(blob);
         this.audio.playbackRate = this.settingsService.playbackSpeed();
-        this.currentFile.next(sanitizedUrl);
+        this.currentFileSignal.set(sanitizedUrl);
 
         await this.audio.play();
-        this.isPlaying.next(true);
+        this.isPlayingSignal.set(true);
       } else if (this.queue.length > 0) {
         // Queue playback - start from beginning
         this.currentIndex = -1; // Will be incremented to 0 in playNext
         this.currentRepeat = 1;
-        this.isPlaying.next(true);
+        this.isPlayingSignal.set(true);
         this.playNext(); // Start the queue playback
       }
 
@@ -264,7 +267,7 @@ export class AudioService {
       }
     } catch (error) {
       console.error('Error in play:', error);
-      this.isPlaying.next(false);
+      this.isPlayingSignal.set(false);
     }
   }
 
@@ -294,8 +297,8 @@ export class AudioService {
       this.playbackTimeout = null;
     }
 
-    this.isPlaying.next(false);
-    this.currentFile.next('');
+    this.isPlayingSignal.set(false);
+    this.currentFileSignal.set('');
 
     if (this.audio) {
       this.audio.pause();
@@ -353,6 +356,10 @@ export class AudioService {
   }
 
   private async playNext() {
+    if (!this.isPlayingSignal()) {
+      return; // Don't continue if playback was stopped
+    }
+
     this.currentIndex++;
 
     if (this.currentIndex >= this.queue.length) {
@@ -376,14 +383,14 @@ export class AudioService {
           const blob = await this.getAudioBlob(this.queue[this.currentIndex]);
           this.audio.src = URL.createObjectURL(blob);
           this.audio.playbackRate = this.settingsService.playbackSpeed();
-          this.currentFile.next(this.queue[this.currentIndex]);
+          this.currentFileSignal.set(this.queue[this.currentIndex]);
 
           await this.audio.play();
-          this.isPlaying.next(true);
+          this.isPlayingSignal.set(true);
           this.updateMediaMetadata();
         } catch (error) {
           console.error('Error playing audio:', error);
-          this.isPlaying.next(false);
+          this.isPlayingSignal.set(false);
           // Try to continue with next file on error
           this.playNext();
         }
@@ -412,15 +419,6 @@ export class AudioService {
         ],
       });
     }
-  }
-
-  get isPlayingState() {
-    return this.isPlaying.asObservable();
-  }
-
-  // Add getter for the current file observable
-  get currentFileState() {
-    return this.currentFile.asObservable();
   }
 
   async clearAudioCache(): Promise<void> {

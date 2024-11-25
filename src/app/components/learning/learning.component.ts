@@ -943,10 +943,12 @@ export class LearningComponent implements OnInit, OnDestroy {
       this.loadItems();
     });
 
-    this.audioService.isPlayingState.subscribe(
-      (playing) => (this.isPlaying = playing)
-    );
-    this.audioService.currentFileState.subscribe((file) => {
+    effect(() => {
+      this.isPlaying = this.audioService.isPlaying();
+    });
+
+    effect(() => {
+      const file = this.audioService.currentFile();
       if (!file) {
         this.currentlyPlayingItem = undefined;
         return;
