@@ -793,6 +793,12 @@ import { Observable, BehaviorSubject, from } from 'rxjs';
           display: inline-block;
         }
       }
+
+      @media (max-width: 600px) {
+        .label-icon {
+          display: none;
+        }
+      }
     `,
   ],
 })

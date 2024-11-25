@@ -16,9 +16,9 @@ import { AudioService } from '../../services/audio.service';
         <label>Word Delay (ms): {{ wordDelay }}</label>
         <input
           type="range"
-          [min]="100"
+          [min]="0"
           [max]="3000"
-          [step]="100"
+          [step]="50"
           [(ngModel)]="wordDelay"
           (change)="updateWordDelay()"
         />
