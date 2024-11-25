@@ -6,7 +6,7 @@ import { SettingsService } from './settings.service';
   providedIn: 'root',
 })
 export class AudioService {
-  private audio = new Audio();
+  private audio : any = new Audio();
   private silentAudio: AudioContext;
   private queue: string[] = [];
   private isPlaying = new BehaviorSubject<boolean>(false);
