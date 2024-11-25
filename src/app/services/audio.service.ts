@@ -44,7 +44,10 @@ export class AudioService {
     source.loop = true;
     source.start();
 
-    this.audio.onended = () => this.playNext();
+    this.audio.onended = () => {
+      console.log('Audio ended, playing next');
+      this.playNext();
+    };
 
     // Enhanced MediaSession setup
     if ('mediaSession' in navigator) {
@@ -232,7 +235,7 @@ export class AudioService {
 
     try {
       if (url) {
-        // Single file playback
+        // Single file playback logic...
         const dirPath = url.substring(0, url.lastIndexOf('/') + 1);
         const filename = url.substring(url.lastIndexOf('/') + 1);
         const sanitizedUrl = dirPath + this.sanitizeKey(filename);
@@ -245,44 +248,43 @@ export class AudioService {
         await this.audio.play();
         this.isPlaying.next(true);
       } else if (this.queue.length > 0) {
-        // Queue playback
-        const blob = await this.getAudioBlob(this.queue[0]);
-        this.audio.src = URL.createObjectURL(blob);
-        this.audio.playbackRate = this.settingsService.playbackSpeed();
-        this.currentFile.next(this.queue[0]);
-        this.currentIndex = 0;
+        // Queue playback - start from beginning
+        this.currentIndex = -1; // Will be incremented to 0 in playNext
         this.currentRepeat = 1;
-
-        await this.audio.play();
         this.isPlaying.next(true);
+        this.playNext(); // Start the queue playback
+      }
+
+      // Update media session and metadata
+      if ('mediaSession' in navigator) {
+        if ('setActive' in navigator.mediaSession) {
+          await (navigator.mediaSession as any).setActive(true);
+        }
         this.updateMediaMetadata();
       }
     } catch (error) {
       console.error('Error in play:', error);
       this.isPlaying.next(false);
-      const cache = await caches.open('audio-cache');
-      if (url) {
-        await cache.delete(url);
-      } else if (this.queue.length > 0) {
-        await cache.delete(this.queue[0]);
-      }
     }
   }
 
   async playSingleFile(audioFile: string) {
     try {
       const blob = await this.getAudioBlob(audioFile);
-      const audio = new Audio(URL.createObjectURL(blob));
-      this.currentFile.next(audioFile);
+      // Create a new temporary audio element for single file playback
+      const tempAudio = new Audio(URL.createObjectURL(blob));
+      tempAudio.playbackRate = this.settingsService.playbackSpeed();
 
-      // Apply current playback rate
-      audio.playbackRate = this.audio.playbackRate;
-      await audio.play();
+      // Don't update media session or current file for single file playback
+      await tempAudio.play();
 
-      // Clear current file after playback
-      audio.onended = () => this.currentFile.next('');
+      // Clean up after playback
+      tempAudio.onended = () => {
+        URL.revokeObjectURL(tempAudio.src);
+        tempAudio.remove();
+      };
     } catch (error) {
-      console.error('Error playing audio:', error);
+      console.error('Error playing single audio file:', error);
     }
   }
 
@@ -351,40 +353,41 @@ export class AudioService {
   }
 
   private async playNext() {
-    if (!this.isPlaying.value) {
-      return; // Don't continue if playback was stopped
+    this.currentIndex++;
+
+    if (this.currentIndex >= this.queue.length) {
+      if (this.currentRepeat < this.repeatCount) {
+        this.currentRepeat++;
+        this.currentIndex = 0;
+      } else {
+        this.stop();
+        return;
+      }
     }
 
-    try {
-      this.currentIndex++;
+    if (this.currentIndex < this.queue.length) {
+      // Clear any existing timeout
+      if (this.playbackTimeout) {
+        clearTimeout(this.playbackTimeout);
+      }
 
-      if (this.currentIndex >= this.queue.length) {
-        if (this.currentRepeat < this.repeatCount) {
-          this.currentRepeat++;
-          this.currentIndex = 0;
-        } else {
-          this.stop();
-          return;
+      this.playbackTimeout = setTimeout(async () => {
+        try {
+          const blob = await this.getAudioBlob(this.queue[this.currentIndex]);
+          this.audio.src = URL.createObjectURL(blob);
+          this.audio.playbackRate = this.settingsService.playbackSpeed();
+          this.currentFile.next(this.queue[this.currentIndex]);
+
+          await this.audio.play();
+          this.isPlaying.next(true);
+          this.updateMediaMetadata();
+        } catch (error) {
+          console.error('Error playing audio:', error);
+          this.isPlaying.next(false);
+          // Try to continue with next file on error
+          this.playNext();
         }
-      }
-
-      if (this.currentIndex < this.queue.length) {
-        // Wait for the configured delay
-        await new Promise((resolve) =>
-          setTimeout(resolve, this.settingsService.wordDelay())
-        );
-
-        const blob = await this.getAudioBlob(this.queue[this.currentIndex]);
-        this.audio.src = URL.createObjectURL(blob);
-        this.audio.playbackRate = this.settingsService.playbackSpeed();
-        this.currentFile.next(this.queue[this.currentIndex]);
-
-        await this.audio.play();
-        this.updateMediaMetadata();
-      }
-    } catch (error) {
-      console.error('Error in playNext:', error);
-      this.playNext(); // Try next file on error
+      }, this.delay);
     }
   }
 

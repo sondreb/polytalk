@@ -162,6 +162,8 @@ import { Observable, BehaviorSubject, from } from 'rxjs';
                 </div>
 
                 <div class="buttons">
+                  {{ isPlaying }}
+
                   <button (click)="startPlayback()" [disabled]="isPlaying">
                     <span class="icon">▶</span>
                     <span class="button-text">Start</span>
@@ -863,7 +865,7 @@ import { Observable, BehaviorSubject, from } from 'rxjs';
 
         .native,
         .translation {
-          gap: 0.5rem;  /* Reduce spacing between play button and text */
+          gap: 0.5rem; /* Reduce spacing between play button and text */
         }
 
         /* Reduce margins around other elements */
@@ -1117,7 +1119,7 @@ export class LearningComponent implements OnInit, OnDestroy {
   stopPlayback() {
     this.currentlyPlayingItem = undefined;
     this.audioService.stop();
-    
+
     if (this.playbackTimeout) {
       clearTimeout(this.playbackTimeout);
       this.playbackTimeout = null;
