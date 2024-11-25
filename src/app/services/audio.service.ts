@@ -6,7 +6,7 @@ import { SettingsService } from './settings.service';
   providedIn: 'root',
 })
 export class AudioService {
-  private audio : any = new Audio();
+  private audio: any = new Audio();
   private silentAudio: AudioContext;
   private queue: string[] = [];
   private isPlaying = new BehaviorSubject<boolean>(false);
@@ -16,7 +16,7 @@ export class AudioService {
   private delay = 250; // Will be updated from settings
   private playbackTimeout: any;
   private currentFile = new BehaviorSubject<string>('');
-  private audioQueue: { title: string, url: string }[] = [];
+  private audioQueue: { title: string; url: string }[] = [];
 
   constructor(private settingsService: SettingsService) {
     // Initialize Web Audio API context
@@ -151,23 +151,23 @@ export class AudioService {
       clearTimeout(this.playbackTimeout);
       this.playbackTimeout = null;
     }
-    
+
     // Reset audio state
     this.audio.pause();
     this.audio.currentTime = 0;
 
     // Sanitize and prepare queue with metadata
-    this.audioQueue = audioFiles.map(file => {
+    this.audioQueue = audioFiles.map((file) => {
       const dirPath = file.substring(0, file.lastIndexOf('/') + 1);
       const filename = file.substring(file.lastIndexOf('/') + 1);
       const sanitizedFilename = this.sanitizeKey(filename);
       return {
         title: sanitizedFilename.replace('.mp3', ''),
-        url: dirPath + sanitizedFilename
+        url: dirPath + sanitizedFilename,
       };
     });
-    
-    this.queue = this.audioQueue.map(item => item.url);
+
+    this.queue = this.audioQueue.map((item) => item.url);
     this.repeatCount = repeat;
     this.currentRepeat = 1;
     this.currentIndex = 0;
@@ -245,17 +245,26 @@ export class AudioService {
         await this.audio.play();
         this.isPlaying.next(true);
       } else if (this.queue.length > 0) {
-        // Start queue playback from the beginning
-        this.currentIndex = -1; // Will be incremented in playNext
+        // Queue playback
+        const blob = await this.getAudioBlob(this.queue[0]);
+        this.audio.src = URL.createObjectURL(blob);
+        this.audio.playbackRate = this.settingsService.playbackSpeed();
+        this.currentFile.next(this.queue[0]);
+        this.currentIndex = 0;
         this.currentRepeat = 1;
-        this.playNext();
+
+        await this.audio.play();
+        this.isPlaying.next(true);
+        this.updateMediaMetadata();
       }
     } catch (error) {
       console.error('Error in play:', error);
       this.isPlaying.next(false);
+      const cache = await caches.open('audio-cache');
       if (url) {
-        const cache = await caches.open('audio-cache');
         await cache.delete(url);
+      } else if (this.queue.length > 0) {
+        await cache.delete(this.queue[0]);
       }
     }
   }
@@ -285,7 +294,7 @@ export class AudioService {
 
     this.isPlaying.next(false);
     this.currentFile.next('');
-    
+
     if (this.audio) {
       this.audio.pause();
       this.audio.currentTime = 0;
@@ -309,7 +318,7 @@ export class AudioService {
   // Optional: Add a cleanup method to be called on component destruction
   cleanup() {
     this.stop();
-    
+
     // Only null out audio instance during actual cleanup
     if (this.audio) {
       this.audio.onended = null;
@@ -346,37 +355,36 @@ export class AudioService {
       return; // Don't continue if playback was stopped
     }
 
-    this.currentIndex++;
+    try {
+      this.currentIndex++;
 
-    if (this.currentIndex >= this.queue.length) {
-      if (this.currentRepeat < this.repeatCount) {
-        this.currentRepeat++;
-        this.currentIndex = 0;
-      } else {
-        this.stop();
-        return;
+      if (this.currentIndex >= this.queue.length) {
+        if (this.currentRepeat < this.repeatCount) {
+          this.currentRepeat++;
+          this.currentIndex = 0;
+        } else {
+          this.stop();
+          return;
+        }
       }
-    }
 
-    if (this.currentIndex < this.queue.length) {
-      try {
+      if (this.currentIndex < this.queue.length) {
+        // Wait for the configured delay
+        await new Promise((resolve) =>
+          setTimeout(resolve, this.settingsService.wordDelay())
+        );
+
         const blob = await this.getAudioBlob(this.queue[this.currentIndex]);
         this.audio.src = URL.createObjectURL(blob);
         this.audio.playbackRate = this.settingsService.playbackSpeed();
         this.currentFile.next(this.queue[this.currentIndex]);
-        
+
         await this.audio.play();
-        this.isPlaying.next(true);
         this.updateMediaMetadata();
-      } catch (error) {
-        console.error('Error playing audio:', error);
-        this.isPlaying.next(false);
-        // Try to continue with next file
-        if (this.playbackTimeout) {
-          clearTimeout(this.playbackTimeout);
-        }
-        this.playbackTimeout = setTimeout(() => this.playNext(), this.delay);
       }
+    } catch (error) {
+      console.error('Error in playNext:', error);
+      this.playNext(); // Try next file on error
     }
   }
 
@@ -389,12 +397,12 @@ export class AudioService {
         album: 'Language Practice',
         artwork: [
           {
-            src: 'assets/icons/icon-192x192.png',
+            src: 'icons/icon-192x192.png',
             sizes: '192x192',
             type: 'image/png',
           },
           {
-            src: 'assets/icons/icon-512x512.png',
+            src: 'icons/icon-512x512.png',
             sizes: '512x512',
             type: 'image/png',
           },
@@ -415,7 +423,9 @@ export class AudioService {
   async clearAudioCache(): Promise<void> {
     try {
       const cache = await caches.open('audio-cache');
-      await cache.keys().then((keys) => keys.forEach(key => cache.delete(key)));
+      await cache
+        .keys()
+        .then((keys) => keys.forEach((key) => cache.delete(key)));
     } catch (error) {
       console.error('Error clearing audio cache:', error);
       throw error;
