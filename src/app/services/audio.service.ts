@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { effect, Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 import { SettingsService } from './settings.service';
 
@@ -22,11 +22,11 @@ export class AudioService {
     // Initialize Web Audio API context
     this.silentAudio = new AudioContext();
 
-    // Subscribe to settings changes ONCE
-    this.settingsService.settings$.subscribe((settings) => {
-      this.delay = settings.wordDelay;
+    // Use effect to react to settings changes
+    effect(() => {
+      this.delay = this.settingsService.wordDelay();
       if (this.audio) {
-        this.audio.playbackRate = settings.playbackSpeed;
+        this.audio.playbackRate = this.settingsService.playbackSpeed();
       }
     });
 
@@ -228,7 +228,7 @@ export class AudioService {
 
         const blob = await this.getAudioBlob(sanitizedUrl);
         this.audio.src = URL.createObjectURL(blob);
-        this.audio.playbackRate = this.settingsService.settings$.value.playbackSpeed;
+        this.audio.playbackRate = this.settingsService.playbackSpeed();
         this.currentFile.next(sanitizedUrl);
 
         await this.audio.play();
@@ -236,7 +236,7 @@ export class AudioService {
       } else if (this.queue.length > 0) {
         const blob = await this.getAudioBlob(this.queue[0]);
         this.audio.src = URL.createObjectURL(blob);
-        this.audio.playbackRate = this.settingsService.settings$.value.playbackSpeed;
+        this.audio.playbackRate = this.settingsService.playbackSpeed();
         this.currentFile.next(this.queue[0]);
 
         await this.audio.play();
@@ -375,7 +375,7 @@ export class AudioService {
         try {
           const blob = await this.getAudioBlob(this.queue[this.currentIndex]);
           this.audio.src = URL.createObjectURL(blob);
-          this.audio.playbackRate = this.settingsService.settings$.value.playbackSpeed;
+          this.audio.playbackRate = this.settingsService.playbackSpeed();
           this.currentFile.next(this.queue[this.currentIndex]);
 
           await this.audio.play();
@@ -384,7 +384,7 @@ export class AudioService {
           console.error('Error playing audio:', error);
           this.isPlaying.next(false);
         }
-      }, this.delay);
+      }, this.settingsService.wordDelay()); // Use computed value directly
     }
 
     this.updateMediaMetadata();

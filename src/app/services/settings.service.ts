@@ -1,5 +1,4 @@
-import { Injectable } from '@angular/core';
-import { BehaviorSubject } from 'rxjs';
+import { Injectable, signal, computed } from '@angular/core';
 
 export interface AppSettings {
   wordDelay: number;
@@ -15,11 +14,18 @@ export class SettingsService {
     playbackSpeed: 1.0,
   };
 
-  private settings = new BehaviorSubject<AppSettings>(
+  private settingsSignal = signal<AppSettings>(
     this.loadSettings() || this.defaultSettings
   );
 
-  settings$ = this.settings.asObservable();
+  // Computed values for individual settings
+  readonly wordDelay = computed(() => this.settingsSignal().wordDelay);
+  readonly playbackSpeed = computed(() => this.settingsSignal().playbackSpeed);
+
+  // Method to get all settings
+  getSettings() {
+    return this.settingsSignal();
+  }
 
   private loadSettings(): AppSettings | null {
     const saved = localStorage.getItem('polytalk-extra-settings');
@@ -27,9 +33,9 @@ export class SettingsService {
   }
 
   updateSettings(newSettings: Partial<AppSettings>) {
-    const current = this.settings.value;
+    const current = this.settingsSignal();
     const updated = { ...current, ...newSettings };
     localStorage.setItem('polytalk-extra-settings', JSON.stringify(updated));
-    this.settings.next(updated);
+    this.settingsSignal.set(updated);
   }
 }
