@@ -798,6 +798,10 @@ import { Observable, BehaviorSubject, from } from 'rxjs';
         .label-icon {
           display: none;
         }
+
+        .checkbox-label::after {
+          content: '';
+        }
       }
     `,
   ],
