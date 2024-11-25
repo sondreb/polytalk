@@ -25,7 +25,7 @@ import { CommonModule } from '@angular/common';
             class="install-button"
           >
             <span>Install</span>
-            <span class="app-text">App</span>
+            <span class="app-text">&nbsp;App</span>
           </button>
         </div>
       </div>
@@ -37,12 +37,12 @@ import { CommonModule } from '@angular/common';
         background: rgba(255, 255, 255, 0.8);
         backdrop-filter: blur(10px);
         box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-        padding: 1rem 0;  /* Changed: removed left/right padding */
+        padding: 1rem 0; /* Changed: removed left/right padding */
         position: sticky;
         top: 0;
         z-index: 100;
         width: 100%;
-        overflow: hidden;  /* Added: prevent content overflow */
+        overflow: hidden; /* Added: prevent content overflow */
       }
       .content-wrapper {
         max-width: 1200px;
@@ -51,8 +51,8 @@ import { CommonModule } from '@angular/common';
         justify-content: space-between;
         align-items: center;
         padding: 0 1rem;
-        width: 100%;  /* Added: ensure wrapper takes full width */
-        box-sizing: border-box;  /* Added: include padding in width calculation */
+        width: 100%; /* Added: ensure wrapper takes full width */
+        box-sizing: border-box; /* Added: include padding in width calculation */
       }
       @media (max-width: 768px) {
         .content-wrapper {
@@ -62,8 +62,8 @@ import { CommonModule } from '@angular/common';
       .nav-links {
         display: flex;
         align-items: center;
-        gap: 0.25rem;  /* Changed from 0.5rem to 0.25rem */
-        flex-shrink: 0;  /* Added: prevent nav links from shrinking */
+        gap: 0.25rem; /* Changed from 0.5rem to 0.25rem */
+        flex-shrink: 0; /* Added: prevent nav links from shrinking */
       }
       .nav-content {
         max-width: 1200px;
@@ -83,8 +83,8 @@ import { CommonModule } from '@angular/common';
         -webkit-background-clip: text;
         -webkit-text-fill-color: transparent;
         text-decoration: none;
-        white-space: nowrap;  /* Added: prevent text wrapping */
-        flex-shrink: 0;  /* Added: prevent brand from shrinking */
+        white-space: nowrap; /* Added: prevent text wrapping */
+        flex-shrink: 0; /* Added: prevent brand from shrinking */
       }
       .nav-links a {
         color: var(--text-color);

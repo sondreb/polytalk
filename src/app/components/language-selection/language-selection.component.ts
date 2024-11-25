@@ -28,11 +28,14 @@ import { LanguageService, Language } from '../../services/language.service';
   styles: [
     `
       .languages {
-        padding: 2rem 1rem; /* Added horizontal padding */
+        padding: 2rem 1rem;
       }
       .grid {
-        max-width: 1200px; /* Optional: limit maximum width */
-        margin: 0 auto; /* Center the grid */
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+        gap: 1rem;
+        max-width: 1200px;
+        margin: 0 auto;
       }
       h1 {
         text-align: center;
@@ -43,6 +46,7 @@ import { LanguageService, Language } from '../../services/language.service';
         text-align: center;
         cursor: pointer;
         transition: transform 0.2s;
+        padding: 1rem;
       }
       .language-card:hover {
         transform: translateY(-4px);
