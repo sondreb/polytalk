@@ -44,17 +44,56 @@ export class AudioService {
 
     this.audio.onended = () => this.playNext();
 
-    // Setup MediaSession API if available
+    // Enhanced MediaSession setup
     if ('mediaSession' in navigator) {
-      navigator.mediaSession.setActionHandler('play', () => this.play());
-      navigator.mediaSession.setActionHandler('pause', () => this.stop());
-      navigator.mediaSession.setActionHandler('stop', () => this.stop());
-      navigator.mediaSession.setActionHandler('previoustrack', () => {
-        // Optional: Implement previous track logic
+      navigator.mediaSession.setActionHandler('play', () => {
+        this.play();
+        navigator.mediaSession.playbackState = 'playing';
       });
+
+      navigator.mediaSession.setActionHandler('pause', () => {
+        this.stop();
+        navigator.mediaSession.playbackState = 'paused';
+      });
+
+      navigator.mediaSession.setActionHandler('stop', () => {
+        this.stop();
+        navigator.mediaSession.playbackState = 'none';
+      });
+
       navigator.mediaSession.setActionHandler('nexttrack', () => {
-        this.playNext();
+        if (this.isPlaying.value) {
+          clearTimeout(this.playbackTimeout);
+          this.playNext();
+        }
       });
+
+      navigator.mediaSession.setActionHandler('previoustrack', () => {
+        if (this.isPlaying.value && this.currentIndex > 0) {
+          clearTimeout(this.playbackTimeout);
+          this.currentIndex -= 2; // Go back two steps because playNext will increment
+          if (this.currentIndex < -1) this.currentIndex = -1;
+          this.playNext();
+        }
+      });
+
+      // Add seek handlers if needed
+      navigator.mediaSession.setActionHandler('seekto', (details) => {
+        if (details.seekTime && this.audio) {
+          this.audio.currentTime = details.seekTime;
+        }
+      });
+
+      // Update position state periodically
+      setInterval(() => {
+        if (this.audio && this.isPlaying.value) {
+          navigator.mediaSession.setPositionState({
+            duration: this.audio.duration || 0,
+            position: this.audio.currentTime || 0,
+            playbackRate: this.audio.playbackRate || 1,
+          });
+        }
+      }, 1000);
     }
 
     // Add event listeners for better audio state management
@@ -62,6 +101,13 @@ export class AudioService {
       this.isPlaying.next(true);
       if ('mediaSession' in navigator) {
         navigator.mediaSession.playbackState = 'playing';
+        this.updateMediaMetadata();
+        // Request audio focus
+        if ('setActive' in navigator.mediaSession) {
+          (navigator.mediaSession as any).setActive(true).catch((e: any) => {
+            console.warn('Failed to set media session active:', e);
+          });
+        }
       }
     });
 
@@ -69,6 +115,11 @@ export class AudioService {
       this.isPlaying.next(false);
       if ('mediaSession' in navigator) {
         navigator.mediaSession.playbackState = 'paused';
+        if ('setActive' in navigator.mediaSession) {
+          (navigator.mediaSession as any).setActive(false).catch((e: any) => {
+            console.warn('Failed to release media session:', e);
+          });
+        }
       }
     });
 
@@ -167,8 +218,8 @@ export class AudioService {
   async play(url?: string) {
     this.silentAudio.resume();
 
-    if (url) {
-      try {
+    try {
+      if (url) {
         const dirPath = url.substring(0, url.lastIndexOf('/') + 1);
         const filename = url.substring(url.lastIndexOf('/') + 1);
         const sanitizedUrl = dirPath + this.sanitizeKey(filename);
@@ -183,14 +234,7 @@ export class AudioService {
 
         await this.audio.play();
         this.isPlaying.next(true);
-      } catch (error) {
-        console.error('Error playing audio:', error);
-        this.isPlaying.next(false);
-        const cache = await caches.open('audio-cache');
-        await cache.delete(url);
-      }
-    } else if (this.queue.length > 0) {
-      try {
+      } else if (this.queue.length > 0) {
         const blob = await this.getAudioBlob(this.queue[0]);
         this.audio.src = URL.createObjectURL(blob);
         // Set playback rate directly from current settings
@@ -203,12 +247,21 @@ export class AudioService {
 
         await this.audio.play();
         this.isPlaying.next(true);
-      } catch (error) {
-        console.error('Error playing audio:', error);
-        this.isPlaying.next(false);
-        const cache = await caches.open('audio-cache');
-        await cache.delete(this.queue[0]);
       }
+
+      // Request audio focus when starting playback
+      if ('mediaSession' in navigator && 'setActive' in navigator.mediaSession) {
+        try {
+          await (navigator.mediaSession as any).setActive(true);
+        } catch (e) {
+          console.warn('Failed to set media session active:', e);
+        }
+      }
+
+      this.updateMediaMetadata();
+    } catch (error) {
+      console.error('Error in play:', error);
+      this.isPlaying.next(false);
     }
 
     // Update media session metadata
@@ -256,6 +309,11 @@ export class AudioService {
     // Update media session state
     if ('mediaSession' in navigator) {
       navigator.mediaSession.playbackState = 'none';
+      if ('setActive' in navigator.mediaSession) {
+        (navigator.mediaSession as any).setActive(false).catch((e: any) => {
+          console.warn('Failed to release media session:', e);
+        });
+      }
     }
   }
 
@@ -274,11 +332,18 @@ export class AudioService {
 
     // Clear media session handlers
     if ('mediaSession' in navigator) {
+      if ('setActive' in navigator.mediaSession) {
+        (navigator.mediaSession as any).setActive(false).catch((e: any) => {
+          console.warn('Failed to release media session:', e);
+        });
+      }
+      navigator.mediaSession.metadata = null;
       navigator.mediaSession.setActionHandler('play', null);
       navigator.mediaSession.setActionHandler('pause', null);
       navigator.mediaSession.setActionHandler('stop', null);
       navigator.mediaSession.setActionHandler('previoustrack', null);
       navigator.mediaSession.setActionHandler('nexttrack', null);
+      navigator.mediaSession.setActionHandler('seekto', null);
     }
 
     // Cleanup audio context
@@ -333,6 +398,29 @@ export class AudioService {
         title: this.audioQueue[this.currentIndex]?.title || 'Audio Playback',
         artist: 'PolyTalk',
         album: 'Language Learning',
+      });
+    }
+  }
+
+  private updateMediaMetadata() {
+    if ('mediaSession' in navigator && this.audioQueue.length > 0) {
+      const currentItem = this.audioQueue[this.currentIndex];
+      navigator.mediaSession.metadata = new MediaMetadata({
+        title: currentItem?.title || 'Language Learning',
+        artist: 'PolyTalk',
+        album: 'Language Practice',
+        artwork: [
+          {
+            src: 'assets/icons/icon-192x192.png',
+            sizes: '192x192',
+            type: 'image/png',
+          },
+          {
+            src: 'assets/icons/icon-512x512.png',
+            sizes: '512x512',
+            type: 'image/png',
+          },
+        ],
       });
     }
   }
