@@ -22,10 +22,12 @@ export class AudioService {
     // Initialize Web Audio API context
     this.silentAudio = new AudioContext();
 
-    // Subscribe to settings changes
+    // Subscribe to settings changes ONCE
     this.settingsService.settings$.subscribe((settings) => {
       this.delay = settings.wordDelay;
-      this.audio.playbackRate = settings.playbackSpeed;
+      if (this.audio) {
+        this.audio.playbackRate = settings.playbackSpeed;
+      }
     });
 
     // Create silent buffer
@@ -226,10 +228,7 @@ export class AudioService {
 
         const blob = await this.getAudioBlob(sanitizedUrl);
         this.audio.src = URL.createObjectURL(blob);
-        // Set playback rate directly from current settings
-        this.settingsService.settings$.subscribe((settings) => {
-          this.audio.playbackRate = settings.playbackSpeed;
-        });
+        this.audio.playbackRate = this.settingsService.settings$.value.playbackSpeed;
         this.currentFile.next(sanitizedUrl);
 
         await this.audio.play();
@@ -237,12 +236,7 @@ export class AudioService {
       } else if (this.queue.length > 0) {
         const blob = await this.getAudioBlob(this.queue[0]);
         this.audio.src = URL.createObjectURL(blob);
-        // Set playback rate directly from current settings
-        // Set playback rate directly from current settings
-        this.settingsService.settings$.subscribe((settings) => {
-          this.audio.playbackRate = settings.playbackSpeed;
-        });
-        // this.audio.playbackRate = this.settingsService.settings$.value.playbackSpeed;
+        this.audio.playbackRate = this.settingsService.settings$.value.playbackSpeed;
         this.currentFile.next(this.queue[0]);
 
         await this.audio.play();
@@ -262,6 +256,13 @@ export class AudioService {
     } catch (error) {
       console.error('Error in play:', error);
       this.isPlaying.next(false);
+      if (url) {
+        const cache = await caches.open('audio-cache');
+        await cache.delete(url);
+      } else if (this.queue.length > 0) {
+        const cache = await caches.open('audio-cache');
+        await cache.delete(this.queue[0]);
+      }
     }
 
     // Update media session metadata
@@ -374,13 +375,7 @@ export class AudioService {
         try {
           const blob = await this.getAudioBlob(this.queue[this.currentIndex]);
           this.audio.src = URL.createObjectURL(blob);
-          // Set playback rate directly from current settings
-          // Set playback rate directly from current settings
-          this.settingsService.settings$.subscribe((settings) => {
-            this.audio.playbackRate = settings.playbackSpeed;
-          });
-          // this.audio.playbackRate =
-          //   this.settingsService.settings$.value.playbackSpeed;
+          this.audio.playbackRate = this.settingsService.settings$.value.playbackSpeed;
           this.currentFile.next(this.queue[this.currentIndex]);
 
           await this.audio.play();
@@ -392,14 +387,7 @@ export class AudioService {
       }, this.delay);
     }
 
-    // Update media session metadata for next track
-    if ('mediaSession' in navigator && this.audioQueue.length > 0) {
-      navigator.mediaSession.metadata = new MediaMetadata({
-        title: this.audioQueue[this.currentIndex]?.title || 'Audio Playback',
-        artist: 'PolyTalk',
-        album: 'Language Learning',
-      });
-    }
+    this.updateMediaMetadata();
   }
 
   private updateMediaMetadata() {
