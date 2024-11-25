@@ -14,6 +14,7 @@ import { LanguageService, Language } from '../../services/language.service';
           *ngFor="let language of languages"
           class="card language-card"
           [routerLink]="['/learn', fromLanguageCode, language.code, 'words']"
+          (click)="onLanguageSelect()"
         >
           <img
             [src]="language.flagImage"
@@ -101,5 +102,9 @@ export class LanguageSelectionComponent implements OnInit {
     if (savedFromLanguage) {
       this.fromLanguageCode = savedFromLanguage;
     }
+  }
+
+  onLanguageSelect() {
+    window.scrollTo(0, 0);
   }
 }

@@ -891,6 +891,9 @@ export class LearningComponent implements OnInit, OnDestroy {
     this.availableLanguages = this.languageService.getLanguages();
 
     this.route.params.subscribe((params) => {
+      // Scroll to top when route params change
+      window.scrollTo(0, 0);
+
       this.fromLanguageCode = params['fromLanguage'];
       this.toLanguageCode = params['toLanguage'];
       this.category = params['category'];
