@@ -186,17 +186,25 @@ export class AudioService {
   }
 
   stop() {
-    if (this.playbackTimeout) {
-      clearTimeout(this.playbackTimeout);
-    }
-    this.audio.pause();
-    this.audio.currentTime = 0;
     this.isPlaying.next(false);
-    this.currentIndex = 0;
-    this.currentRepeat = 1;
-    this.currentFile.next(''); // Clear current file
-    // Suspend audio context when stopping
-    this.silentAudio.suspend();
+    this.currentFile.next('');
+    
+    // Force stop and unload any playing audio
+    if (this.audio) {
+      this.audio.pause();
+      this.audio.currentTime = 0;
+      this.audio.src = ''; // Clear source
+      this.audio.load(); // Force reload
+      this.audio = null;
+    }
+
+    // Clear queue and audio elements pool
+    this.queue = [];
+  }
+
+  // Optional: Add a cleanup method to be called on component destruction
+  cleanup() {
+    this.stop();
   }
 
   private async playNext() {

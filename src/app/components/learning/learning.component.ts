@@ -933,6 +933,8 @@ export class LearningComponent implements OnInit, OnDestroy {
 
   ngOnDestroy() {
     this.stopPlayback();
+    // Ensure proper cleanup of audio service
+    this.audioService.cleanup();
   }
 
   loadItems() {
@@ -1071,9 +1073,13 @@ export class LearningComponent implements OnInit, OnDestroy {
   stopPlayback() {
     // Reset currently playing item
     this.currentlyPlayingItem = undefined;
+    
+    // Stop audio playback
     this.audioService.stop();
+    
     if (this.playbackTimeout) {
       clearTimeout(this.playbackTimeout);
+      this.playbackTimeout = null;
     }
   }
 
@@ -1238,5 +1244,13 @@ export class LearningComponent implements OnInit, OnDestroy {
       this.toLanguageCode,
       this.category,
     ]);
+  }
+
+  // Add a method to handle stop button click with additional safety
+  @HostListener('document:visibilitychange')
+  onVisibilityChange() {
+    if (document.hidden && this.isPlaying) {
+      this.stopPlayback();
+    }
   }
 }
