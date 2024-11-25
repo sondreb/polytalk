@@ -803,6 +803,45 @@ import { Observable, BehaviorSubject, from } from 'rxjs';
           content: '';
         }
       }
+
+      @media (max-width: 768px) {
+        .controls.card {
+          padding: 0.25rem; /* Reduced from 0.5rem */
+          gap: 0.25rem; /* Reduced from 0.5rem */
+        }
+
+        .settings {
+          gap: 0.25rem; /* Reduced from 0.75rem */
+        }
+
+        .settings label {
+          gap: 0.25rem; /* Reduced from 0.5rem */
+        }
+
+        .settings input[type='number'] {
+          padding: 0.25rem; /* Reduced from 0.5rem */
+          width: 16px; /* Slightly smaller width */
+        }
+
+        .checkbox-label {
+          gap: 0.25rem; /* Reduced from 0.75rem */
+        }
+
+        .buttons {
+          gap: 0.5rem; /* Reduced from 1rem */
+        }
+
+        .buttons button {
+          padding: 0.5rem; /* Reduced from 0.75rem */
+          width: 40px; /* Reduced from 48px */
+          min-width: 40px; /* Reduced from 48px */
+        }
+
+        .checkbox-label input[type='checkbox'] {
+          width: 1.25rem; /* Reduced from 1.5rem */
+          height: 1.25rem; /* Reduced from 1.5rem */
+        }
+      }
     `,
   ],
 })
