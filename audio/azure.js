@@ -33,6 +33,7 @@ const voiceMap = {
   // is: "is-IS-GudrunNeural",
   // pt: "pt-BR-FranciscaNeural",
   // cy: "cy-GB-NiaNeural",
+  el: "el-GR-AthinaNeural",
   bs: "bs-BA-VesnaNeural",
   fa: "fa-IR-DilaraNeural",
   he: "he-IL-HilaNeural",
