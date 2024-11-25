@@ -16,6 +16,7 @@ export class AudioService {
   private delay = 250; // Will be updated from settings
   private playbackTimeout: any;
   private currentFile = new BehaviorSubject<string>('');
+  private audioQueue: { title: string, url: string }[] = [];
 
   constructor(private settingsService: SettingsService) {
     // Initialize Web Audio API context
@@ -42,6 +43,49 @@ export class AudioService {
     source.start();
 
     this.audio.onended = () => this.playNext();
+
+    // Setup MediaSession API if available
+    if ('mediaSession' in navigator) {
+      navigator.mediaSession.setActionHandler('play', () => this.play());
+      navigator.mediaSession.setActionHandler('pause', () => this.stop());
+      navigator.mediaSession.setActionHandler('stop', () => this.stop());
+      navigator.mediaSession.setActionHandler('previoustrack', () => {
+        // Optional: Implement previous track logic
+      });
+      navigator.mediaSession.setActionHandler('nexttrack', () => {
+        this.playNext();
+      });
+    }
+
+    // Add event listeners for better audio state management
+    this.audio.addEventListener('play', () => {
+      this.isPlaying.next(true);
+      if ('mediaSession' in navigator) {
+        navigator.mediaSession.playbackState = 'playing';
+      }
+    });
+
+    this.audio.addEventListener('pause', () => {
+      this.isPlaying.next(false);
+      if ('mediaSession' in navigator) {
+        navigator.mediaSession.playbackState = 'paused';
+      }
+    });
+
+    this.audio.addEventListener('ended', () => {
+      if ('mediaSession' in navigator) {
+        navigator.mediaSession.playbackState = 'none';
+      }
+    });
+
+    // Add error handling
+    this.audio.addEventListener('error', (e: any) => {
+      console.error('Audio playback error:', e);
+      this.isPlaying.next(false);
+      if ('mediaSession' in navigator) {
+        navigator.mediaSession.playbackState = 'none';
+      }
+    });
   }
 
   private sanitizeKey(key: string): string {
@@ -49,22 +93,22 @@ export class AudioService {
   }
 
   setQueue(audioFiles: string[], repeat: number = 1) {
-    // Sanitize all filenames in the queue
-    this.queue = audioFiles.map((file) => {
+    // Sanitize and prepare queue with metadata
+    this.audioQueue = audioFiles.map(file => {
       const dirPath = file.substring(0, file.lastIndexOf('/') + 1);
       const filename = file.substring(file.lastIndexOf('/') + 1);
       const sanitizedFilename = this.sanitizeKey(filename);
-      return dirPath + sanitizedFilename;
+      return {
+        title: sanitizedFilename.replace('.mp3', ''),
+        url: dirPath + sanitizedFilename
+      };
     });
+    
+    this.queue = this.audioQueue.map(item => item.url);
     this.repeatCount = repeat;
     this.currentRepeat = 1;
     this.currentIndex = 0;
   }
-
-  // Remove setDelay method as it's now handled by settings
-  // setDelay(seconds: number) {
-  //   this.delay = Math.max(0.25, seconds) * 1000;
-  // }
 
   private async validateAudioBlob(blob: Blob): Promise<boolean> {
     return new Promise((resolve) => {
@@ -166,6 +210,15 @@ export class AudioService {
         await cache.delete(this.queue[0]);
       }
     }
+
+    // Update media session metadata
+    if ('mediaSession' in navigator && this.audioQueue.length > 0) {
+      navigator.mediaSession.metadata = new MediaMetadata({
+        title: this.audioQueue[this.currentIndex]?.title || 'Audio Playback',
+        artist: 'PolyTalk',
+        album: 'Language Learning',
+      });
+    }
   }
 
   async playSingleFile(audioFile: string) {
@@ -200,11 +253,38 @@ export class AudioService {
 
     // Clear queue and audio elements pool
     this.queue = [];
+
+    // Update media session state
+    if ('mediaSession' in navigator) {
+      navigator.mediaSession.playbackState = 'none';
+    }
   }
 
   // Optional: Add a cleanup method to be called on component destruction
   cleanup() {
     this.stop();
+    
+    // Remove all event listeners
+    if (this.audio) {
+      this.audio.onended = null;
+      this.audio.onerror = null;
+      this.audio.onplay = null;
+      this.audio.onpause = null;
+    }
+
+    // Clear media session handlers
+    if ('mediaSession' in navigator) {
+      navigator.mediaSession.setActionHandler('play', null);
+      navigator.mediaSession.setActionHandler('pause', null);
+      navigator.mediaSession.setActionHandler('stop', null);
+      navigator.mediaSession.setActionHandler('previoustrack', null);
+      navigator.mediaSession.setActionHandler('nexttrack', null);
+    }
+
+    // Cleanup audio context
+    if (this.silentAudio) {
+      this.silentAudio.close();
+    }
   }
 
   private async playNext() {
@@ -241,6 +321,15 @@ export class AudioService {
           this.isPlaying.next(false);
         }
       }, this.delay);
+    }
+
+    // Update media session metadata for next track
+    if ('mediaSession' in navigator && this.audioQueue.length > 0) {
+      navigator.mediaSession.metadata = new MediaMetadata({
+        title: this.audioQueue[this.currentIndex]?.title || 'Audio Playback',
+        artist: 'PolyTalk',
+        album: 'Language Learning',
+      });
     }
   }
 
