@@ -57,11 +57,31 @@ import { LanguageService, Language } from '../../services/language.service';
       h2 {
         margin: 1rem 0 0;
         color: var(--text-color);
+        font-size: 1.2rem;
       }
       .flag-image {
         width: 64px;
         height: 48px;
         border-radius: 4px;
+      }
+
+      @media (max-width: 768px) {
+        .grid {
+          grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+        }
+        h2 {
+          font-size: 1rem;
+        }
+      }
+
+      @media (max-width: 480px) {
+        h2 {
+          font-size: 0.9rem;
+        }
+        .flag-image {
+          width: 48px;
+          height: 36px;
+        }
       }
     `,
   ],
