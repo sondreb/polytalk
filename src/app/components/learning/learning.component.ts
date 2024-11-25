@@ -1,4 +1,10 @@
-import { Component, OnInit, OnDestroy, HostListener } from '@angular/core';
+import {
+  Component,
+  OnInit,
+  OnDestroy,
+  HostListener,
+  effect,
+} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
@@ -162,8 +168,6 @@ import { Observable, BehaviorSubject, from } from 'rxjs';
                 </div>
 
                 <div class="buttons">
-                  {{ isPlaying }}
-
                   <button (click)="startPlayback()" [disabled]="isPlaying">
                     <span class="icon">▶</span>
                     <span class="button-text">Start</span>
@@ -926,22 +930,6 @@ export class LearningComponent implements OnInit, OnDestroy {
     window.addEventListener('offline', () =>
       this.handleConnectionChange(false)
     );
-  }
-
-  ngOnInit() {
-    this.availableLanguages = this.languageService.getLanguages();
-
-    this.route.params.subscribe((params) => {
-      // Scroll to top when route params change
-      window.scrollTo(0, 0);
-
-      this.fromLanguageCode = params['fromLanguage'];
-      this.toLanguageCode = params['toLanguage'];
-      this.category = params['category'];
-
-      this.updateLanguages();
-      this.loadItems();
-    });
 
     effect(() => {
       this.isPlaying = this.audioService.isPlaying();
@@ -974,6 +962,22 @@ export class LearningComponent implements OnInit, OnDestroy {
           }
         }
       }
+    });
+  }
+
+  ngOnInit() {
+    this.availableLanguages = this.languageService.getLanguages();
+
+    this.route.params.subscribe((params) => {
+      // Scroll to top when route params change
+      window.scrollTo(0, 0);
+
+      this.fromLanguageCode = params['fromLanguage'];
+      this.toLanguageCode = params['toLanguage'];
+      this.category = params['category'];
+
+      this.updateLanguages();
+      this.loadItems();
     });
   }
 

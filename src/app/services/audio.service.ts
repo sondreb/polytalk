@@ -70,6 +70,7 @@ export class AudioService {
       });
 
       navigator.mediaSession.setActionHandler('nexttrack', () => {
+        console.log('Next track requested');
         if (this.isPlayingSignal()) {
           clearTimeout(this.playbackTimeout);
           this.playNext();
@@ -94,6 +95,7 @@ export class AudioService {
 
       // Update position state periodically
       setInterval(() => {
+        console.log('Updating media session position state');
         if (this.audio && this.isPlayingSignal()) {
           navigator.mediaSession.setPositionState({
             duration: this.audio.duration || 0,
@@ -158,7 +160,7 @@ export class AudioService {
       this.playbackTimeout = null;
     }
 
-    // Reset audio state
+    // Reset audio state but don't change isPlaying
     this.audio.pause();
     this.audio.currentTime = 0;
 
@@ -176,7 +178,7 @@ export class AudioService {
     this.queue = this.audioQueue.map((item) => item.url);
     this.repeatCount = repeat;
     this.currentRepeat = 1;
-    this.currentIndex = 0;
+    this.currentIndex = -1; // Will be incremented to 0 in playNext
   }
 
   private async validateAudioBlob(blob: Blob): Promise<boolean> {
@@ -235,6 +237,7 @@ export class AudioService {
 
   async play(url?: string) {
     this.silentAudio.resume();
+    this.isPlayingSignal.set(true);
 
     try {
       if (url) {
@@ -249,12 +252,12 @@ export class AudioService {
         this.currentFileSignal.set(sanitizedUrl);
 
         await this.audio.play();
-        this.isPlayingSignal.set(true);
+        // this.isPlayingSignal.set(true);
       } else if (this.queue.length > 0) {
         // Queue playback - start from beginning
         this.currentIndex = -1; // Will be incremented to 0 in playNext
         this.currentRepeat = 1;
-        this.isPlayingSignal.set(true);
+        // this.isPlayingSignal.set(true);
         this.playNext(); // Start the queue playback
       }
 
@@ -297,6 +300,12 @@ export class AudioService {
       this.playbackTimeout = null;
     }
 
+    console.log('Stopping audio playback');
+
+    // Reset all state
+    this.queue = [];
+    this.currentIndex = 0;
+    this.currentRepeat = 1;
     this.isPlayingSignal.set(false);
     this.currentFileSignal.set('');
 
@@ -304,10 +313,6 @@ export class AudioService {
       this.audio.pause();
       this.audio.currentTime = 0;
     }
-
-    // Keep the queue but reset playback position
-    this.currentIndex = 0;
-    this.currentRepeat = 1;
 
     // Update media session state
     if ('mediaSession' in navigator) {
@@ -356,10 +361,8 @@ export class AudioService {
   }
 
   private async playNext() {
-    if (!this.isPlayingSignal()) {
-      return; // Don't continue if playback was stopped
-    }
-
+    this.isPlayingSignal.set(true);
+    // Don't turn off isPlaying between tracks
     this.currentIndex++;
 
     if (this.currentIndex >= this.queue.length) {
@@ -386,11 +389,9 @@ export class AudioService {
           this.currentFileSignal.set(this.queue[this.currentIndex]);
 
           await this.audio.play();
-          this.isPlayingSignal.set(true);
           this.updateMediaMetadata();
         } catch (error) {
           console.error('Error playing audio:', error);
-          this.isPlayingSignal.set(false);
           // Try to continue with next file on error
           this.playNext();
         }
