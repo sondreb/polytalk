@@ -842,6 +842,45 @@ import { Observable, BehaviorSubject, from } from 'rxjs';
           height: 1.25rem; /* Reduced from 1.5rem */
         }
       }
+
+      @media (max-width: 768px) {
+        .learning {
+          padding: 0;
+        }
+
+        .content-wrapper {
+          padding: 0;
+        }
+
+        .content.card {
+          margin: 0;
+          padding: 0;
+        }
+
+        .item {
+          padding: 0.5rem;
+        }
+
+        .native,
+        .translation {
+          gap: 0.5rem;  /* Reduce spacing between play button and text */
+        }
+
+        /* Reduce margins around other elements */
+        .language-header {
+          margin-bottom: 0.5rem;
+          padding: 0.5rem;
+        }
+
+        .tabs {
+          margin-bottom: 0.5rem;
+          padding: 0.25rem;
+        }
+
+        .offline-controls {
+          margin: 0.5rem 0;
+        }
+      }
     `,
   ],
 })
