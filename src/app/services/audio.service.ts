@@ -146,6 +146,16 @@ export class AudioService {
   }
 
   setQueue(audioFiles: string[], repeat: number = 1) {
+    // Clear any existing playback
+    if (this.playbackTimeout) {
+      clearTimeout(this.playbackTimeout);
+      this.playbackTimeout = null;
+    }
+    
+    // Reset audio state
+    this.audio.pause();
+    this.audio.currentTime = 0;
+
     // Sanitize and prepare queue with metadata
     this.audioQueue = audioFiles.map(file => {
       const dirPath = file.substring(0, file.lastIndexOf('/') + 1);
@@ -235,35 +245,17 @@ export class AudioService {
         await this.audio.play();
         this.isPlaying.next(true);
       } else if (this.queue.length > 0) {
-        // Queue playback
-        this.currentIndex = 0; // Reset index when starting new queue
-        const blob = await this.getAudioBlob(this.queue[this.currentIndex]);
-        this.audio.src = URL.createObjectURL(blob);
-        this.audio.playbackRate = this.settingsService.playbackSpeed();
-        this.currentFile.next(this.queue[this.currentIndex]);
-
-        await this.audio.play();
-        this.isPlaying.next(true);
+        // Start queue playback from the beginning
+        this.currentIndex = -1; // Will be incremented in playNext
+        this.currentRepeat = 1;
+        this.playNext();
       }
-
-      // Request audio focus
-      if ('mediaSession' in navigator && 'setActive' in navigator.mediaSession) {
-        try {
-          await (navigator.mediaSession as any).setActive(true);
-        } catch (e) {
-          console.warn('Failed to set media session active:', e);
-        }
-      }
-
-      this.updateMediaMetadata();
     } catch (error) {
       console.error('Error in play:', error);
       this.isPlaying.next(false);
-      const cache = await caches.open('audio-cache');
       if (url) {
+        const cache = await caches.open('audio-cache');
         await cache.delete(url);
-      } else if (this.queue.length > 0) {
-        await cache.delete(this.queue[this.currentIndex]);
       }
     }
   }
@@ -294,14 +286,12 @@ export class AudioService {
     this.isPlaying.next(false);
     this.currentFile.next('');
     
-    // Just pause and reset the current audio
     if (this.audio) {
       this.audio.pause();
       this.audio.currentTime = 0;
     }
 
-    // Clear queue state but keep the audio instance
-    this.queue = [];
+    // Keep the queue but reset playback position
     this.currentIndex = 0;
     this.currentRepeat = 1;
 
@@ -369,25 +359,24 @@ export class AudioService {
     }
 
     if (this.currentIndex < this.queue.length) {
-      if (this.playbackTimeout) {
-        clearTimeout(this.playbackTimeout);
-      }
-
-      this.playbackTimeout = setTimeout(async () => {
-        try {
-          const blob = await this.getAudioBlob(this.queue[this.currentIndex]);
-          this.audio.src = URL.createObjectURL(blob);
-          this.audio.playbackRate = this.settingsService.playbackSpeed();
-          this.currentFile.next(this.queue[this.currentIndex]);
-
-          await this.audio.play();
-          this.isPlaying.next(true);
-          this.updateMediaMetadata();
-        } catch (error) {
-          console.error('Error playing audio:', error);
-          this.isPlaying.next(false);
+      try {
+        const blob = await this.getAudioBlob(this.queue[this.currentIndex]);
+        this.audio.src = URL.createObjectURL(blob);
+        this.audio.playbackRate = this.settingsService.playbackSpeed();
+        this.currentFile.next(this.queue[this.currentIndex]);
+        
+        await this.audio.play();
+        this.isPlaying.next(true);
+        this.updateMediaMetadata();
+      } catch (error) {
+        console.error('Error playing audio:', error);
+        this.isPlaying.next(false);
+        // Try to continue with next file
+        if (this.playbackTimeout) {
+          clearTimeout(this.playbackTimeout);
         }
-      }, this.settingsService.wordDelay());
+        this.playbackTimeout = setTimeout(() => this.playNext(), this.delay);
+      }
     }
   }
 
