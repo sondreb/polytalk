@@ -222,6 +222,7 @@ export class AudioService {
 
     try {
       if (url) {
+        // Single file playback
         const dirPath = url.substring(0, url.lastIndexOf('/') + 1);
         const filename = url.substring(url.lastIndexOf('/') + 1);
         const sanitizedUrl = dirPath + this.sanitizeKey(filename);
@@ -234,16 +235,18 @@ export class AudioService {
         await this.audio.play();
         this.isPlaying.next(true);
       } else if (this.queue.length > 0) {
-        const blob = await this.getAudioBlob(this.queue[0]);
+        // Queue playback
+        this.currentIndex = 0; // Reset index when starting new queue
+        const blob = await this.getAudioBlob(this.queue[this.currentIndex]);
         this.audio.src = URL.createObjectURL(blob);
         this.audio.playbackRate = this.settingsService.playbackSpeed();
-        this.currentFile.next(this.queue[0]);
+        this.currentFile.next(this.queue[this.currentIndex]);
 
         await this.audio.play();
         this.isPlaying.next(true);
       }
 
-      // Request audio focus when starting playback
+      // Request audio focus
       if ('mediaSession' in navigator && 'setActive' in navigator.mediaSession) {
         try {
           await (navigator.mediaSession as any).setActive(true);
@@ -256,22 +259,12 @@ export class AudioService {
     } catch (error) {
       console.error('Error in play:', error);
       this.isPlaying.next(false);
+      const cache = await caches.open('audio-cache');
       if (url) {
-        const cache = await caches.open('audio-cache');
         await cache.delete(url);
       } else if (this.queue.length > 0) {
-        const cache = await caches.open('audio-cache');
-        await cache.delete(this.queue[0]);
+        await cache.delete(this.queue[this.currentIndex]);
       }
-    }
-
-    // Update media session metadata
-    if ('mediaSession' in navigator && this.audioQueue.length > 0) {
-      navigator.mediaSession.metadata = new MediaMetadata({
-        title: this.audioQueue[this.currentIndex]?.title || 'Audio Playback',
-        artist: 'PolyTalk',
-        album: 'Language Learning',
-      });
     }
   }
 
@@ -293,16 +286,21 @@ export class AudioService {
   }
 
   stop() {
+    if (this.playbackTimeout) {
+      clearTimeout(this.playbackTimeout);
+      this.playbackTimeout = null;
+    }
+
     this.isPlaying.next(false);
     this.currentFile.next('');
     
-    // Just pause and reset the current audio instead of destroying it
+    // Just pause and reset the current audio
     if (this.audio) {
       this.audio.pause();
       this.audio.currentTime = 0;
     }
 
-    // Clear queue but keep the audio instance
+    // Clear queue state but keep the audio instance
     this.queue = [];
     this.currentIndex = 0;
     this.currentRepeat = 1;
@@ -371,6 +369,10 @@ export class AudioService {
     }
 
     if (this.currentIndex < this.queue.length) {
+      if (this.playbackTimeout) {
+        clearTimeout(this.playbackTimeout);
+      }
+
       this.playbackTimeout = setTimeout(async () => {
         try {
           const blob = await this.getAudioBlob(this.queue[this.currentIndex]);
@@ -380,14 +382,13 @@ export class AudioService {
 
           await this.audio.play();
           this.isPlaying.next(true);
+          this.updateMediaMetadata();
         } catch (error) {
           console.error('Error playing audio:', error);
           this.isPlaying.next(false);
         }
-      }, this.settingsService.wordDelay()); // Use computed value directly
+      }, this.settingsService.wordDelay());
     }
-
-    this.updateMediaMetadata();
   }
 
   private updateMediaMetadata() {
