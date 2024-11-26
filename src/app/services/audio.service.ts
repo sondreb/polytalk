@@ -5,7 +5,7 @@ import { SettingsService } from './settings.service';
   providedIn: 'root',
 })
 export class AudioService {
-  private audio: any = new Audio();
+  private audio: HTMLAudioElement;  // Change type declaration
   private silentAudio: AudioContext;
   private queue: string[] = [];
   private isPlayingSignal = signal<boolean>(false);
@@ -22,8 +22,12 @@ export class AudioService {
   readonly currentFile = computed(() => this.currentFileSignal());
 
   constructor(private settingsService: SettingsService) {
-    // Initialize Web Audio API context
+    // Initialize audio at the start of constructor
+    this.audio = new Audio();
     this.silentAudio = new AudioContext();
+
+    // Setup audio event handlers right after initialization
+    this.setupAudioHandlers();
 
     // Use effect to react to settings changes
     effect(() => {
@@ -46,11 +50,6 @@ export class AudioService {
     source.connect(this.silentAudio.destination);
     source.loop = true;
     source.start();
-
-    this.audio.onended = () => {
-      console.log('Audio ended, playing next');
-      this.playNext();
-    };
 
     // Enhanced MediaSession setup
     if ('mediaSession' in navigator) {
@@ -105,8 +104,17 @@ export class AudioService {
         }
       }, 1000);
     }
+  }
 
-    // Add event listeners for better audio state management
+  // Move event handler setup to a separate method for clarity
+  private setupAudioHandlers() {
+    if (!this.audio) return;
+
+    this.audio.onended = () => {
+      console.log('Audio ended, playing next');
+      this.playNext();
+    };
+
     this.audio.addEventListener('play', () => {
       this.isPlayingSignal.set(true);
       if ('mediaSession' in navigator) {
@@ -154,6 +162,12 @@ export class AudioService {
   }
 
   setQueue(audioFiles: string[], repeat: number = 1) {
+    // Add null check
+    if (!this.audio) {
+      this.audio = new Audio();
+      this.setupAudioHandlers();
+    }
+
     // Clear any existing playback
     if (this.playbackTimeout) {
       clearTimeout(this.playbackTimeout);
@@ -235,8 +249,37 @@ export class AudioService {
     }
   }
 
+  private async ensureAudioContext() {
+    if (!this.silentAudio || this.silentAudio.state === 'closed') {
+      // Re-create AudioContext if closed
+      this.silentAudio = new AudioContext();
+      
+      // Re-create silent buffer
+      const silentBuffer = this.silentAudio.createBuffer(
+        1,
+        this.silentAudio.sampleRate * 0.1,
+        this.silentAudio.sampleRate
+      );
+
+      const source = this.silentAudio.createBufferSource();
+      source.buffer = silentBuffer;
+      source.connect(this.silentAudio.destination);
+      source.loop = true;
+      source.start();
+    }
+
+    // Only try to resume if in suspended state
+    if (this.silentAudio.state === 'suspended') {
+      try {
+        await this.silentAudio.resume();
+      } catch (error) {
+        console.warn('Failed to resume AudioContext:', error);
+      }
+    }
+  }
+
   async play(url?: string) {
-    this.silentAudio.resume();
+    await this.ensureAudioContext();
     this.isPlayingSignal.set(true);
 
     try {
@@ -329,13 +372,20 @@ export class AudioService {
   cleanup() {
     this.stop();
 
-    // Only null out audio instance during actual cleanup
     if (this.audio) {
       this.audio.onended = null;
       this.audio.onerror = null;
       this.audio.onplay = null;
       this.audio.onpause = null;
-      this.audio = null;
+    }
+
+    // Clean up AudioContext properly
+    if (this.silentAudio && this.silentAudio.state !== 'closed') {
+      try {
+        this.silentAudio.close();
+      } catch (error) {
+        console.warn('Error closing AudioContext:', error);
+      }
     }
 
     // Clear media session handlers
@@ -352,11 +402,6 @@ export class AudioService {
       navigator.mediaSession.setActionHandler('previoustrack', null);
       navigator.mediaSession.setActionHandler('nexttrack', null);
       navigator.mediaSession.setActionHandler('seekto', null);
-    }
-
-    // Cleanup audio context
-    if (this.silentAudio) {
-      this.silentAudio.close();
     }
   }
 
