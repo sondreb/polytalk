@@ -356,24 +356,37 @@ export class AudioService {
   }
 
   stop() {
+    console.log('Stopping audio playback');
+
+    // Clear any scheduled playback first
     if (this.playbackTimeout) {
       clearTimeout(this.playbackTimeout);
       this.playbackTimeout = null;
     }
 
-    console.log('Stopping audio playback');
+    // Ensure audio is properly stopped
+    if (this.audio) {
+      // Remove the onended handler temporarily to prevent triggering playNext
+      const originalOnEnded = this.audio.onended;
+      this.audio.onended = null;
+      
+      this.audio.pause();
+      this.audio.currentTime = 0;
+      
+      // Clear the source
+      this.audio.src = '';
+      
+      // Restore the onended handler
+      this.audio.onended = originalOnEnded;
+    }
 
     // Reset all state
     this.queue = [];
+    this.audioQueue = [];
     this.currentIndex = 0;
     this.currentRepeat = 1;
     this.isPlayingSignal.set(false);
     this.currentFileSignal.set('');
-
-    if (this.audio) {
-      this.audio.pause();
-      this.audio.currentTime = 0;
-    }
 
     // Update media session state
     if ('mediaSession' in navigator) {
