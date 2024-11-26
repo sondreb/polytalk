@@ -161,12 +161,30 @@ export class AudioService {
     return key.replace(/[?<>:"/\\|*]/g, '').trim();
   }
 
-  setQueue(audioFiles: string[], repeat: number = 1) {
-    // Add null check
-    if (!this.audio) {
-      this.audio = new Audio();
-      this.setupAudioHandlers();
+  private resetAudio() {
+    if (this.audio) {
+      // Remove all event listeners
+      this.audio.onended = null;
+      this.audio.onerror = null;
+      this.audio.onplay = null;
+      this.audio.onpause = null;
+      
+      // Stop any current playback
+      this.audio.pause();
+      this.audio.src = '';
     }
+
+    // Create new audio element
+    this.audio = new Audio();
+    this.setupAudioHandlers();
+  }
+
+  setQueue(audioFiles: string[], repeat: number = 1) {
+    // Reset audio completely
+    this.resetAudio();
+    
+    // Ensure audio context is active
+    this.ensureAudioContext();
 
     // Clear any existing playback
     if (this.playbackTimeout) {
@@ -174,9 +192,9 @@ export class AudioService {
       this.playbackTimeout = null;
     }
 
-    // Reset audio state but don't change isPlaying
-    this.audio.pause();
-    this.audio.currentTime = 0;
+    // Reset state
+    this.isPlayingSignal.set(false);
+    this.currentFileSignal.set('');
 
     // Sanitize and prepare queue with metadata
     this.audioQueue = audioFiles.map((file) => {
