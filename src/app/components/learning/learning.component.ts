@@ -1053,9 +1053,10 @@ export class LearningComponent implements OnInit, OnDestroy {
   async startPlayback() {
     if (this.isPlaying) return; // Don't start if already playing
 
+    let audioFiles: string[] = [];
+
     if (this.isOffline) {
       // Check all audio files first
-      const audioFiles: string[] = [];
       const unavailableFiles: string[] = [];
 
       for (const item of this.currentItems) {
@@ -1096,7 +1097,6 @@ export class LearningComponent implements OnInit, OnDestroy {
     } else {
       // Original playback logic for online mode
       this.currentlyPlayingItem = undefined;
-      let audioFiles: string[] = [];
 
       this.currentItems.forEach((item) => {
         const sanitizedFileName = this.sanitizeKey(item.key);
@@ -1118,6 +1118,9 @@ export class LearningComponent implements OnInit, OnDestroy {
 
       this.audioService.setQueue(audioFiles, this.loopRepeat);
     }
+
+    // Start caching audio files in the background
+    this.audioService.cacheAudioFiles(audioFiles);
 
     this.audioService.play();
   }

@@ -5,7 +5,7 @@ import { SettingsService } from './settings.service';
   providedIn: 'root',
 })
 export class AudioService {
-  private audio: HTMLAudioElement;  // Change type declaration
+  private audio: HTMLAudioElement; // Change type declaration
   private silentAudio: AudioContext;
   private queue: string[] = [];
   private isPlayingSignal = signal<boolean>(false);
@@ -168,7 +168,7 @@ export class AudioService {
       this.audio.onerror = null;
       this.audio.onplay = null;
       this.audio.onpause = null;
-      
+
       // Stop any current playback
       this.audio.pause();
       this.audio.src = '';
@@ -182,7 +182,7 @@ export class AudioService {
   setQueue(audioFiles: string[], repeat: number = 1) {
     // Reset audio completely
     this.resetAudio();
-    
+
     // Ensure audio context is active
     this.ensureAudioContext();
 
@@ -271,7 +271,7 @@ export class AudioService {
     if (!this.silentAudio || this.silentAudio.state === 'closed') {
       // Re-create AudioContext if closed
       this.silentAudio = new AudioContext();
-      
+
       // Re-create silent buffer
       const silentBuffer = this.silentAudio.createBuffer(
         1,
@@ -369,13 +369,13 @@ export class AudioService {
       // Remove the onended handler temporarily to prevent triggering playNext
       const originalOnEnded = this.audio.onended;
       this.audio.onended = null;
-      
+
       this.audio.pause();
       this.audio.currentTime = 0;
-      
+
       // Clear the source
       this.audio.src = '';
-      
+
       // Restore the onended handler
       this.audio.onended = originalOnEnded;
     }
@@ -507,6 +507,29 @@ export class AudioService {
     } catch (error) {
       console.error('Error clearing audio cache:', error);
       throw error;
+    }
+  }
+
+  async cacheAudioFiles(audioFiles: string[]) {
+    try {
+      const cache = await caches.open('audio-cache');
+      for (const file of audioFiles) {
+        try {
+          const cached = await cache.match(file);
+          if (!cached) {
+            const response = await fetch(file);
+            if (response.ok) {
+              await cache.put(file, response);
+            } else {
+              console.log('Failed to load audio file for caching:', file);
+            }
+          }
+        } catch (error) {
+          console.error(`Error caching file ${file}:`, error);
+        }
+      }
+    } catch (error) {
+      console.error('Error caching audio files:', error);
     }
   }
 }
