@@ -1,6 +1,6 @@
 {
   "configVersion": 1,
-  "timestamp": 1732709014305,
+  "timestamp": 1732826977820,
   "index": "/index.html",
   "assetGroups": [
     {
@@ -13,7 +13,7 @@
       "urls": [
         "/favicon.png",
         "/index.html",
-        "/main-I5RBTOJJ.js",
+        "/main-DQHLCV4L.js",
         "/manifest.webmanifest",
         "/polyfills-FFHMD2TL.js",
         "/styles-6UFKNO7K.css"
@@ -3799,8 +3799,8 @@
     "/assets/flags/zw.png": "c44732cbf86a0e57773e71a9649dc9519324c742",
     "/assets/polytalk-social.png": "46a7abf377503c8fea256fa14970ab122d5fb384",
     "/favicon.png": "6e8076b4e3ae8dc62c15baaefed63b717257f91e",
-    "/index.html": "aa315e4bca483a43b3701b46a99b6d99495c37cf",
-    "/main-I5RBTOJJ.js": "16a87c409ab1ef79a955b28558381f5b72342e73",
+    "/index.html": "265feb85a66fefb6ecc260faeb732695bf676dbe",
+    "/main-DQHLCV4L.js": "c78010f65cc96b9f53055fb5e4ef79915f6bf58f",
     "/manifest.webmanifest": "bee929cc6bc9228e0dd4f5208457bb0dfc5faa20",
     "/polyfills-FFHMD2TL.js": "f49b49a155bc7d192db62a4c15d0a612b460a667",
     "/styles-6UFKNO7K.css": "678acf769a3dcad6b8b7c8df2a76d2429807711a"
