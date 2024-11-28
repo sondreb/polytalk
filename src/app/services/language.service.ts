@@ -78,12 +78,12 @@ export class LanguageService {
       flag: '🇷🇺',
       flagImage: '/assets/flags/ru.png',
     },
-    {
-      code: 'sr',
-      name: 'Montenegrin',
-      flag: '🇲🇪',
-      flagImage: '/assets/flags/me.png',
-    },
+    // {
+    //   code: 'sr',
+    //   name: 'Montenegrin',
+    //   flag: '🇲🇪',
+    //   flagImage: '/assets/flags/me.png',
+    // },
     {
       code: 'ar',
       name: 'Arabic',
