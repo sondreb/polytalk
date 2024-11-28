@@ -613,7 +613,7 @@ import { Observable, BehaviorSubject, from } from 'rxjs';
       }
 
       .offline-controls {
-        margin: 2rem 0.5rem;
+        padding: 2em 0 1em 0;
         text-align: center;
       }
 
