@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, AfterViewInit } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { LanguageService, Language } from '../../services/language.service';
@@ -107,7 +107,7 @@ import { trigger, style, animate, transition, query, stagger } from '@angular/an
     `,
   ],
 })
-export class LanguageSelectionComponent implements OnInit {
+export class LanguageSelectionComponent implements OnInit, AfterViewInit {
   languages: Language[];
   fromLanguageCode: string = 'en';
   private readonly FROM_LANGUAGE_KEY = 'polytalk-from-language';
@@ -122,6 +122,10 @@ export class LanguageSelectionComponent implements OnInit {
     if (savedFromLanguage) {
       this.fromLanguageCode = savedFromLanguage;
     }
+  }
+
+  ngAfterViewInit() {
+    window.scrollTo(0, 0);
   }
 
   onLanguageSelect() {
