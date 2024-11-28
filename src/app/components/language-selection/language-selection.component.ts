@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { LanguageService, Language } from '../../services/language.service';
+import { trigger, style, animate, transition, query, stagger } from '@angular/animations';
 
 @Component({
   selector: 'app-language-selection',
@@ -9,7 +10,7 @@ import { LanguageService, Language } from '../../services/language.service';
   imports: [CommonModule, RouterLink],
   template: `
     <section class="languages">
-      <div class="grid">
+      <div class="grid" [@listAnimation]="languages.length">
         <div
           *ngFor="let language of languages"
           class="card language-card"
@@ -26,6 +27,25 @@ import { LanguageService, Language } from '../../services/language.service';
       </div>
     </section>
   `,
+  animations: [
+    trigger('listAnimation', [
+      transition('* => *', [
+        query(
+          ':enter',
+          [
+            style({ opacity: 0, transform: 'translateY(15px)' }),
+            stagger(50, [
+              animate(
+                '0.3s ease-out',
+                style({ opacity: 1, transform: 'translateY(0)' })
+              ),
+            ]),
+          ],
+          { optional: true }
+        ),
+      ]),
+    ]),
+  ],
   styles: [
     `
       .languages {
