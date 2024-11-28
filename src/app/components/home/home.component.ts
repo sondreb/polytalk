@@ -52,15 +52,31 @@ import { RouterLink } from '@angular/router';
       .hero {
         text-align: center;
         padding: 8rem 1rem;
-        background: radial-gradient(
-          circle at center,
-          rgba(99, 102, 241, 0.15) 0%,
-          rgba(139, 92, 246, 0.05) 100%
-        );
+        background: 
+          linear-gradient(125deg, 
+            rgba(130, 80, 255, 0.15) 0%,
+            rgba(255, 110, 110, 0.15) 30%,
+            rgba(80, 200, 255, 0.15) 100%
+          ),
+          radial-gradient(
+            circle at top right,
+            rgba(255, 170, 100, 0.12) 0%,
+            rgba(130, 80, 255, 0.08) 50%,
+            transparent 100%
+          ),
+          radial-gradient(
+            circle at bottom left,
+            rgba(80, 200, 255, 0.15) 0%,
+            rgba(130, 80, 255, 0.1) 50%,
+            transparent 100%
+          );
         border-radius: 32px;
         margin: 2rem 0;
         position: relative;
         overflow: hidden;
+        box-shadow: 
+          inset 0 0 100px rgba(130, 80, 255, 0.1),
+          0 10px 40px rgba(130, 80, 255, 0.1);
       }
 
       .hero::before {
@@ -70,8 +86,9 @@ import { RouterLink } from '@angular/router';
         left: 0;
         right: 0;
         bottom: 0;
-        background: url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M11 18c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm48 25c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm-43-7c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm63 31c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM34 90c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3z' fill='rgba(99, 102, 241, 0.05)' fill-rule='evenodd'/%3E%3C/svg%3E");
-        opacity: 0.5;
+        background: url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M11 18c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm48 25c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm-43-7c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm63 31c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM34 90c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3z' fill='rgba(255, 255, 255, 0.05)' fill-rule='evenodd'/%3E%3C/svg%3E");
+        opacity: 0.6;
+        mix-blend-mode: overlay;
       }
 
       .hero-content {
