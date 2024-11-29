@@ -53,8 +53,8 @@ import { trigger, style, animate, transition, query, stagger } from '@angular/an
       }
       .grid {
         display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
-        gap: 1rem;
+        grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+        gap: 1.5rem;
         max-width: 1200px;
         margin: 0 auto;
       }
@@ -78,7 +78,8 @@ import { trigger, style, animate, transition, query, stagger } from '@angular/an
       h2 {
         margin: 1rem 0 0;
         color: var(--text-color);
-        font-size: 1.2rem;
+        font-size: 1.1rem;
+        line-height: 1.2;
       }
       .flag-image {
         width: 64px;
@@ -88,7 +89,7 @@ import { trigger, style, animate, transition, query, stagger } from '@angular/an
 
       @media (max-width: 768px) {
         .grid {
-          grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+          grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
         }
         h2 {
           font-size: 1rem;
@@ -96,6 +97,9 @@ import { trigger, style, animate, transition, query, stagger } from '@angular/an
       }
 
       @media (max-width: 480px) {
+        .grid {
+          grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+        }
         h2 {
           font-size: 0.9rem;
         }
