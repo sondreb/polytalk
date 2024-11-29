@@ -24,42 +24,13 @@ export class LanguageService {
       flag: '🇬🇧',
       flagImage: '/assets/flags/gb.png',
     },
-    {
-      code: 'es',
-      name: 'Spanish',
-      flag: '🇪🇸',
-      flagImage: '/assets/flags/es.png',
-    },
-    {
-      code: 'fr',
-      name: 'French',
-      flag: '🇫🇷',
-      flagImage: '/assets/flags/fr.png',
-    },
-    {
-      code: 'de',
-      name: 'German',
-      flag: '🇩🇪',
-      flagImage: '/assets/flags/de.png',
-    },
-    {
-      code: 'sr',
-      name: 'Serbian',
-      flag: '🇷🇸',
-      flagImage: '/assets/flags/rs.png',
-    },
-    {
-      code: 'bs',
-      name: 'Bosnian',
-      flag: '🇧🇦',
-      flagImage: '/assets/flags/ba.png',
-    },
+},
     {
       code: 'el',
       name: 'Greek',
       flag: '🇬🇷',
       flagImage: '/assets/flags/gr.png',
-    },
+    }
     {
       code: 'me',
       name: 'Montenegrin',
@@ -287,15 +258,15 @@ export class LanguageService {
         'I am lost': 'Изгубио сам се (Izgubio sam se)',
         "I don't understand": 'Не разумијем (Ne razumijem)',
         'Do you speak English?':
-          'Да ли говорите енглески? (Da li govorite engleski?)',
-        'Where is the bathroom?': 'Ђе је купатило? (Đe je kupatilo?)',
+          'Да ли говорите енглески? (Da li govorите енглески?)',
+        'Where is the bathroom?': 'Ђе је купатило? (Đe је купатило?)',
         // Practical Phrases
         'How much does it cost?': 'Колико кошта? (Koliko košta?)',
-        'Can you help me?': 'Можете ли ми помоћи? (Možete li mi pomoći?)',
-        'I would like...': 'Желио бих... (Želio bih...)',
-        'The check, please': 'Рачун, молим (Račun, molim)',
+        'Can you help me?': 'Можете ли ми помоћи? (Možete ли ми помоћи?)',
+        'I would like...': 'Желио бих... (Žелио бих...)',
+        'The check, please': 'Рачун, молим (Рачун, молим)',
       },
-    },
+    },,
   };
 
   getLanguages(): Language[] {

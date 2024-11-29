@@ -37,6 +37,7 @@ const voiceMap = {
   bs: "bs-BA-VesnaNeural",
   fa: "fa-IR-DilaraNeural",
   he: "he-IL-HilaNeural",
+  am: "am-ET-MekdesNeural",
   af: "af-ZA-AdriNeural",
   sr: "sr-RS-NicholasNeural",
   me: "sr-RS-SophieNeural",
