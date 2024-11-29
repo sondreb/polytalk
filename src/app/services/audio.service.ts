@@ -204,6 +204,15 @@ export class AudioService {
     this.isPlayingSignal.set(false);
     this.currentFileSignal.set('');
 
+    // Clear saved state
+    this.queueState = {
+      files: [],
+      repeatCount: 1,
+      currentIndex: 0,
+      currentRepeat: 1,
+      isPaused: false
+    };
+
     // Sanitize and prepare queue with metadata
     this.audioQueue = audioFiles.map((file) => {
       const dirPath = file.substring(0, file.lastIndexOf('/') + 1);

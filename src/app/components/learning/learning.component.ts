@@ -1056,6 +1056,12 @@ export class LearningComponent implements OnInit, OnDestroy {
   }
 
   saveSettings() {
+    // Stop any current playback and reset resume state
+    if (this.isPlaying) {
+      this.stopPlayback();
+    }
+    this.canResume = false;
+
     const settings = {
       wordRepeat: this.wordRepeat,
       loopRepeat: this.loopRepeat,
@@ -1065,10 +1071,15 @@ export class LearningComponent implements OnInit, OnDestroy {
   }
 
   async startPlayback() {
+    // If playing, pause playback
     if (this.isPlaying) {
-      // Pause instead of stop when already playing
       this.pausePlayback();
       return;
+    }
+
+    // Reset queue if settings have changed
+    if (this.settingsChanged()) {
+      this.canResume = false;
     }
 
     // Only prepare new queue if not resuming from pause
@@ -1332,6 +1343,28 @@ export class LearningComponent implements OnInit, OnDestroy {
       this.toLanguageCode,
       this.category,
     ]);
+  }
+
+  // Add a method to track settings changes
+  private lastSettings = {
+    wordRepeat: 1,
+    loopRepeat: 2,
+    playBothLanguages: true
+  };
+
+  private settingsChanged(): boolean {
+    const changed = this.wordRepeat !== this.lastSettings.wordRepeat ||
+                   this.loopRepeat !== this.lastSettings.loopRepeat ||
+                   this.playBothLanguages !== this.lastSettings.playBothLanguages;
+
+    // Update last settings
+    this.lastSettings = {
+      wordRepeat: this.wordRepeat,
+      loopRepeat: this.loopRepeat,
+      playBothLanguages: this.playBothLanguages
+    };
+
+    return changed;
   }
 
   // Add a method to handle stop button click with additional safety
