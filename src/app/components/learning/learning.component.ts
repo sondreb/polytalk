@@ -168,9 +168,9 @@ import { Observable, BehaviorSubject, from } from 'rxjs';
                 </div>
 
                 <div class="buttons">
-                  <button (click)="startPlayback()" [disabled]="isPlaying">
-                    <span class="icon">▶</span>
-                    <span class="button-text">Start</span>
+                  <button (click)="startPlayback()">
+                    <span class="icon">{{playButtonIcon}}</span>
+                    <span class="button-text">{{playButtonText}}</span>
                   </button>
                   <button (click)="stopPlayback()" [disabled]="!isPlaying">
                     <span class="icon">■</span>
@@ -916,6 +916,18 @@ export class LearningComponent implements OnInit, OnDestroy {
   fromLanguage?: Language;
   toLanguage?: Language;
   availableLanguages: Language[] = [];
+  private canResume = false;
+
+  // Add getters for button text and icon
+  get playButtonText(): string {
+    if (this.isPlaying) return 'Pause';
+    return this.canResume ? 'Resume' : 'Start';
+  }
+
+  get playButtonIcon(): string {
+    if (this.isPlaying) return '⏸';
+    return this.canResume ? '▶' : '▶';
+  }
 
   constructor(
     private route: ActivatedRoute,
@@ -973,6 +985,8 @@ export class LearningComponent implements OnInit, OnDestroy {
       window.scrollTo(0, 0);
 
       this.fromLanguageCode = params['fromLanguage'];
+
+      this.fromLanguageCode = params['fromLanguage'];
       this.toLanguageCode = params['toLanguage'];
       this.category = params['category'];
 
@@ -984,7 +998,7 @@ export class LearningComponent implements OnInit, OnDestroy {
   ngOnDestroy() {
     this.stopPlayback();
     // Ensure proper cleanup of audio service
-    this.audioService.cleanup();
+    // No cleanup method available on audioService
   }
 
   loadItems() {
@@ -1051,88 +1065,108 @@ export class LearningComponent implements OnInit, OnDestroy {
   }
 
   async startPlayback() {
-    if (this.isPlaying) return; // Don't start if already playing
-
-    let audioFiles: string[] = [];
-
-    if (this.isOffline) {
-      // Check all audio files first
-      const unavailableFiles: string[] = [];
-
-      for (const item of this.currentItems) {
-        const sanitizedFileName = this.sanitizeKey(item.key); // Use English key for file name
-        if (this.playBothLanguages) {
-          const fromFile = `/assets/audio/${this.fromLanguageCode}/${this.category}/${sanitizedFileName}.mp3`;
-          const toFile = `/assets/audio/${this.toLanguageCode}/${this.category}/${sanitizedFileName}.mp3`;
-
-          if (!(await this.checkAudioAvailability(fromFile))) {
-            unavailableFiles.push(fromFile);
-          } else {
-            audioFiles.push(fromFile);
-          }
-
-          if (!(await this.checkAudioAvailability(toFile))) {
-            unavailableFiles.push(toFile);
-          } else {
-            audioFiles.push(toFile);
-          }
-        } else {
-          const toFile = `/assets/audio/${this.toLanguageCode}/${this.category}/${sanitizedFileName}.mp3`;
-          if (!(await this.checkAudioAvailability(toFile))) {
-            unavailableFiles.push(toFile);
-          } else {
-            audioFiles.push(toFile);
-          }
-        }
-      }
-
-      if (unavailableFiles.length > 0) {
-        unavailableFiles.forEach((file) => this.unavailableAudio.add(file));
-        if (audioFiles.length === 0) {
-          return; // Don't start playback if no files are available
-        }
-      }
-
-      this.audioService.setQueue(audioFiles, this.loopRepeat);
-    } else {
-      // Original playback logic for online mode
-      this.currentlyPlayingItem = undefined;
-
-      this.currentItems.forEach((item) => {
-        const sanitizedFileName = this.sanitizeKey(item.key);
-        for (let i = 0; i < this.wordRepeat; i++) {
-          if (this.playBothLanguages) {
-            audioFiles.push(
-              `/assets/audio/${this.fromLanguageCode}/${this.category}/${sanitizedFileName}.mp3`
-            );
-            audioFiles.push(
-              `/assets/audio/${this.toLanguageCode}/${this.category}/${sanitizedFileName}.mp3`
-            );
-          } else {
-            audioFiles.push(
-              `/assets/audio/${this.toLanguageCode}/${this.category}/${sanitizedFileName}.mp3`
-            );
-          }
-        }
-      });
-
-      this.audioService.setQueue(audioFiles, this.loopRepeat);
+    if (this.isPlaying) {
+      // Pause instead of stop when already playing
+      this.pausePlayback();
+      return;
     }
 
-    // Start caching audio files in the background
-    this.audioService.cacheAudioFiles(audioFiles);
+    // Only prepare new queue if not resuming from pause
+    if (!this.canResume) {
+      let audioFiles: string[] = [];
+      // ...existing queue preparation code...
+      if (this.isOffline) {
+        // Check all audio files first
+        const unavailableFiles: string[] = [];
+
+        for (const item of this.currentItems) {
+          const sanitizedFileName = this.sanitizeKey(item.key);
+          if (this.playBothLanguages) {
+            const fromFile = `/assets/audio/${this.fromLanguageCode}/${this.category}/${sanitizedFileName}.mp3`;
+            const toFile = `/assets/audio/${this.toLanguageCode}/${this.category}/${sanitizedFileName}.mp3`;
+
+            if (!(await this.checkAudioAvailability(fromFile))) {
+              unavailableFiles.push(fromFile);
+            } else {
+              audioFiles.push(fromFile);
+            }
+
+            if (!(await this.checkAudioAvailability(toFile))) {
+              unavailableFiles.push(toFile);
+            } else {
+              audioFiles.push(toFile);
+            }
+          } else {
+            const toFile = `/assets/audio/${this.toLanguageCode}/${this.category}/${sanitizedFileName}.mp3`;
+            if (!(await this.checkAudioAvailability(toFile))) {
+              unavailableFiles.push(toFile);
+            } else {
+              audioFiles.push(toFile);
+            }
+          }
+        }
+
+        if (unavailableFiles.length > 0) {
+          unavailableFiles.forEach((file) => this.unavailableAudio.add(file));
+          if (audioFiles.length === 0) {
+            return;
+          }
+        }
+
+        this.audioService.setQueue(audioFiles, this.loopRepeat);
+      } else {
+        this.currentlyPlayingItem = undefined;
+
+        this.currentItems.forEach((item) => {
+          const sanitizedFileName = this.sanitizeKey(item.key);
+          for (let i = 0; i < this.wordRepeat; i++) {
+            if (this.playBothLanguages) {
+              audioFiles.push(
+                `/assets/audio/${this.fromLanguageCode}/${this.category}/${sanitizedFileName}.mp3`
+              );
+              audioFiles.push(
+                `/assets/audio/${this.toLanguageCode}/${this.category}/${sanitizedFileName}.mp3`
+              );
+            } else {
+              audioFiles.push(
+                `/assets/audio/${this.toLanguageCode}/${this.category}/${sanitizedFileName}.mp3`
+              );
+            }
+          }
+        });
+
+        this.audioService.setQueue(audioFiles, this.loopRepeat);
+      }
+
+      // Start caching audio files in the background
+      this.audioService.cacheAudioFiles(audioFiles);
+    }
 
     this.audioService.play();
+    this.canResume = false;
+  }
+
+  pausePlayback() {
+    this.audioService.stop(true); // Pass true to indicate pause
+    this.canResume = true;
   }
 
   stopPlayback() {
     this.currentlyPlayingItem = undefined;
-    this.audioService.stop();
+    this.canResume = false; // Reset canResume since we're doing a full stop
+    this.audioService.stop(false); // Pass false to indicate full stop
 
     if (this.playbackTimeout) {
       clearTimeout(this.playbackTimeout);
       this.playbackTimeout = null;
     }
+  }
+
+  // Add method to force restart playback
+  restartPlayback() {
+    this.canResume = false;
+    this.stopPlayback();
+    this.startPlayback();
   }
 
   async playItem(
@@ -1156,6 +1190,7 @@ export class LearningComponent implements OnInit, OnDestroy {
   }
 
   selectCategory(category: string) {
+    this.canResume = false;
     this.router.navigate([
       '/learn',
       this.fromLanguageCode,
@@ -1282,6 +1317,7 @@ export class LearningComponent implements OnInit, OnDestroy {
   }
 
   onLanguageChange(type: 'from' | 'to', value: string) {
+    this.canResume = false;
     if (type === 'from') {
       this.fromLanguageCode = value;
       // Save from language preference

@@ -17,6 +17,14 @@ export class AudioService {
   private currentFileSignal = signal<string>('');
   private audioQueue: { title: string; url: string }[] = [];
 
+  private queueState = {
+    files: [] as string[],
+    repeatCount: 1,
+    currentIndex: 0,
+    currentRepeat: 1,
+    isPaused: false
+  };
+
   // Public computed signals for components to use
   readonly isPlaying = computed(() => this.isPlayingSignal());
   readonly currentFile = computed(() => this.currentFileSignal());
@@ -59,7 +67,7 @@ export class AudioService {
       });
 
       navigator.mediaSession.setActionHandler('pause', () => {
-        this.stop();
+        this.stop(true);
         navigator.mediaSession.playbackState = 'paused';
       });
 
@@ -211,6 +219,13 @@ export class AudioService {
     this.repeatCount = repeat;
     this.currentRepeat = 1;
     this.currentIndex = -1; // Will be incremented to 0 in playNext
+
+    // Clear saved state
+    this.queueState.files = [];
+    this.queueState.repeatCount = 1;
+    this.queueState.currentIndex = 0;
+    this.queueState.currentRepeat = 1;
+    this.queueState.isPaused = false;
   }
 
   private async validateAudioBlob(blob: Blob): Promise<boolean> {
@@ -298,11 +313,10 @@ export class AudioService {
 
   async play(url?: string) {
     await this.ensureAudioContext();
-    this.isPlayingSignal.set(true);
 
     try {
       if (url) {
-        // Single file playback logic...
+        // Single file playback logic
         const dirPath = url.substring(0, url.lastIndexOf('/') + 1);
         const filename = url.substring(url.lastIndexOf('/') + 1);
         const sanitizedUrl = dirPath + this.sanitizeKey(filename);
@@ -311,24 +325,20 @@ export class AudioService {
         this.audio.src = URL.createObjectURL(blob);
         this.audio.playbackRate = this.settingsService.playbackSpeed();
         this.currentFileSignal.set(sanitizedUrl);
-
         await this.audio.play();
-        // this.isPlayingSignal.set(true);
+      } else if (this.queueState.files.length > 0 && this.queueState.isPaused) {
+        // Resume from paused state
+        this.queueState.isPaused = false;
+        this.playNext();
       } else if (this.queue.length > 0) {
-        // Queue playback - start from beginning
-        this.currentIndex = -1; // Will be incremented to 0 in playNext
+        // Start fresh queue
+        this.currentIndex = -1;
         this.currentRepeat = 1;
-        // this.isPlayingSignal.set(true);
-        this.playNext(); // Start the queue playback
+        this.queueState.isPaused = false;
+        this.playNext();
       }
 
-      // Update media session and metadata
-      if ('mediaSession' in navigator) {
-        if ('setActive' in navigator.mediaSession) {
-          await (navigator.mediaSession as any).setActive(true);
-        }
-        this.updateMediaMetadata();
-      }
+      this.isPlayingSignal.set(true);
     } catch (error) {
       console.error('Error in play:', error);
       this.isPlayingSignal.set(false);
@@ -355,56 +365,46 @@ export class AudioService {
     }
   }
 
-  stop() {
+  stop(pause: boolean = false) {
     console.log('Stopping audio playback');
 
-    // Clear any scheduled playback first
+    if (pause) {
+      // Save current state for resume
+      this.queueState.files = [...this.queue];
+      this.queueState.repeatCount = this.repeatCount;
+      this.queueState.currentIndex = this.currentIndex;
+      this.queueState.currentRepeat = this.currentRepeat;
+      this.queueState.isPaused = true;
+    } else {
+      // Clear the queue state completely
+      this.queueState.files = [];
+      this.queueState.repeatCount = 1;
+      this.queueState.currentIndex = 0;
+      this.queueState.currentRepeat = 1;
+      this.queueState.isPaused = false;
+    }
+
+    // Clear timeout and stop audio
     if (this.playbackTimeout) {
       clearTimeout(this.playbackTimeout);
       this.playbackTimeout = null;
     }
 
-    // Ensure audio is properly stopped
     if (this.audio) {
-      // Remove the onended handler temporarily to prevent triggering playNext
-      const originalOnEnded = this.audio.onended;
-      this.audio.onended = null;
-
       this.audio.pause();
-      this.audio.currentTime = 0;
-
-      // Clear the source
-      this.audio.src = '';
-
-      // Restore the onended handler
-      this.audio.onended = originalOnEnded;
-    }
-
-    // Reset all state
-    this.queue = [];
-    this.audioQueue = [];
-    this.currentIndex = 0;
-    this.currentRepeat = 1;
-    this.isPlayingSignal.set(false);
-    this.currentFileSignal.set('');
-
-    // Update media session state
-    if ('mediaSession' in navigator) {
-      navigator.mediaSession.playbackState = 'none';
-      if ('setActive' in navigator.mediaSession) {
-        (navigator.mediaSession as any).setActive(false).catch((e: any) => {
-          console.warn('Failed to release media session:', e);
-        });
+      if (!pause) {
+        this.audio.currentTime = 0;
       }
     }
-  }
 
-  // Optional: Add a cleanup method to be called on component destruction
-  cleanup() {
-    this.stop();
+    this.isPlayingSignal.set(false);
+    if (!pause) {
+      this.currentFileSignal.set('');
+    }
 
-    if (this.audio) {
-      this.audio.onended = null;
+    // Update media session
+    if ('mediaSession' in navigator) {
+      navigator.mediaSession.playbackState = 'none';
       this.audio.onerror = null;
       this.audio.onplay = null;
       this.audio.onpause = null;
