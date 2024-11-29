@@ -78,12 +78,12 @@ export class LanguageService {
       flag: '🇷🇺',
       flagImage: '/assets/flags/ru.png',
     },
-    // {
-    //   code: 'sr',
-    //   name: 'Montenegrin',
-    //   flag: '🇲🇪',
-    //   flagImage: '/assets/flags/me.png',
-    // },
+    {
+      code: 'me',
+      name: 'Montenegrin',
+      flag: '🇲🇪',
+      flagImage: '/assets/flags/me.png',
+    },
     {
       code: 'ar',
       name: 'Arabic',
@@ -189,6 +189,82 @@ export class LanguageService {
   ];
 
   private content: { [key: string]: LearningContent } = {
+    me: {
+      words: {
+        // Essential Nouns
+        water: 'вода (voda)',
+        food: 'храна (hrana)',
+        restaurant: 'ресторан (restoran)',
+        bathroom: 'купатило (kupatilo)',
+        hospital: 'болница (bolnica)',
+        hotel: 'хотел (hotel)',
+        airport: 'аеродром (aerodrom)',
+        train: 'воз (voz)',
+        bus: 'аутобус (autobus)',
+        taxi: 'такси (taksi)',
+        // Common Adjectives
+        good: 'добро (dobro)',
+        bad: 'лоше (loše)',
+        big: 'велико (veliko)',
+        small: 'мало (malo)',
+        hot: 'вруће (vruće)',
+        cold: 'хладно (hladno)',
+        // Essential Verbs
+        'to eat': 'јести (jesti)',
+        'to drink': 'пити (piti)',
+        'to sleep': 'спавати (spavati)',
+        'to go': 'ићи (ići)',
+        'to help': 'помоћи (pomoći)',
+        thanks: 'хвала (hvala)',
+      },
+      numbers: {
+        '0': 'нула (nula)',
+        '1': 'један (jedan)',
+        '2': 'два (dva)',
+        '3': 'три (tri)',
+        '4': 'четири (četiri)',
+        '5': 'пет (pet)',
+        '6': 'шест (šest)',
+        '7': 'седам (sedam)',
+        '8': 'осам (osam)',
+        '9': 'девет (devet)',
+        '10': 'десет (deset)',
+        '20': 'двадесет (dvadeset)',
+        '30': 'тридесет (trideset)',
+        '40': 'четрдесет (četrdeset)',
+        '50': 'педесет (pedeset)',
+        '100': 'сто (sto)',
+        '1000': 'хиљада (hiljada)',
+      },
+      sentences: {
+        // Greetings
+        Hello: 'Здраво (Zdravo)',
+        'Good morning': 'Добро јутро (Dobro jutro)',
+        'Good afternoon': 'Добар дан (Dobar dan)',
+        'Good night': 'Лаку ноћ (Laku noć)',
+        Goodbye: 'Довиђења (Doviđenja)',
+        // Essential Phrases
+        'How are you?': 'Како сте? (Kako ste?)',
+        'I am fine': 'Добро сам (Dobro sam)',
+        'Thank you': 'Хвала (Hvala)',
+        "You're welcome": 'Нема на чему (Nema na čemu)',
+        Please: 'Молим (Molim)',
+        'Excuse me': 'Извините (Izvinite)',
+        "I'm sorry": 'Жао ми је (Žao mi je)',
+        // Emergency Phrases
+        'I need help': 'Треба ми помоћ (Treba mi pomoć)',
+        'I am lost': 'Изгубио сам се (Izgubio sam se)',
+        "I don't understand": 'Не разумијем (Ne razumijem)',
+        'Do you speak English?':
+          'Да ли говорите енглески? (Da li govorite engleski?)',
+        'Where is the bathroom?': 'Ђе је купатило? (Đe je kupatilo?)',
+        // Practical Phrases
+        'How much does it cost?': 'Колико кошта? (Koliko košta?)',
+        'Can you help me?': 'Можете ли ми помоћи? (Možete li mi pomoći?)',
+        'I would like...': 'Желио бих... (Želio bih...)',
+        'The check, please': 'Рачун, молим (Račun, molim)',
+      },
+    },
     el: {
       words: {
         // Essential Nouns
@@ -1174,83 +1250,6 @@ export class LanguageService {
         'The check, please': 'Счёт, пожалуйста (Schyot, pozhaluysta)',
       },
     },
-
-    me: {
-      words: {
-        // Essential Nouns
-        water: 'voda',
-        food: 'hrana',
-        restaurant: 'restoran',
-        bathroom: 'kupatilo',
-        hospital: 'bolnica',
-        hotel: 'hotel',
-        airport: 'aerodrom',
-        train: 'voz',
-        bus: 'autobus',
-        taxi: 'taksi',
-        // Common Adjectives
-        good: 'dobar',
-        bad: 'loš',
-        big: 'veliki',
-        small: 'mali',
-        hot: 'vruć',
-        cold: 'hladan',
-        // Essential Verbs
-        'to eat': 'jesti',
-        'to drink': 'piti',
-        'to sleep': 'spavati',
-        'to go': 'ići',
-        'to help': 'pomoći',
-        thanks: 'hvala',
-      },
-      numbers: {
-        '0': 'nula',
-        '1': 'jedan',
-        '2': 'dva',
-        '3': 'tri',
-        '4': 'četiri',
-        '5': 'pet',
-        '6': 'šest',
-        '7': 'sedam',
-        '8': 'osam',
-        '9': 'devet',
-        '10': 'deset',
-        '20': 'dvadeset',
-        '30': 'trideset',
-        '40': 'četrdeset',
-        '50': 'pedeset',
-        '100': 'sto',
-        '1000': 'hiljada',
-      },
-      sentences: {
-        // Greetings
-        Hello: 'Zdravo',
-        'Good morning': 'Dobro jutro',
-        'Good afternoon': 'Dobar dan',
-        'Good night': 'Laku noć',
-        Goodbye: 'Doviđenja',
-        // Essential Phrases
-        'How are you?': 'Kako si?',
-        'I am fine': 'Dobro sam',
-        'Thank you': 'Hvala',
-        "You're welcome": 'Nema na čemu',
-        Please: 'Molim',
-        'Excuse me': 'Izvinite',
-        "I'm sorry": 'Žao mi je',
-        // Emergency Phrases
-        'I need help': 'Treba mi pomoć',
-        'I am lost': 'Izgubio sam se',
-        "I don't understand": 'Ne razumijem',
-        'Do you speak English?': 'Govoriš li engleski?',
-        'Where is the bathroom?': 'Gdje je kupatilo?',
-        // Practical Phrases
-        'How much does it cost?': 'Koliko košta?',
-        'Can you help me?': 'Možete li mi pomoći?',
-        'I would like...': 'Želio bih...',
-        'The check, please': 'Račun, molim vas',
-      },
-    },
-
     pl: {
       words: {
         // Essential Nouns

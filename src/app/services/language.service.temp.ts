@@ -27,7 +27,7 @@ export class LanguageService {
   ];
 
   private content: { [key: string]: LearningContent } = {
-    sr: {
+    me: {
       words: {
         // Essential Nouns
         water: 'вода (voda)',
@@ -92,14 +92,14 @@ export class LanguageService {
         // Emergency Phrases
         'I need help': 'Треба ми помоћ (Treba mi pomoć)',
         'I am lost': 'Изгубио сам се (Izgubio sam se)',
-        "I don't understand": 'Не разумем (Ne razumem)',
+        "I don't understand": 'Не разумијем (Ne razumijem)',
         'Do you speak English?':
           'Да ли говорите енглески? (Da li govorite engleski?)',
-        'Where is the bathroom?': 'Где је купатило? (Gde je kupatilo?)',
+        'Where is the bathroom?': 'Ђе је купатило? (Đe je kupatilo?)',
         // Practical Phrases
         'How much does it cost?': 'Колико кошта? (Koliko košta?)',
         'Can you help me?': 'Можете ли ми помоћи? (Možete li mi pomoći?)',
-        'I would like...': 'Желео бих... (Želeo bih...)',
+        'I would like...': 'Желио бих... (Želio bih...)',
         'The check, please': 'Рачун, молим (Račun, molim)',
       },
     },
