@@ -33,6 +33,8 @@ const voiceMap = {
   // is: "is-IS-GudrunNeural",
   // pt: "pt-BR-FranciscaNeural",
   // cy: "cy-GB-NiaNeural",
+  sk: "sk-SK-ViktoriaNeural",
+  sl: "sl-SI-PetraNeural",
   et: "et-EE-AnuNeural",
   fi: "fi-FI-SelmaNeural",
   cs: "cs-CZ-VlastaNeural",
@@ -48,7 +50,8 @@ const voiceMap = {
   bg: "bg-BG-KalinaNeural",
   sq: "sq-AL-AnilaNeural",
   uk: "uk-UA-PolinaNeural",
-  hr: "hr-HR-GabrijelaNeural"
+  hr: "hr-HR-GabrijelaNeural",
+  hy: "hy-AM-AnahitNeural"
 };
 
 async function getAuthToken() {
