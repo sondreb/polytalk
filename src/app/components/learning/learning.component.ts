@@ -341,7 +341,7 @@ import { Observable, BehaviorSubject, from } from 'rxjs';
       }
 
       .settings input[type='number'] {
-        width: 20px;
+        width: 45px; /* Increased from 20px */
         padding: 0.5rem;
         border: 2px solid rgba(99, 102, 241, 0.2);
         border-radius: 8px;
@@ -825,8 +825,8 @@ import { Observable, BehaviorSubject, from } from 'rxjs';
         }
 
         .settings input[type='number'] {
-          padding: 0.25rem; /* Reduced from 0.5rem */
-          width: 16px; /* Slightly smaller width */
+          padding: 0.25rem;
+          width: 35px; /* Increased from 16px for mobile */
         }
 
         .checkbox-label {
