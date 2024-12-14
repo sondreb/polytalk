@@ -10,12 +10,19 @@ import { RouterLink } from '@angular/router';
       <div class="hero-content">
         <h1>Learn Any Language with PolyTalk</h1>
         <p>
-          Master basic words, numbers, and essential phrases in any language
+          Master basic words, numbers, and essential phrases in any language, and learn more about 
+          language learning tips and tricks on our blog.
         </p>
-        <a routerLink="/languages" class="cta-button">
-          Start Learning
-          <span class="arrow">→</span>
-        </a>
+        <div class="cta-buttons">
+          <a routerLink="/languages" class="cta-button primary">
+            Start Learning
+            <span class="arrow">→</span>
+          </a>
+          <a routerLink="/blog" class="cta-button secondary">
+            Read Blog
+            <span class="arrow">→</span>
+          </a>
+        </div>
       </div>
     </div>
 
@@ -167,32 +174,58 @@ import { RouterLink } from '@angular/router';
         opacity: 0.9;
       }
 
+      .cta-buttons {
+        display: flex;
+        gap: 1rem;
+        justify-content: center;
+        flex-wrap: wrap;
+      }
+
       .cta-button {
         display: inline-flex;
         align-items: center;
         padding: 1.2rem 3rem;
+        text-decoration: none;
+        border-radius: 16px;
+        font-size: 1.2rem;
+        font-weight: 600;
+        transition: all 0.3s ease;
+      }
+
+      .cta-button.primary {
         background: linear-gradient(
           135deg,
           var(--gradient-start),
           var(--gradient-end)
         );
         color: white;
-        text-decoration: none;
-        border-radius: 16px;
-        font-size: 1.2rem;
-        font-weight: 600;
-        transition: all 0.3s ease;
         box-shadow: 0 8px 20px rgba(99, 102, 241, 0.3);
+      }
+
+      .cta-button.secondary {
+        background: transparent;
+        color: var(--text-color);
+        border: 2px solid var(--text-color);
+        opacity: 0.8;
+      }
+
+      .cta-button:hover {
+        transform: translateY(-2px);
+      }
+
+      .cta-button.primary:hover {
+        box-shadow: 0 12px 24px rgba(99, 102, 241, 0.4);
+      }
+
+      .cta-button.secondary:hover {
+        opacity: 1;
+        border-color: var(--gradient-end);
+        color: var(--gradient-end);
       }
 
       .arrow {
         margin-left: 0.5rem;
         transition: transform 0.3s ease;
-      }
-
-      .cta-button:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 12px 24px rgba(99, 102, 241, 0.4);
       }
 
       .cta-button:hover .arrow {
