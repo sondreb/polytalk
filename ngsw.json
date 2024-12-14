@@ -1,6 +1,6 @@
 {
   "configVersion": 1,
-  "timestamp": 1733857226481,
+  "timestamp": 1734175447779,
   "index": "/index.html",
   "assetGroups": [
     {
@@ -13,7 +13,7 @@
       "urls": [
         "/favicon.png",
         "/index.html",
-        "/main-KPIGL6IE.js",
+        "/main-GFVBU6XA.js",
         "/manifest.webmanifest",
         "/polyfills-FFHMD2TL.js",
         "/styles-6UFKNO7K.css"
@@ -2368,6 +2368,12 @@
         "/assets/audio/zh/words/to sleep.mp3",
         "/assets/audio/zh/words/train.mp3",
         "/assets/audio/zh/words/water.mp3",
+        "/assets/blog/cultural-insights.md",
+        "/assets/blog/language-learning-tips.md",
+        "/assets/blog/new-languages.md",
+        "/assets/blog/posts.json",
+        "/assets/blog/travel-basics.md",
+        "/assets/blog/travel-photos.md",
         "/assets/flags/ad.png",
         "/assets/flags/ae.png",
         "/assets/flags/af.png",
@@ -4983,6 +4989,12 @@
     "/assets/audio/zh/words/to sleep.mp3": "36a7d3fc4ef641c1daa287c43ed82a18857125d0",
     "/assets/audio/zh/words/train.mp3": "beb4d6182019455b797a63d330c56c0efb27a76c",
     "/assets/audio/zh/words/water.mp3": "1077003cea9c7ee17c23301da79151c24e04135c",
+    "/assets/blog/cultural-insights.md": "186fb6390f589e3cf1c9f44fc0c4abeb2df13e36",
+    "/assets/blog/language-learning-tips.md": "57459c52dee4e11a93e2adb19688a91d1a641bc9",
+    "/assets/blog/new-languages.md": "050cbcdb77c20dd904799ac244d68af8994f459a",
+    "/assets/blog/posts.json": "77b0f55dac25671331ed8755592e43c01671d162",
+    "/assets/blog/travel-basics.md": "3b06a6d9c608609c7ea677bed3e3cb158d21af6f",
+    "/assets/blog/travel-photos.md": "c74c3cfa5a7472e3f36836c2b0eead289d939828",
     "/assets/flags/ad.png": "6d9d8f99f0bb2a1cbfdf6a814295dd4212be9961",
     "/assets/flags/ae.png": "eb6a6f8af821a4b3554b32a1990d9453b1afde60",
     "/assets/flags/af.png": "daaeb5a0c30715773048f2333a0815dbdd8a0af4",
@@ -5239,8 +5251,8 @@
     "/assets/flags/zw.png": "c44732cbf86a0e57773e71a9649dc9519324c742",
     "/assets/polytalk-social.png": "46a7abf377503c8fea256fa14970ab122d5fb384",
     "/favicon.png": "6e8076b4e3ae8dc62c15baaefed63b717257f91e",
-    "/index.html": "e51151140b0d4cffec0aa956ba27c00fab112324",
-    "/main-KPIGL6IE.js": "b135c7075a6161333065e4fd0ab0e7f44d144b37",
+    "/index.html": "86782f3efcefa0ac43dc4fa5d9f73b38808954fe",
+    "/main-GFVBU6XA.js": "865efffe8987fc40368ebb01b9e8850843788647",
     "/manifest.webmanifest": "7e27ae86a16a08123be276faf09285ce86bae69c",
     "/polyfills-FFHMD2TL.js": "f49b49a155bc7d192db62a4c15d0a612b460a667",
     "/styles-6UFKNO7K.css": "678acf769a3dcad6b8b7c8df2a76d2429807711a"
