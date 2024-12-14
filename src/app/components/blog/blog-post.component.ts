@@ -36,6 +36,7 @@ interface BlogPostMetadata {
             }
           </div>
         </header>
+        <a class="back-link" routerLink="/blog">← Back to Blog</a>
         }
       </article>
       }
