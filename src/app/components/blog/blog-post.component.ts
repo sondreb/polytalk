@@ -56,6 +56,16 @@ interface BlogPostMetadata {
         box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
         line-height: 1.6;
       }
+      @media (max-width: 768px) {
+        .blog-post {
+          padding: 1rem;
+        }
+      }
+      @media (max-width: 480px) {
+        .blog-post {
+          padding: 0.5rem;
+        }
+      }
       .back-link {
         display: inline-block;
         padding: 0.5rem 1.5rem;
