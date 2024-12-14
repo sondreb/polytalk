@@ -9,7 +9,16 @@ import { Component } from '@angular/core';
       <p>Last updated: {{ lastUpdated }}</p>
       
       <h2>Information Collection</h2>
-      <p>PolyTalk does not collect any personal information or account information. We do not store any user data.</p>
+      <p>PolyTalk does not collect personal or account information directly. However, we use third-party services for analytics and advertising.</p>
+
+      <h2>Analytics Data</h2>
+      <p>We use Google Analytics to understand website usage patterns. Google Analytics may collect:</p>
+      <ul>
+        <li>Pages visited and time spent</li>
+        <li>Browser and device information</li>
+        <li>Geographic location (country/region level)</li>
+        <li>Referral sources</li>
+      </ul>
 
       <h2>Advertising Data</h2>
       <p>Our service uses Google AdSense for displaying advertisements. Google AdSense may collect:</p>
@@ -20,11 +29,18 @@ import { Component } from '@angular/core';
       </ul>
 
       <h2>How Information is Used</h2>
-      <p>The only data collection that occurs on PolyTalk is through Google AdSense, which is used to:</p>
+      <p>Data collection occurs through Google services:</p>
       <ul>
-        <li>Display relevant advertisements</li>
-        <li>Measure ad performance</li>
-        <li>Provide personalized ad experience</li>
+        <li>Google Analytics: To analyze website usage and improve user experience</li>
+        <li>Google Tag Manager: To manage and deploy tracking scripts</li>
+        <li>Google AdSense: To display relevant advertisements</li>
+      </ul>
+
+      <h2>Your Choices</h2>
+      <p>You can control your data privacy through these methods:</p>
+      <ul>
+        <li>Install the <a href="https://tools.google.com/dlpage/gaoptout" target="_blank" rel="noopener">Google Analytics Opt-out Browser Add-on</a></li>
+        <li>Adjust your <a href="https://www.google.com/settings/ads" target="_blank" rel="noopener">Google Ads Settings</a></li>
       </ul>
 
       <h2>Advertising</h2>
