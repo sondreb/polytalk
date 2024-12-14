@@ -3,12 +3,12 @@ title: Exploring Unique Languages in PolyTalk
 date: 2024-12-13
 description: Discover fascinating languages like Afrikaans, Amharic, Icelandic, and Persian now available in PolyTalk for basic language learning.
 tags: ["languages", "learning", "culture", "education", "diversity"]
-featured_image: https://images.unsplash.com/photo-1456513080510-7bf3a84b82f8
+featured_image: https://images.unsplash.com/photo-1447069387593-a5de0862481e
 ---
 
 # Exploring Unique Languages in PolyTalk
 
-![Various international books and writing systems](https://images.unsplash.com/photo-1456513080510-7bf3a84b82f8?auto=format&fit=crop&w=1024)
+![brown paper and black pen](https://images.unsplash.com/photo-1447069387593-a5de0862481e?auto=format&fit=crop&w=1024)
 
 We're excited to announce the addition of several fascinating languages to PolyTalk! Our app now includes some unique and historically rich languages that will help you explore diverse cultures through their words, numbers, and essential phrases.
 
