@@ -1,6 +1,6 @@
 {
   "configVersion": 1,
-  "timestamp": 1734175447779,
+  "timestamp": 1734175663971,
   "index": "/index.html",
   "assetGroups": [
     {
@@ -4991,8 +4991,8 @@
     "/assets/audio/zh/words/water.mp3": "1077003cea9c7ee17c23301da79151c24e04135c",
     "/assets/blog/cultural-insights.md": "186fb6390f589e3cf1c9f44fc0c4abeb2df13e36",
     "/assets/blog/language-learning-tips.md": "57459c52dee4e11a93e2adb19688a91d1a641bc9",
-    "/assets/blog/new-languages.md": "050cbcdb77c20dd904799ac244d68af8994f459a",
-    "/assets/blog/posts.json": "77b0f55dac25671331ed8755592e43c01671d162",
+    "/assets/blog/new-languages.md": "eec3e752ef1a9d9b0beb679aa3065ec193935f07",
+    "/assets/blog/posts.json": "5163b0abe1706e14f13ba63918f25e5edf2d24e9",
     "/assets/blog/travel-basics.md": "3b06a6d9c608609c7ea677bed3e3cb158d21af6f",
     "/assets/blog/travel-photos.md": "c74c3cfa5a7472e3f36836c2b0eead289d939828",
     "/assets/flags/ad.png": "6d9d8f99f0bb2a1cbfdf6a814295dd4212be9961",
