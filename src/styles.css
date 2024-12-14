@@ -16,6 +16,10 @@
   color-scheme: light;  /* This tells browsers to use their native light scrollbars */
 }
 
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
 body {
   overscroll-behavior: none;
   font-size: 16px;

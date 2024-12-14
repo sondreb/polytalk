@@ -3,11 +3,12 @@ import { RouterOutlet } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { NavbarComponent } from './components/navbar/navbar.component';
 import { UpdateService } from './services/update.service';
+import { FooterComponent } from './components/footer/footer.component';
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [RouterOutlet, CommonModule, NavbarComponent],
+  imports: [RouterOutlet, CommonModule, NavbarComponent, FooterComponent],
   template: `
     <div *ngIf="updateService.updateAvailable()" class="update-banner">
       A new version is available!
@@ -20,6 +21,7 @@ import { UpdateService } from './services/update.service';
     <main>
       <router-outlet />
     </main>
+    <app-footer />
   `,
   styles: [
     `
@@ -71,9 +73,14 @@ import { UpdateService } from './services/update.service';
       }
 
       main {
+        flex: 1;
+        width: 100%;
         max-width: 1200px;
         margin: 0 auto;
         padding: 2rem;
+        display: flex;
+        flex-direction: column;
+        box-sizing: border-box;
       }
 
       @media (max-width: 768px) {
@@ -113,6 +120,14 @@ import { UpdateService } from './services/update.service';
       .update-banner button:hover {
         transform: scale(1.05);
         background-color: #f0f0f0;
+      }
+
+      :host {
+        display: flex;
+        flex-direction: column;
+        min-height: 100vh;
+        width: 100%;
+        overflow-x: hidden;
       }
     `,
   ],
