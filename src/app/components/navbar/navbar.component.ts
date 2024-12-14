@@ -19,6 +19,10 @@ import { CommonModule } from '@angular/common';
             <span class="full-text">Settings</span>
             <span class="icon-only">⚙️</span>
           </a>
+          <a routerLink="/blog" class="nav-link">
+            <span class="full-text">Blog</span>
+            <span class="icon-only">📝</span>
+          </a>
           <button
             *ngIf="showInstall"
             (click)="onInstallClick()"
