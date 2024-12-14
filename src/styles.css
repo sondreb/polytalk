@@ -33,6 +33,21 @@ body {
   color: var(--text-color);
 }
 
+/* Add global link styles */
+a {
+  color: var(--primary-color);
+  text-decoration: none;
+  transition: color 0.3s ease;
+}
+
+a:hover {
+  color: var(--primary-dark);
+}
+
+a:visited {
+  color: var(--primary-color);
+}
+
 button {
   font-size: 16px;
   padding: 12px 24px;
