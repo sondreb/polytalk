@@ -24,6 +24,13 @@ interface BlogPostMetadata {
       } @else {
       <article class="blog-post">
         <a class="back-link" routerLink="/blog">← Back to Blog</a>
+        <div>
+          <script type="text/javascript">
+            aclib.runBanner({
+              zoneId: '9196998',
+            });
+          </script>
+        </div>
         <div class="post-content" [innerHTML]="content"></div>
         @if (metadata) {
         <header class="post-header">
@@ -36,6 +43,15 @@ interface BlogPostMetadata {
             }
           </div>
         </header>
+
+        <div>
+          <script type="text/javascript">
+            aclib.runBanner({
+              zoneId: '9197038',
+            });
+          </script>
+        </div>
+
         <a class="back-link" routerLink="/blog">← Back to Blog</a>
         }
       </article>

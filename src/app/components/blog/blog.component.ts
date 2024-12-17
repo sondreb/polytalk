@@ -19,6 +19,15 @@ interface BlogPost {
   imports: [CommonModule, RouterModule],
   template: `
     <div class="blog-container">
+
+    <div>
+        <script type="text/javascript">
+            aclib.runBanner({
+                zoneId: '9196990',
+            });
+        </script>
+    </div>
+
       @if (loading) {
         <div class="loading">Loading posts...</div>
       } @else if (error) {
