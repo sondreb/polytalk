@@ -10,8 +10,8 @@ import { RouterLink } from '@angular/router';
       <div class="hero-content">
         <h1>Learn Any Language with PolyTalk</h1>
         <p>
-          Master basic words, numbers, and essential phrases in any language, and learn more about 
-          language learning tips and tricks on our blog.
+          Master basic words, numbers, and essential phrases in any language,
+          and learn more about language learning tips and tricks on our blog.
         </p>
         <div class="cta-buttons">
           <a routerLink="/languages" class="cta-button primary">
@@ -44,6 +44,14 @@ import { RouterLink } from '@angular/router';
       </div>
     </div>
 
+    <div class="ad-banner">
+      <script type="text/javascript">
+        aclib.runBanner({
+          zoneId: '9196982',
+        });
+      </script>
+    </div>
+
     <div class="disclaimer">
       <p>
         Please note that this application may contain errors in translations,
@@ -59,8 +67,8 @@ import { RouterLink } from '@angular/router';
       .hero {
         text-align: center;
         padding: 8rem 1rem;
-        background: 
-          linear-gradient(125deg, 
+        background: linear-gradient(
+            125deg,
             rgba(130, 80, 255, 0.15) 0%,
             rgba(255, 110, 110, 0.15) 30%,
             rgba(80, 200, 255, 0.15) 100%
@@ -81,8 +89,7 @@ import { RouterLink } from '@angular/router';
         margin: 2rem 0;
         position: relative;
         overflow: hidden;
-        box-shadow: 
-          inset 0 0 100px rgba(130, 80, 255, 0.1),
+        box-shadow: inset 0 0 100px rgba(130, 80, 255, 0.1),
           0 10px 40px rgba(130, 80, 255, 0.1);
       }
 
