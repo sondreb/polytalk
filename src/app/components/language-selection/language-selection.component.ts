@@ -9,6 +9,13 @@ import { trigger, style, animate, transition, query, stagger } from '@angular/an
   standalone: true,
   imports: [CommonModule, RouterLink],
   template: `
+
+    <script type="text/javascript">
+        aclib.runInterstitial({
+            zoneId: '9197070',
+        });
+    </script>
+
     <section class="languages">
       <div class="grid" [@listAnimation]="languages.length">
         <div
