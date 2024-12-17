@@ -21,30 +21,31 @@ import { Component } from '@angular/core';
       </ul>
 
       <h2>Advertising Data</h2>
-      <p>Our service uses Google AdSense for displaying advertisements. Google AdSense may collect:</p>
+      <p>Our service uses Adcash for displaying advertisements. Adcash may collect:</p>
       <ul>
         <li>Cookie data</li>
         <li>Device information</li>
-        <li>Usage statistics</li>
+        <li>IP address</li>
+        <li>Browser information</li>
       </ul>
 
       <h2>How Information is Used</h2>
-      <p>Data collection occurs through Google services:</p>
+      <p>Data collection occurs through the following services:</p>
       <ul>
         <li>Google Analytics: To analyze website usage and improve user experience</li>
         <li>Google Tag Manager: To manage and deploy tracking scripts</li>
-        <li>Google AdSense: To display relevant advertisements</li>
+        <li>Adcash: To display advertisements and measure ad performance</li>
       </ul>
 
       <h2>Your Choices</h2>
       <p>You can control your data privacy through these methods:</p>
       <ul>
         <li>Install the <a href="https://tools.google.com/dlpage/gaoptout" target="_blank" rel="noopener">Google Analytics Opt-out Browser Add-on</a></li>
-        <li>Adjust your <a href="https://www.google.com/settings/ads" target="_blank" rel="noopener">Google Ads Settings</a></li>
+        <li>Learn more about Adcash's privacy practices at <a href="https://adcash.com/privacy-policy/" target="_blank" rel="noopener">Adcash Privacy Policy</a></li>
       </ul>
 
       <h2>Advertising</h2>
-      <p>We use Google AdSense to display advertisements. Google AdSense uses cookies to serve ads based on your visits to this and other websites. You can opt out of personalized advertising by visiting <a href="https://www.google.com/settings/ads" target="_blank" rel="noopener">Google's Ads Settings</a>.</p>
+      <p>We use Adcash to display advertisements. Adcash uses cookies and similar technologies to serve ads and measure their performance. For more information about how Adcash handles your data, please visit their <a href="https://adcash.com/privacy-policy/" target="_blank" rel="noopener">Privacy Policy</a>.</p>
 
       <h2>Contact Us</h2>
       <p>If you have questions about this Privacy Policy, <a href="https://github.com/sondreb">please contact us</a>.</p>
