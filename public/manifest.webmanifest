@@ -2,6 +2,7 @@
   "name": "Polytalk",
   "short_name": "Polytalk",
   "id": "no.brainbox.polytalk",
+  "orientation": "any",
   "author": "SondreB",
   "description": "Learn the basics of every language in the world.",
   "theme_color": "#6366f1",
