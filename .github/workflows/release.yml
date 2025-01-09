@@ -60,17 +60,23 @@ jobs:
           toolchain: stable
           override: true
 
-    - name: Version
+
+    - name: Variables
       run: |
-          BASE_VERSION=$(npm run version-number --silent)
-          # Remove last digit and dot, then append run number
-          VERSION=$(echo $BASE_VERSION | sed 's/\.[0-9]*$/.'${{ github.run_number }}/)
-          echo "VERSION=$VERSION" >> $GITHUB_ENV
+        echo VERSION=$(npm run version-number --silent) >> $GITHUB_ENV
       shell: bash
 
-    - name: Update package.json version
-      run: npm version $VERSION --no-git-tag-version
-      shell: bash
+    # - name: Version
+    #   run: |
+    #       BASE_VERSION=$(npm run version-number --silent)
+    #       # Remove last digit and dot, then append run number
+    #       VERSION=$(echo $BASE_VERSION | sed 's/\.[0-9]*$/.'${{ github.run_number }}/)
+    #       echo "VERSION=$VERSION" >> $GITHUB_ENV
+    #   shell: bash
+
+    # - name: Update package.json version
+    #   run: npm version $VERSION --no-git-tag-version
+    #   shell: bash
 
     - name: Install dependencies
       run: npm ci
