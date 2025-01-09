@@ -151,7 +151,7 @@ jobs:
 
     - name: Variables
       run: |
-          echo VERSION=$(npm run version --silent) >> $GITHUB_ENV
+          echo VERSION=$(npm run version-number --silent) >> $GITHUB_ENV
       shell: bash
 
     - name: Download Artifacts 
