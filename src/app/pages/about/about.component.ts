@@ -21,7 +21,9 @@ import { Component } from '@angular/core';
       </ul>
 
       <h2>Contact</h2>
-      <p>For support or inquiries, please visit our <a href="https://github.com/sondreb/polytalk" target="_blank" rel="noopener">GitHub repository</a>.</p>
+      <p>For support or inquiries, please visit our <a href="https://github.com/sondreb/polytalk" target="_blank" rel="noopener">GitHub repository</a></p>
+      <p>Follow us on X: <a href="https://x.com/PolyTalkMe" target="_blank" rel="noopener">PolyTalkMe</a></p>
+    
     </div>
   `,
   styles: [`
