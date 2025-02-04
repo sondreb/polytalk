@@ -4,6 +4,13 @@
 	<h3>Learn the basics of every language in the world.</h3>
 	<br>
 	<h4><a href="https://polytalk.me">Open App</a></h4>
+	<h4>
+	<a href="https://apps.microsoft.com/detail/9NLCCGZQ48TX">
+            <img
+              src="https://get.microsoft.com/images/en-us%20dark.svg"
+              width="200"
+            />
+          </a></h4>
 </div>
 <br>
 <br>
