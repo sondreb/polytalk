@@ -169,8 +169,8 @@ import { Observable, BehaviorSubject, from } from 'rxjs';
 
                 <div class="buttons">
                   <button (click)="startPlayback()">
-                    <span class="icon">{{playButtonIcon}}</span>
-                    <span class="button-text">{{playButtonText}}</span>
+                    <span class="icon">{{ playButtonIcon }}</span>
+                    <span class="button-text">{{ playButtonText }}</span>
                   </button>
                   <button (click)="stopPlayback()" [disabled]="!isPlaying">
                     <span class="icon">■</span>
@@ -905,6 +905,7 @@ export class LearningComponent implements OnInit, OnDestroy {
   private playbackTimeout: any;
   private readonly SETTINGS_KEY = 'polytalk-settings';
   private readonly FROM_LANGUAGE_KEY = 'polytalk-from-language';
+  private readonly TO_LANGUAGE_KEY = 'polytalk-to-language';
   selectedLanguage?: Language;
   tabs = ['Words', 'Numbers', 'Sentences'];
   isDownloading = false;
@@ -1325,6 +1326,9 @@ export class LearningComponent implements OnInit, OnDestroy {
     this.toLanguage = this.availableLanguages.find(
       (lang) => lang.code === this.toLanguageCode
     );
+
+    localStorage.setItem(this.FROM_LANGUAGE_KEY, this.fromLanguageCode);
+    localStorage.setItem(this.TO_LANGUAGE_KEY, this.toLanguageCode);
   }
 
   onLanguageChange(type: 'from' | 'to', value: string) {
@@ -1335,6 +1339,7 @@ export class LearningComponent implements OnInit, OnDestroy {
       localStorage.setItem(this.FROM_LANGUAGE_KEY, value);
     } else {
       this.toLanguageCode = value;
+      localStorage.setItem(this.TO_LANGUAGE_KEY, value);
     }
     this.updateLanguages();
     this.router.navigate([
@@ -1349,19 +1354,20 @@ export class LearningComponent implements OnInit, OnDestroy {
   private lastSettings = {
     wordRepeat: 1,
     loopRepeat: 2,
-    playBothLanguages: true
+    playBothLanguages: true,
   };
 
   private settingsChanged(): boolean {
-    const changed = this.wordRepeat !== this.lastSettings.wordRepeat ||
-                   this.loopRepeat !== this.lastSettings.loopRepeat ||
-                   this.playBothLanguages !== this.lastSettings.playBothLanguages;
+    const changed =
+      this.wordRepeat !== this.lastSettings.wordRepeat ||
+      this.loopRepeat !== this.lastSettings.loopRepeat ||
+      this.playBothLanguages !== this.lastSettings.playBothLanguages;
 
     // Update last settings
     this.lastSettings = {
       wordRepeat: this.wordRepeat,
       loopRepeat: this.loopRepeat,
-      playBothLanguages: this.playBothLanguages
+      playBothLanguages: this.playBothLanguages,
     };
 
     return changed;

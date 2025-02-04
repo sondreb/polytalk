@@ -122,6 +122,8 @@ export class LanguageSelectionComponent implements OnInit, AfterViewInit {
   languages: Language[];
   fromLanguageCode: string = 'en';
   private readonly FROM_LANGUAGE_KEY = 'polytalk-from-language';
+  private readonly TO_LANGUAGE_KEY = 'polytalk-to-language';
+
 
   constructor(private languageService: LanguageService) {
     this.languages = this.languageService.getLanguages();

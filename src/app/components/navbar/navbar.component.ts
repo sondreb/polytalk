@@ -9,7 +9,7 @@ import { CommonModule } from '@angular/common';
   template: `
     <nav class="navbar">
       <div class="content-wrapper">
-        <a routerLink="/" class="brand">PolyTalk.Me</a>
+        <a routerLink="/home" class="brand">PolyTalk.Me</a>
         <div class="nav-links">
           <a routerLink="/languages" class="nav-link">
             <span class="full-text">Languages</span>

@@ -5,9 +5,11 @@ import { LearningComponent } from './components/learning/learning.component';
 import { SettingsComponent } from './components/settings/settings.component';
 import { BlogListComponent } from './components/blog/blog.component';
 import { BlogPostComponent } from './components/blog/blog-post.component';
+import { HomeRootComponent } from './components/root/root.component';
 
 export const routes: Routes = [
-  { path: '', component: HomeComponent },
+  { path: '', component: HomeRootComponent },
+  { path: 'home', component: HomeComponent },
   { path: 'languages', component: LanguageSelectionComponent },
   { path: 'learn/:fromLanguage/:toLanguage/:category', component: LearningComponent },
   { path: 'settings', component: SettingsComponent },

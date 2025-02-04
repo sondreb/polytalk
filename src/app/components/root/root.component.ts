@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { RouterLink, Router, ActivatedRoute } from '@angular/router';
 
 @Component({
-  selector: 'app-home',
+  selector: 'app-home-root',
   standalone: true,
   imports: [RouterLink],
   template: `
@@ -277,26 +277,21 @@ import { RouterLink, Router, ActivatedRoute } from '@angular/router';
     `,
   ],
 })
-export class HomeComponent implements OnInit {
-  constructor(
-    private router: Router,
-    private route: ActivatedRoute
-  ) {}
+export class HomeRootComponent implements OnInit {
+  private readonly FROM_LANGUAGE_KEY = 'polytalk-from-language';
+  private readonly TO_LANGUAGE_KEY = 'polytalk-to-language';
+
+  constructor(private router: Router, private route: ActivatedRoute) {}
 
   ngOnInit() {
     // Check if we're accessing home directly (not through navigation)
-    if (this.route.snapshot.queryParams['direct'] !== 'true') {
-      const fromLang = localStorage.getItem('lastFromLanguage');
-      const toLang = localStorage.getItem('lastToLanguage');
+    const fromLang = localStorage.getItem(this.FROM_LANGUAGE_KEY);
+    const toLang = localStorage.getItem(this.TO_LANGUAGE_KEY);
 
-      if (fromLang && toLang) {
-        this.router.navigate(['/learn'], {
-          queryParams: {
-            from: fromLang,
-            to: toLang
-          }
-        });
-      }
+    if (fromLang && toLang) {
+      this.router.navigate(['/learn', fromLang, toLang, 'words']);
+    } else {
+      this.router.navigate(['/home']);
     }
   }
 
