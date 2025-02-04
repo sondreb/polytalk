@@ -44,6 +44,31 @@ import { RouterLink, Router, ActivatedRoute } from '@angular/router';
       </div>
     </div>
 
+    <div class="store-banner">
+      <div class="store-content">
+        <div class="store-icon">
+          <a href="https://apps.microsoft.com/detail/9NLCCGZQ48TX">
+            <img
+              src="https://get.microsoft.com/images/en-us%20dark.svg"
+              width="200"
+            />
+          </a>
+        </div>
+        <div class="store-text">
+          <h3>Get PolyTalk for Windows</h3>
+          <p>Install the native app for a better learning experience</p>
+        </div>
+        <a
+          href="https://apps.microsoft.com/detail/9NLCCGZQ48TX"
+          target="_blank"
+          class="store-button"
+        >
+          Get it from Microsoft Store
+          <span class="arrow">→</span>
+        </a>
+      </div>
+    </div>
+
     <div class="ad-banner">
       <script type="text/javascript">
         aclib.runBanner({
@@ -239,6 +264,70 @@ import { RouterLink, Router, ActivatedRoute } from '@angular/router';
         transform: translateX(4px);
       }
 
+      .store-banner {
+        background: linear-gradient(135deg, #0078d4, #005a9e);
+        border-radius: 24px;
+        margin: 4rem auto;
+        padding: 2rem;
+        max-width: 1000px;
+      }
+
+      .store-content {
+        display: flex;
+        align-items: center;
+        gap: 2rem;
+        color: white;
+      }
+
+      // .store-icon img {
+      //   width: 64px;
+      //   height: 64px;
+      // }
+
+      .store-text {
+        flex: 1;
+      }
+
+      .store-text h3 {
+        font-size: 1.5rem;
+        margin: 0;
+        font-weight: 600;
+      }
+
+      .store-text p {
+        margin: 0.5rem 0 0;
+        opacity: 0.9;
+      }
+
+      .store-button {
+        display: inline-flex;
+        align-items: center;
+        background: white;
+        color: #0078d4;
+        padding: 0.8rem 1.5rem;
+        border-radius: 12px;
+        text-decoration: none;
+        font-weight: 600;
+        transition: all 0.3s ease;
+      }
+
+      .store-button:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+      }
+
+      @media (max-width: 768px) {
+        .store-content {
+          flex-direction: column;
+          text-align: center;
+          gap: 1rem;
+        }
+
+        .store-banner {
+          margin: 2rem 1rem;
+        }
+      }
+
       .disclaimer {
         margin-top: 3rem;
         padding: 1rem;
@@ -278,10 +367,7 @@ import { RouterLink, Router, ActivatedRoute } from '@angular/router';
   ],
 })
 export class HomeComponent implements OnInit {
-  constructor(
-    private router: Router,
-    private route: ActivatedRoute
-  ) {}
+  constructor(private router: Router, private route: ActivatedRoute) {}
 
   ngOnInit() {
     // Check if we're accessing home directly (not through navigation)
@@ -293,8 +379,8 @@ export class HomeComponent implements OnInit {
         this.router.navigate(['/learn'], {
           queryParams: {
             from: fromLang,
-            to: toLang
-          }
+            to: toLang,
+          },
         });
       }
     }
