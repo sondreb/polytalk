@@ -47,5 +47,5 @@ Traveling and experiencing new cultures can be a powerful catalyst for personal 
 
 In conclusion, cultural insights and experiences can greatly enrich your travels and provide a deeper connection to the places you visit. By embracing local customs, learning the language, understanding cultural norms, exploring historical sites, engaging with locals, and reflecting on your experiences, you can gain a greater appreciation for the diversity and richness of our world.
 
-To help you get started with learning new languages for your travels, we invite you to try Polytalk. Our app offers an intuitive way to learn basic phrases and expressions in multiple languages, making it easier to connect with locals and navigate new cultures. Whether you're planning your next adventure or simply want to expand your linguistic horizons, Polytalk can help you take the first step in your language learning journey.
+To help you get started with learning new languages for your travels, we invite you to try PolyTalk. Our app offers an intuitive way to learn basic phrases and expressions in multiple languages, making it easier to connect with locals and navigate new cultures. Whether you're planning your next adventure or simply want to expand your linguistic horizons, PolyTalk can help you take the first step in your language learning journey.
 

@@ -1,6 +1,6 @@
 {
   "configVersion": 1,
-  "timestamp": 1738709404422,
+  "timestamp": 1738709898592,
   "index": "/index.html",
   "assetGroups": [
     {
@@ -4993,7 +4993,7 @@
     "/assets/audio/zh/words/to sleep.mp3": "36a7d3fc4ef641c1daa287c43ed82a18857125d0",
     "/assets/audio/zh/words/train.mp3": "beb4d6182019455b797a63d330c56c0efb27a76c",
     "/assets/audio/zh/words/water.mp3": "1077003cea9c7ee17c23301da79151c24e04135c",
-    "/assets/blog/cultural-insights.md": "186fb6390f589e3cf1c9f44fc0c4abeb2df13e36",
+    "/assets/blog/cultural-insights.md": "07ed980b579efbf59b9d3866861d365e08d081aa",
     "/assets/blog/language-learning-tips.md": "57459c52dee4e11a93e2adb19688a91d1a641bc9",
     "/assets/blog/new-languages.md": "eec3e752ef1a9d9b0beb679aa3065ec193935f07",
     "/assets/blog/posts.json": "5163b0abe1706e14f13ba63918f25e5edf2d24e9",
@@ -5259,9 +5259,9 @@
     "/chunk-WZ2ZIX4H.js": "dd20848a1622b0e6ee83fd0a2c6abe3ce551bcf1",
     "/chunk-XG7HQG7C.js": "64c3c4ae90ee785d571214bcd6acac2a4beb32ee",
     "/favicon.png": "b091747a8a6ef2cae7cfc030818e64c7ee80902f",
-    "/index.html": "61a7309a7015e8d6c7ef9afd1be2ef77f357bb80",
+    "/index.html": "ed3e07fa5e12713f83b7580f96f479c49b5710b5",
     "/main-U57BO5EL.js": "030c5274de566ab875406a5447458b8c4aaafc44",
-    "/manifest.webmanifest": "236b6caf65a710965d7b55e3dd1bb7dc1160bf95",
+    "/manifest.webmanifest": "f4796476cdc85fa498506cfed138967013125504",
     "/polyfills-FFHMD2TL.js": "f49b49a155bc7d192db62a4c15d0a612b460a667",
     "/styles-6RYUWOPM.css": "67075db47b6ec66b6beed766fc1ebd1e2cd70b41"
   },
