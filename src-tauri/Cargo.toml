@@ -1,6 +1,6 @@
 [package]
 name = "polytalk"
-version = "0.0.1"
+version = "0.0.2"
 description = "Learn Any Language with PolyTalk"
 authors = ["brainbox.no"]
 edition = "2021"
