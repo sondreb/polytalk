@@ -1,0 +1,8 @@
+[{
+      "relation": ["delegate_permission/common.handle_all_urls"],
+      "target": {
+        "namespace": "android_app",
+        "package_name": "me.polytalk.twa",
+        "sha256_cert_fingerprints": ["E0:E7:A0:86:4B:67:DC:80:B5:B4:B9:E8:41:F9:2E:A4:F6:D2:4B:C1:76:D7:72:53:2C:DF:B4:7B:7A:3E:1A:A3"]
+      }
+    }]
