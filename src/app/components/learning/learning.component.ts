@@ -128,6 +128,23 @@ import { Observable, BehaviorSubject, from } from 'rxjs';
               Downloading... {{ downloadProgress | async }}%
             </span>
           </button>
+
+          <br /><br />
+
+          @if(wakeLock) { 
+
+          <button (click)="releaseScreenLock()" class="download-button">
+            Keep screen off
+          </button>
+          <p>
+          Screen will not turn off, so you can enjoy the
+          learning experience without interruptions.
+          </p>
+          } @else {
+          <button (click)="keepScreenOn()" class="download-button">
+            Keep screen on
+          </button>
+          }
         </div>
 
         <div class="controls-wrapper">
@@ -1223,6 +1240,34 @@ export class LearningComponent implements OnInit, OnDestroy {
   //     .trim();
   // }
 
+  wakeLock: WakeLockSentinel | null = null;
+
+  async releaseScreenLock() {
+    if (!this.wakeLock) {
+      return;
+    }
+
+    this.wakeLock.release();
+    this.wakeLock = null;
+  }
+
+  async keepScreenOn() {
+    try {
+      if (this.wakeLock) {
+        return;
+      }
+
+      this.wakeLock = await navigator.wakeLock.request('screen');
+
+      this.wakeLock.addEventListener('release', () => {
+        this.wakeLock = null;
+      });
+
+    } catch (err) {
+      console.error(err);
+    }
+  }
+
   async downloadAllAudio() {
     if (this.isDownloading) return;
 
@@ -1375,9 +1420,13 @@ export class LearningComponent implements OnInit, OnDestroy {
 
   // Add a method to handle stop button click with additional safety
   @HostListener('document:visibilitychange')
-  onVisibilityChange() {
+  async onVisibilityChange() {
     if (document.hidden && this.isPlaying) {
       this.stopPlayback();
+    }
+
+    if (this.wakeLock !== null && document.visibilityState === 'visible') {
+      await this.keepScreenOn();
     }
   }
 }
