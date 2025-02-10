@@ -1,4 +1,4 @@
-import { Component, computed, effect, signal } from '@angular/core';
+import { Component, computed, effect, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { SettingsService } from '../../services/settings.service';
@@ -99,12 +99,12 @@ export class SettingsComponent {
   isClearingCache = signal(false);
   cacheMessage = signal('');
   cacheMessageClass = signal('');
+  themeService = inject(ThemeService);
+  audioService = inject(AudioService);
+  settingsService = inject(SettingsService);
   selectedTheme = signal(this.themeService.getSavedTheme());
 
   constructor(
-    private settingsService: SettingsService,
-    private audioService: AudioService,
-    private themeService: ThemeService
   ) {
     // Create an effect to clear the cache message
     effect(() => {
