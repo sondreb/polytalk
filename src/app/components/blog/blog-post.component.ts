@@ -66,7 +66,8 @@ interface BlogPostMetadata {
         padding: 20px;
       }
       .blog-post {
-        background: white;
+        background: var(--surface-color);
+        color: var(--text-color);
         padding: 2rem;
         border-radius: 12px;
         box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
@@ -105,10 +106,10 @@ interface BlogPostMetadata {
       .error {
         text-align: center;
         padding: 3rem;
-        background: white;
+        background: var(--surface-color);
         border-radius: 12px;
         box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-        color: #666;
+        color: var(--text-light);
       }
       .error {
         color: #d32f2f;
@@ -122,13 +123,13 @@ interface BlogPostMetadata {
         color: var(--primary-color);
       }
       .post-header time {
-        color: #666;
+        color: var(--text-light);
         font-size: 0.9rem;
         display: block;
         margin-bottom: 1rem;
       }
       .post-header .description {
-        color: #555;
+        color: var(--text-light);
         font-size: 1.1rem;
         margin: 1rem 0;
       }
@@ -136,20 +137,20 @@ interface BlogPostMetadata {
         margin: 1rem 0;
       }
       .tag {
-        background: #f0f0f0;
+        background: var(--surface-color);
         padding: 0.3rem 0.8rem;
         border-radius: 20px;
         margin-right: 0.5rem;
         font-size: 0.9rem;
-        color: #666;
+        color: var(--text-light);
         display: inline-block;
         margin-bottom: 0.5rem;
-        border: 1px solid #e0e0e0;
+        border: 1px solid var(--text-light);
       }
 
       :host ::ng-deep .post-content {
         font-size: 1.1rem;
-        color: #333;
+        color: var(--text-color);
       }
       :host ::ng-deep .post-content h1,
       :host ::ng-deep .post-content h2,

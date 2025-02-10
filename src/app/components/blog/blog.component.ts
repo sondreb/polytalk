@@ -68,7 +68,8 @@ interface BlogPost {
       margin-bottom: 2rem;
       padding: 2rem;
       border-radius: 12px;
-      background: white;
+      background: var(--surface-color);
+      color: var(--text-color);
       box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
       transition: transform 0.2s, box-shadow 0.2s;
     }
@@ -88,7 +89,7 @@ interface BlogPost {
       color: var(--primary-color-dark);
     }
     .description {
-      color: #555;
+      color: var(--text-color);
       margin: 1rem 0;
       line-height: 1.6;
     }
@@ -96,21 +97,21 @@ interface BlogPost {
       margin: 1rem 0;
     }
     .tag {
-      background: #f0f0f0;
+      background: var(--surface-color);
       padding: 0.3rem 0.8rem;
       border-radius: 20px;
       margin-right: 0.5rem;
       font-size: 0.9rem;
-      color: #666;
+      color: var(--text-light);
       display: inline-block;
       margin-bottom: 0.5rem;
-      border: 1px solid #e0e0e0;
+      border: 1px solid var(--text-light);
     }
     .read-more {
       display: inline-block;
       padding: 0.5rem 1.5rem;
       background: linear-gradient(135deg, var(--gradient-start), var(--gradient-end));
-      color: white;
+      color: var(--text-light);
       text-decoration: none;
       border-radius: 24px;
       font-weight: 500;
@@ -122,7 +123,7 @@ interface BlogPost {
       text-decoration: none;
     }
     time {
-      color: #666;
+      color: var(--text-light);
       font-size: 0.9rem;
       display: block;
       margin-bottom: 1rem;
@@ -130,7 +131,7 @@ interface BlogPost {
     .loading, .error, .empty {
       text-align: center;
       padding: 3rem;
-      color: #666;
+      color: var(--text-light);
       background: white;
       border-radius: 12px;
       box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
