@@ -38,7 +38,7 @@ import { CommonModule } from '@angular/common';
   styles: [
     `
       .navbar {
-        background: rgba(255, 255, 255, 0.8);
+        background: var(--surface-color);
         backdrop-filter: blur(10px);
         box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
         padding: 1rem 0; /* Changed: removed left/right padding */
