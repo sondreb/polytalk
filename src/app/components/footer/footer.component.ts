@@ -13,7 +13,7 @@ import { RouterLink } from '@angular/router';
           <a routerLink="/terms">Terms</a>
           <a routerLink="/about">About</a>
         </nav>
-        <p class="copyright">&copy; {{ currentYear }} PolyTalk.Me</p>
+        <p class="copyright">&copy; {{ currentYear }} PolyTalk.Me | <a href="https://x.com/PolyTalkMe" target="_blank">&#64;PolyTalkMe</a></p>
       </div>
     </footer>
   `,
