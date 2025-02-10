@@ -297,7 +297,7 @@ import { Observable, BehaviorSubject, from } from 'rxjs';
         left: 0;
         right: 0;
         z-index: 99;
-        background: rgba(255, 255, 255, 0.8);
+        background: var(--surface-color);
         backdrop-filter: blur(10px);
         box-shadow: 0 -1px 3px rgba(0, 0, 0, 0.1);
         height: 72px;
@@ -736,7 +736,7 @@ import { Observable, BehaviorSubject, from } from 'rxjs';
         left: 0;
         right: 0;
         z-index: 99;
-        background: rgba(255, 255, 255, 0.8);
+        background: var(--surface-color);
         backdrop-filter: blur(10px);
         box-shadow: 0 -1px 3px rgba(0, 0, 0, 0.1);
       }
