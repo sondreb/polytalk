@@ -29,6 +29,12 @@ export class ThemeService {
 
     document.body.classList.remove('light-theme', 'dark-theme');
     document.body.classList.add(`${theme}-theme`);
+
+    if (theme === 'dark') {
+      document.documentElement.style.setProperty('color-scheme', 'dark');
+    } else {
+      document.documentElement.style.setProperty('color-scheme', 'light');
+    }
   }
 
   getSavedTheme(): string {
