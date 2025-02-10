@@ -4,6 +4,7 @@ import { CommonModule } from '@angular/common';
 import { NavbarComponent } from './components/navbar/navbar.component';
 import { UpdateService } from './services/update.service';
 import { FooterComponent } from './components/footer/footer.component';
+import { ThemeService } from './services/theme.service';
 
 @Component({
   selector: 'app-root',
@@ -136,12 +137,14 @@ export class AppComponent {
   showInstallPrompt = false;
   private deferredPrompt: any;
 
-  constructor(public updateService: UpdateService) {
+  constructor(public updateService: UpdateService, private themeService: ThemeService) {
     window.addEventListener('beforeinstallprompt', (e) => {
       e.preventDefault();
       this.deferredPrompt = e;
       this.showInstallPrompt = true;
     });
+
+    this.themeService.applyTheme();
   }
 
   async installPwa() {

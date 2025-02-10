@@ -98,3 +98,34 @@ button:hover {
     gap: 1rem;
   }
 }
+
+/* CSS variables for light and dark themes */
+:root {
+  --light-background-color: #f8fafc;
+  --light-surface-color: #ffffff;
+  --light-text-color: #1e293b;
+  --light-text-light: #64748b;
+
+  --dark-background-color: #1e293b;
+  --dark-surface-color: #2d3748;
+  --dark-text-color: #f8fafc;
+  --dark-text-light: #a0aec0;
+}
+
+/* Light theme */
+body.light-theme {
+  --background-color: var(--light-background-color);
+  --surface-color: var(--light-surface-color);
+  --text-color: var(--light-text-color);
+  --text-light: var(--light-text-light);
+  color-scheme: light;
+}
+
+/* Dark theme */
+body.dark-theme {
+  --background-color: var(--dark-background-color);
+  --surface-color: var(--dark-surface-color);
+  --text-color: var(--dark-text-color);
+  --text-light: var(--dark-text-light);
+  color-scheme: dark;
+}
