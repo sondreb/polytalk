@@ -138,6 +138,7 @@ export class SettingsComponent {
   }
 
   onThemeChange(theme: string) {
+    this.themeService.saveTheme(theme);
     this.themeService.setTheme(theme);
   }
 }

@@ -15,15 +15,20 @@ export class ThemeService {
     this.setTheme(savedTheme);
   }
 
+  saveTheme(theme: string) {
+    localStorage.setItem(this.THEME_KEY, theme);
+  }
+
   setTheme(theme: string) {
     if (theme === 'auto') {
-      const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+      const prefersDark = window.matchMedia(
+        '(prefers-color-scheme: dark)'
+      ).matches;
       theme = prefersDark ? 'dark' : 'light';
     }
 
     document.body.classList.remove('light-theme', 'dark-theme');
     document.body.classList.add(`${theme}-theme`);
-    localStorage.setItem(this.THEME_KEY, theme);
   }
 
   getSavedTheme(): string {
