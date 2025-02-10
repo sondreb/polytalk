@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { SettingsService } from '../../services/settings.service';
 import { AudioService } from '../../services/audio.service';
+import { ThemeService } from '../../services/theme.service';
 
 @Component({
   selector: 'app-settings',
@@ -34,6 +35,15 @@ import { AudioService } from '../../services/audio.service';
           [ngModel]="playbackSpeed()"
           (ngModelChange)="updatePlaybackSpeed($event)"
         />
+      </div>
+
+      <div class="setting-item">
+        <label for="theme-select">Theme:</label>
+        <select id="theme-select" [(ngModel)]="selectedTheme" (ngModelChange)="onThemeChange($event)">
+          <option value="auto">Auto</option>
+          <option value="light">Light</option>
+          <option value="dark">Dark</option>
+        </select>
       </div>
 
       <div class="setting-item">
@@ -89,10 +99,12 @@ export class SettingsComponent {
   isClearingCache = signal(false);
   cacheMessage = signal('');
   cacheMessageClass = signal('');
+  selectedTheme = signal(this.themeService.getSavedTheme());
 
   constructor(
     private settingsService: SettingsService,
-    private audioService: AudioService
+    private audioService: AudioService,
+    private themeService: ThemeService
   ) {
     // Create an effect to clear the cache message
     effect(() => {
@@ -123,5 +135,9 @@ export class SettingsComponent {
     } finally {
       this.isClearingCache.set(false);
     }
+  }
+
+  onThemeChange(theme: string) {
+    this.themeService.setTheme(theme);
   }
 }
