@@ -27,6 +27,10 @@ export class SettingsService {
     return this.settingsSignal();
   }
 
+  resetSettings() {
+    this.updateSettings(this.defaultSettings);
+  }
+
   private loadSettings(): AppSettings | null {
     const saved = localStorage.getItem('polytalk-extra-settings');
     return saved ? JSON.parse(saved) : null;

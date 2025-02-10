@@ -54,6 +54,10 @@ import { ThemeService } from '../../services/theme.service';
           cacheMessage()
         }}</span>
       </div>
+
+      <div class="setting-item">
+        <button (click)="settingsService.resetSettings()">Reset Settings</button>
+      </div>
     </div>
   `,
   styles: [
