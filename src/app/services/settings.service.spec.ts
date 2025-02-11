@@ -1,27 +1,21 @@
-import { TestBed } from '@angular/core/testing';
+import { test, expect } from '@playwright/test';
 import { SettingsService } from './settings.service';
 
-describe('SettingsService', () => {
+test.describe('SettingsService', () => {
   let service: SettingsService;
 
-  beforeEach(() => {
-    TestBed.configureTestingModule({});
-    service = TestBed.inject(SettingsService);
+  test.beforeEach(async ({ page }) => {
+    await page.addInitScript(() => {
+      TestBed.configureTestingModule({});
+      service = TestBed.inject(SettingsService);
+    });
   });
 
-  it('should be created', () => {
+  test('should be created', () => {
     expect(service).toBeTruthy();
   });
 
-  // it('should return default settings if no settings are saved', () => {
-  //   localStorage.removeItem('polytalk-extra-settings');
-  //   const settings = service.getSettings();
-  //   console.log('SETTINGS, CHECK:', settings);
-  //   expect(settings.wordDelay).toBe(50);
-  //   expect(settings.playbackSpeed).toBe(1.0);
-  // });
-
-  it('should save and load settings correctly', () => {
+  test('should save and load settings correctly', () => {
     const newSettings = { wordDelay: 100, playbackSpeed: 1.5 };
     service.updateSettings(newSettings);
     const settings = service.getSettings();
@@ -29,7 +23,7 @@ describe('SettingsService', () => {
     expect(settings.playbackSpeed).toBe(1.5);
   });
 
-  it('should reset settings to default', () => {
+  test('should reset settings to default', () => {
     const newSettings = { wordDelay: 100, playbackSpeed: 1.5 };
     service.updateSettings(newSettings);
     service.resetSettings();

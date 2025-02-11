@@ -1,36 +1,38 @@
-import { TestBed } from '@angular/core/testing';
+import { test, expect } from '@playwright/test';
 import { ThemeService } from './theme.service';
 
-describe('ThemeService', () => {
+test.describe('ThemeService', () => {
   let service: ThemeService;
 
-  beforeEach(() => {
-    TestBed.configureTestingModule({});
-    service = TestBed.inject(ThemeService);
+  test.beforeEach(async ({ page }) => {
+    await page.addInitScript(() => {
+      TestBed.configureTestingModule({});
+      service = TestBed.inject(ThemeService);
+    });
   });
 
-  it('should be created', () => {
+  test('should be created', () => {
     expect(service).toBeTruthy();
   });
 
-  it('should save and retrieve theme correctly', () => {
+  test('should save and retrieve theme correctly', () => {
     service.saveTheme('dark');
     expect(service.getSavedTheme()).toBe('dark');
   });
 
-  it('should apply theme correctly', () => {
+  test('should apply theme correctly', () => {
     spyOn(service, 'setTheme');
     service.applyTheme();
     expect(service.setTheme).toHaveBeenCalled();
   });
 
-  it('should set theme to dark', () => {
+  test('should set theme to dark', () => {
     service.setTheme('dark');
     expect(document.body.classList.contains('dark-theme')).toBeTrue();
     expect(document.documentElement.style.getPropertyValue('color-scheme')).toBe('dark');
   });
 
-  it('should set theme to light', () => {
+  test('should set theme to light', () => {
     service.setTheme('light');
     expect(document.body.classList.contains('light-theme')).toBeTrue();
     expect(document.documentElement.style.getPropertyValue('color-scheme')).toBe('light');

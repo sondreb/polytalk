@@ -1,42 +1,44 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { test, expect } from '@playwright/test';
 import { LearningComponent } from './learning.component';
 import { RouterTestingModule } from '@angular/router/testing';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { LanguageService } from '../../services/language.service';
 import { AudioService } from '../../services/audio.service';
 
-describe('LearningComponent', () => {
+test.describe('LearningComponent', () => {
   let component: LearningComponent;
   let fixture: ComponentFixture<LearningComponent>;
 
-  beforeEach(async () => {
-    await TestBed.configureTestingModule({
-      imports: [RouterTestingModule, HttpClientTestingModule],
-      providers: [LanguageService, AudioService],
-    }).compileComponents();
+  test.beforeEach(async ({ page }) => {
+    await page.addInitScript(() => {
+      TestBed.configureTestingModule({
+        imports: [RouterTestingModule, HttpClientTestingModule],
+        providers: [LanguageService, AudioService],
+      }).compileComponents();
+    });
   });
 
-  beforeEach(() => {
+  test.beforeEach(() => {
     fixture = TestBed.createComponent(LearningComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
 
-  it('should create', () => {
+  test('should create', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should render language selectors', () => {
+  test('should render language selectors', () => {
     const compiled = fixture.nativeElement as HTMLElement;
     expect(compiled.querySelector('.language-selector')).toBeTruthy();
   });
 
-  it('should render tabs', () => {
+  test('should render tabs', () => {
     const compiled = fixture.nativeElement as HTMLElement;
     expect(compiled.querySelector('.tabs')).toBeTruthy();
   });
 
-  it('should render content items', () => {
+  test('should render content items', () => {
     component.currentItems = [
       { native: 'Hello', translation: 'Hola', key: 'hello' },
     ];
@@ -45,42 +47,42 @@ describe('LearningComponent', () => {
     expect(compiled.querySelector('.item')).toBeTruthy();
   });
 
-  it('should render controls', () => {
+  test('should render controls', () => {
     const compiled = fixture.nativeElement as HTMLElement;
     expect(compiled.querySelector('.controls')).toBeTruthy();
   });
 
-  it('should render offline controls', () => {
+  test('should render offline controls', () => {
     const compiled = fixture.nativeElement as HTMLElement;
     expect(compiled.querySelector('.offline-controls')).toBeTruthy();
   });
 
-  it('should render download button', () => {
+  test('should render download button', () => {
     const compiled = fixture.nativeElement as HTMLElement;
     expect(compiled.querySelector('.download-button')).toBeTruthy();
   });
 
-  it('should render play button', () => {
+  test('should render play button', () => {
     const compiled = fixture.nativeElement as HTMLElement;
     expect(compiled.querySelector('.buttons button')).toBeTruthy();
   });
 
-  it('should render stop button', () => {
+  test('should render stop button', () => {
     const compiled = fixture.nativeElement as HTMLElement;
     expect(compiled.querySelector('.buttons button:last-child')).toBeTruthy();
   });
 
-  it('should render settings', () => {
+  test('should render settings', () => {
     const compiled = fixture.nativeElement as HTMLElement;
     expect(compiled.querySelector('.settings')).toBeTruthy();
   });
 
-  it('should render language header', () => {
+  test('should render language header', () => {
     const compiled = fixture.nativeElement as HTMLElement;
     expect(compiled.querySelector('.language-header')).toBeTruthy();
   });
 
-  it('should render tabs with correct labels', () => {
+  test('should render tabs with correct labels', () => {
     const compiled = fixture.nativeElement as HTMLElement;
     const tabs = compiled.querySelectorAll('.tabs button');
     expect(tabs.length).toBe(3);
@@ -89,7 +91,7 @@ describe('LearningComponent', () => {
     expect(tabs[2].textContent).toContain('Sentences');
   });
 
-  it('should render items with correct content', () => {
+  test('should render items with correct content', () => {
     component.currentItems = [
       { native: 'Hello', translation: 'Hola', key: 'hello' },
     ];
@@ -100,7 +102,7 @@ describe('LearningComponent', () => {
     expect(item?.querySelector('.translation span')?.textContent).toContain('Hola');
   });
 
-  it('should render play buttons for items', () => {
+  test('should render play buttons for items', () => {
     component.currentItems = [
       { native: 'Hello', translation: 'Hola', key: 'hello' },
     ];
@@ -110,7 +112,7 @@ describe('LearningComponent', () => {
     expect(playButtons.length).toBe(2);
   });
 
-  it('should render language selectors with correct options', () => {
+  test('should render language selectors with correct options', () => {
     component.availableLanguages = [
       { code: 'en', name: 'English', flag: '🇬🇧', flagImage: '/assets/flags/gb.png' },
       { code: 'es', name: 'Spanish', flag: '🇪🇸', flagImage: '/assets/flags/es.png' },

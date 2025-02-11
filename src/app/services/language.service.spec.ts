@@ -1,26 +1,28 @@
-import { TestBed } from '@angular/core/testing';
+import { test, expect } from '@playwright/test';
 import { LanguageService, Language, LearningContent } from './language.service';
 
-describe('LanguageService', () => {
+test.describe('LanguageService', () => {
   let service: LanguageService;
 
-  beforeEach(() => {
-    TestBed.configureTestingModule({});
+  test.beforeEach(async ({ page }) => {
+    await page.addInitScript(() => {
+      TestBed.configureTestingModule({}).compileComponents();
+    });
     service = TestBed.inject(LanguageService);
   });
 
-  it('should be created', () => {
+  test('should be created', () => {
     expect(service).toBeTruthy();
   });
 
-  it('should return a sorted list of languages', () => {
+  test('should return a sorted list of languages', () => {
     const languages: Language[] = service.getLanguages();
     expect(languages).toBeTruthy();
     expect(languages.length).toBeGreaterThan(0);
     expect(languages).toEqual(languages.sort((a, b) => a.name.localeCompare(b.name)));
   });
 
-  it('should return learning content for a valid language code', () => {
+  test('should return learning content for a valid language code', () => {
     const content: LearningContent | undefined = service.getContent('en');
     expect(content).toBeTruthy();
     expect(content?.words).toBeDefined();
@@ -28,7 +30,7 @@ describe('LanguageService', () => {
     expect(content?.sentences).toBeDefined();
   });
 
-  it('should return undefined for an invalid language code', () => {
+  test('should return undefined for an invalid language code', () => {
     const content: LearningContent | undefined = service.getContent('invalid-code');
     expect(content).toBeUndefined();
   });

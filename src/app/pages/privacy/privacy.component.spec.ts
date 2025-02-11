@@ -1,26 +1,28 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { test, expect } from '@playwright/test';
 import { PrivacyComponent } from './privacy.component';
 
-describe('PrivacyComponent', () => {
+test.describe('PrivacyComponent', () => {
   let component: PrivacyComponent;
   let fixture: ComponentFixture<PrivacyComponent>;
 
-  beforeEach(async () => {
-    await TestBed.configureTestingModule({
-    }).compileComponents();
+  test.beforeEach(async ({ page }) => {
+    await page.addInitScript(() => {
+      TestBed.configureTestingModule({
+      }).compileComponents();
+    });
   });
 
-  beforeEach(() => {
+  test.beforeEach(() => {
     fixture = TestBed.createComponent(PrivacyComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
 
-  it('should create', () => {
+  test('should create', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should render title', () => {
+  test('should render title', () => {
     const compiled = fixture.nativeElement as HTMLElement;
     expect(compiled.querySelector('h1')?.textContent).toContain('Privacy Policy');
   });
