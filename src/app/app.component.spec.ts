@@ -32,7 +32,6 @@ describe('AppComponent', () => {
     const fixture = TestBed.createComponent(AppComponent);
     fixture.detectChanges();
     const compiled = fixture.nativeElement as HTMLElement;
-    console.log('CHECK: ', compiled);
     expect(compiled.querySelector('.brand')?.textContent).toContain('PolyTalk.Me');
   });
 });
