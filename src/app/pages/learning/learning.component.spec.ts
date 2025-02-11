@@ -11,7 +11,6 @@ describe('LearningComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [LearningComponent],
       imports: [RouterTestingModule, HttpClientTestingModule],
       providers: [LanguageService, AudioService],
     }).compileComponents();

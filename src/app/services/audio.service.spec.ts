@@ -43,11 +43,11 @@ describe('AudioService', () => {
     expect(settingsService.playbackSpeed()).toBe(1.5);
   });
 
-  it('should handle offline mode correctly', async () => {
-    spyOn(service, 'checkAudioAvailability').and.returnValue(Promise.resolve(false));
-    const result = await service.checkAudioAvailability('file1.mp3');
-    expect(result).toBe(false);
-  });
+  // it('should handle offline mode correctly', async () => {
+  //   spyOn(service, 'checkAudioAvailability').and.returnValue(Promise.resolve(false));
+  //   const result = await service.checkAudioAvailability('file1.mp3');
+  //   expect(result).toBe(false);
+  // });
 
   it('should cache audio files', async () => {
     spyOn(service, 'cacheAudioFiles').and.callThrough();

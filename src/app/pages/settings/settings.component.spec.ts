@@ -15,7 +15,6 @@ describe('SettingsComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [SettingsComponent],
       imports: [FormsModule, CommonModule],
       providers: [SettingsService, AudioService, ThemeService],
     }).compileComponents();
