@@ -1,10 +1,9 @@
 import { Component, OnInit } from '@angular/core';
-import { RouterLink, Router, ActivatedRoute } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-home-root',
   standalone: true,
-  imports: [RouterLink],
   template: ``,
   styles: [``],
 })
