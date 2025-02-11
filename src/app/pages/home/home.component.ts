@@ -279,11 +279,6 @@ import { RouterLink, Router, ActivatedRoute } from '@angular/router';
         color: white;
       }
 
-      // .store-icon img {
-      //   width: 64px;
-      //   height: 64px;
-      // }
-
       .store-text {
         flex: 1;
       }
