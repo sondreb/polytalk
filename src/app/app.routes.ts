@@ -1,10 +1,10 @@
 import { Routes } from '@angular/router';
-import { HomeComponent } from './components/home/home.component';
-import { LanguageSelectionComponent } from './components/language-selection/language-selection.component';
-import { LearningComponent } from './components/learning/learning.component';
-import { SettingsComponent } from './components/settings/settings.component';
-import { BlogListComponent } from './components/blog/blog.component';
-import { BlogPostComponent } from './components/blog/blog-post.component';
+import { HomeComponent } from './pages/home/home.component';
+import { LanguageSelectionComponent } from './pages/language-selection/language-selection.component';
+import { LearningComponent } from './pages/learning/learning.component';
+import { SettingsComponent } from './pages/settings/settings.component';
+import { BlogListComponent } from './pages/blog/blog.component';
+import { BlogPostComponent } from './pages/blog/blog-post.component';
 import { HomeRootComponent } from './components/root/root.component';
 
 export const routes: Routes = [
