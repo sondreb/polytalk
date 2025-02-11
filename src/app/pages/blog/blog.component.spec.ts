@@ -1,29 +1,31 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { test, expect } from '@playwright/test';
 import { BlogListComponent } from './blog.component';
 import { RouterTestingModule } from '@angular/router/testing';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 
-describe('BlogListComponent', () => {
+test.describe('BlogListComponent', () => {
   let component: BlogListComponent;
   let fixture: ComponentFixture<BlogListComponent>;
 
-  beforeEach(async () => {
-    await TestBed.configureTestingModule({
-      imports: [RouterTestingModule, HttpClientTestingModule],
-    }).compileComponents();
+  test.beforeEach(async ({ page }) => {
+    await page.addInitScript(() => {
+      TestBed.configureTestingModule({
+        imports: [RouterTestingModule, HttpClientTestingModule],
+      }).compileComponents();
+    });
   });
 
-  beforeEach(() => {
+  test.beforeEach(() => {
     fixture = TestBed.createComponent(BlogListComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
 
-  it('should create', () => {
+  test('should create', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should render loading state initially', () => {
+  test('should render loading state initially', () => {
     const compiled = fixture.nativeElement as HTMLElement;
     expect(compiled.querySelector('.loading')?.textContent).toContain('Loading posts...');
   });
@@ -35,7 +37,7 @@ describe('BlogListComponent', () => {
   //   expect(compiled.querySelector('.error')?.textContent).toContain('Failed to load blog posts. Please try again later.');
   // });
 
-  it('should render blog post summaries', () => {
+  test('should render blog post summaries', () => {
     component.posts = [
       {
         title: 'Test Blog Post',
@@ -54,7 +56,7 @@ describe('BlogListComponent', () => {
     expect(compiled.querySelector('.blog-summary .tag')?.textContent).toContain('test');
   });
 
-  it('should render empty state when no posts are found', () => {
+  test('should render empty state when no posts are found', () => {
     component.posts = [];
     component.loading = false;
     fixture.detectChanges();

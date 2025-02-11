@@ -1,31 +1,33 @@
-import { TestBed } from '@angular/core/testing';
-import { SwUpdate } from '@angular/service-worker';
+import { test, expect } from '@playwright/test';
 import { UpdateService } from './update.service';
+import { SwUpdate } from '@angular/service-worker';
 
-describe('UpdateService', () => {
+test.describe('UpdateService', () => {
   let service: UpdateService;
   let swUpdate: SwUpdate;
 
-  beforeEach(() => {
-    TestBed.configureTestingModule({
-      providers: [
-        UpdateService,
-        { provide: SwUpdate, useValue: jasmine.createSpyObj('SwUpdate', ['checkForUpdate', 'activateUpdate', 'versionUpdates']) }
-      ],
+  test.beforeEach(async ({ page }) => {
+    await page.addInitScript(() => {
+      TestBed.configureTestingModule({
+        providers: [
+          UpdateService,
+          { provide: SwUpdate, useValue: jasmine.createSpyObj('SwUpdate', ['checkForUpdate', 'activateUpdate', 'versionUpdates']) }
+        ],
+      }).compileComponents();
     });
     service = TestBed.inject(UpdateService);
     swUpdate = TestBed.inject(SwUpdate);
   });
 
-  it('should be created', () => {
+  test('should be created', () => {
     expect(service).toBeTruthy();
   });
 
-  // it('should check for updates on initialization', () => {
+  // test('should check for updates on initialization', () => {
   //   expect(swUpdate.checkForUpdate).toHaveBeenCalled();
   // });
 
-  // it('should set updateAvailable to true when a new version is available', () => {
+  // test('should set updateAvailable to true when a new version is available', () => {
   //   const versionUpdatesSpy = swUpdate.versionUpdates as jasmine.SpyObj<any>;
   //   versionUpdatesSpy.subscribe.and.callFake((callback: any) => {
   //     callback({ type: 'VERSION_READY' });
@@ -35,7 +37,7 @@ describe('UpdateService', () => {
   //   expect(service.updateAvailable()).toBeTrue();
   // });
 
-  // it('should activate update and reload the page when updateNow is called', async () => {
+  // test('should activate update and reload the page when updateNow is called', async () => {
   //   const activateUpdateSpy = swUpdate.activateUpdate as jasmine.Spy;
   //   activateUpdateSpy.and.returnValue(Promise.resolve());
 
@@ -46,7 +48,7 @@ describe('UpdateService', () => {
   //   expect(window.location.reload).toHaveBeenCalled();
   // });
 
-  // it('should clear the check interval on destroy', () => {
+  // test('should clear the check interval on destroy', () => {
   //   spyOn(window, 'clearInterval');
   //   service.ngOnDestroy();
   //   expect(window.clearInterval).toHaveBeenCalled();

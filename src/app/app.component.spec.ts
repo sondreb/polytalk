@@ -1,34 +1,30 @@
-import { TestBed } from '@angular/core/testing';
+import { test, expect } from '@playwright/test';
 import { AppComponent } from './app.component';
 import { ServiceWorkerModule } from '@angular/service-worker';
 import { RouterTestingModule } from '@angular/router/testing';
 
-describe('AppComponent', () => {
-  beforeEach(async () => {
-    await TestBed.configureTestingModule({
-      imports: [
-        AppComponent,
-        RouterTestingModule,
-        ServiceWorkerModule.register('ngsw-worker.js', {
-          enabled: false, // Disable during tests
-        }),
-      ],
-    }).compileComponents();
+test.describe('AppComponent', () => {
+  test.beforeEach(async ({ page }) => {
+    await page.addInitScript(() => {
+      TestBed.configureTestingModule({
+        imports: [
+          AppComponent,
+          RouterTestingModule,
+          ServiceWorkerModule.register('ngsw-worker.js', {
+            enabled: false, // Disable during tests
+          }),
+        ],
+      }).compileComponents();
+    });
   });
 
-  it('should create the app', () => {
+  test('should create the app', async ({ page }) => {
     const fixture = TestBed.createComponent(AppComponent);
     const app = fixture.componentInstance;
     expect(app).toBeTruthy();
   });
 
-  // it(`should have the 'app' title`, () => {
-  //   const fixture = TestBed.createComponent(AppComponent);
-  //   const app = fixture.componentInstance;
-  //   expect(app.title).toEqual('app');
-  // });
-
-  it('should render title', () => {
+  test('should render title', async ({ page }) => {
     const fixture = TestBed.createComponent(AppComponent);
     fixture.detectChanges();
     const compiled = fixture.nativeElement as HTMLElement;
