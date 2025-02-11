@@ -35,4 +35,8 @@ import { Component } from '@angular/core';
     h2 { margin-top: 2rem; }
   `]
 })
-export class AboutComponent {}
+export class AboutComponent {
+  ngAfterViewInit() {
+    window.scrollTo(0, 0);
+  }
+}

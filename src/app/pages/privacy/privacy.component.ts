@@ -62,4 +62,8 @@ import { Component } from '@angular/core';
 })
 export class PrivacyComponent {
   lastUpdated = '2024-12-12';
+
+  ngAfterViewInit() {
+    window.scrollTo(0, 0);
+  }
 }

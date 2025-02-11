@@ -145,4 +145,8 @@ export class SettingsComponent {
     this.themeService.saveTheme(theme);
     this.themeService.setTheme(theme);
   }
+
+  ngAfterViewInit() {
+    window.scrollTo(0, 0);
+  }
 }
