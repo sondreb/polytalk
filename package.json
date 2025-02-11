@@ -3,6 +3,7 @@
   "version": "0.0.3",
   "scripts": {
     "ng": "ng",
+    "e2e": "ng e2e",
     "start": "ng serve",
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
@@ -31,16 +32,18 @@
     "@angular/platform-browser-dynamic": "^19.0.1",
     "@angular/router": "^19.0.1",
     "@angular/service-worker": "^19.0.1",
+    "@tauri-apps/api": "^2",
+    "@tauri-apps/plugin-opener": "^2",
     "marked": "^15.0.3",
     "rxjs": "~7.8.1",
-    "tslib": "^2.8.1",
-    "@tauri-apps/api": "^2",
-    "@tauri-apps/plugin-opener": "^2"
+    "tslib": "^2.8.1"
   },
   "devDependencies": {
     "@angular-devkit/build-angular": "^19.0.2",
     "@angular/cli": "^19.0.2",
     "@angular/compiler-cli": "^19.0.1",
+    "@playwright/test": "1.50.1",
+    "@tauri-apps/cli": "^2",
     "@types/jasmine": "~5.1.5",
     "@types/marked": "^5.0.2",
     "angular-cli-ghpages": "^2.0.3",
@@ -50,7 +53,7 @@
     "karma-coverage": "~2.2.1",
     "karma-jasmine": "~5.1.0",
     "karma-jasmine-html-reporter": "~2.1.0",
-    "typescript": "~5.5.2",
-    "@tauri-apps/cli": "^2"
+    "playwright-ng-schematics": "^1.2.2",
+    "typescript": "~5.5.2"
   }
 }
