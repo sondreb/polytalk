@@ -20,32 +20,33 @@ import { Component } from '@angular/core';
         <li>Referral sources</li>
       </ul>
 
-      <h2>Advertising Data</h2>
+      <!-- <h2>Advertising Data</h2>
       <p>Our service uses Adcash for displaying advertisements. Adcash may collect:</p>
       <ul>
         <li>Cookie data</li>
         <li>Device information</li>
         <li>IP address</li>
         <li>Browser information</li>
-      </ul>
+      </ul> -->
 
       <h2>How Information is Used</h2>
       <p>Data collection occurs through the following services:</p>
       <ul>
         <li>Google Analytics: To analyze website usage and improve user experience</li>
         <li>Google Tag Manager: To manage and deploy tracking scripts</li>
-        <li>Adcash: To display advertisements and measure ad performance</li>
+        <!-- <li>Adcash: To display advertisements and measure ad performance</li> -->
       </ul>
 
       <h2>Your Choices</h2>
       <p>You can control your data privacy through these methods:</p>
       <ul>
         <li>Install the <a href="https://tools.google.com/dlpage/gaoptout" target="_blank" rel="noopener">Google Analytics Opt-out Browser Add-on</a></li>
-        <li>Learn more about Adcash's privacy practices at <a href="https://adcash.com/privacy-policy/" target="_blank" rel="noopener">Adcash Privacy Policy</a></li>
+        <!-- <li>Learn more about Adcash's privacy practices at <a href="https://adcash.com/privacy-policy/" target="_blank" rel="noopener">Adcash Privacy Policy</a></li> -->
       </ul>
 
       <h2>Advertising</h2>
-      <p>We use Adcash to display advertisements. Adcash uses cookies and similar technologies to serve ads and measure their performance. For more information about how Adcash handles your data, please visit their <a href="https://adcash.com/privacy-policy/" target="_blank" rel="noopener">Privacy Policy</a>.</p>
+      <p>We currently don't display advertisements. This will change in the future.</p>
+      <!-- <p>We use Adcash to display advertisements. Adcash uses cookies and similar technologies to serve ads and measure their performance. For more information about how Adcash handles your data, please visit their <a href="https://adcash.com/privacy-policy/" target="_blank" rel="noopener">Privacy Policy</a>.</p> -->
 
       <h2>Contact Us</h2>
       <p>If you have questions about this Privacy Policy, <a href="https://github.com/sondreb">please contact us</a>.</p>
