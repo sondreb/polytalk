@@ -43,7 +43,7 @@ import { Observable, BehaviorSubject, from } from 'rxjs';
             </select>
           </div>
 
-          <div class="language-direction">→</div>
+          <button (click)="switchLanguages()" class="switch-button">⇄</button>
 
           <div class="language-selector">
             <img
@@ -699,6 +699,19 @@ import { Observable, BehaviorSubject, from } from 'rxjs';
         font-size: 1.5rem;
         color: var(--primary-color);
         font-weight: bold;
+      }
+
+      .switch-button {
+        font-size: 1.5rem;
+        color: var(--primary-color);
+        background: transparent;
+        border: none;
+        cursor: pointer;
+        transition: all 0.2s ease;
+      }
+
+      .switch-button:hover {
+        color: var(--gradient-end);
       }
 
       select {
@@ -1386,6 +1399,19 @@ export class LearningComponent implements OnInit, OnDestroy {
       this.toLanguageCode = value;
       localStorage.setItem(this.TO_LANGUAGE_KEY, value);
     }
+    this.updateLanguages();
+    this.router.navigate([
+      '/learn',
+      this.fromLanguageCode,
+      this.toLanguageCode,
+      this.category,
+    ]);
+  }
+
+  switchLanguages() {
+    const temp = this.fromLanguageCode;
+    this.fromLanguageCode = this.toLanguageCode;
+    this.toLanguageCode = temp;
     this.updateLanguages();
     this.router.navigate([
       '/learn',
