@@ -109,9 +109,6 @@ import { ThemeService } from '../../services/theme.service';
         border-color: var(--primary-color);
         box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
       }
-      select:hover {
-        background: rgba(99, 102, 241, 0.05);
-      }
     `,
   ],
 })
