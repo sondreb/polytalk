@@ -94,6 +94,24 @@ import { ThemeService } from '../../services/theme.service';
         color: red;
         margin-left: 1em;
       }
+      select {
+        font-size: 1.2rem;
+        padding: 0.5rem;
+        border-radius: 8px;
+        border: 2px solid rgba(99, 102, 241, 0.2);
+        background: var(--surface-color);
+        color: var(--text-color);
+        cursor: pointer;
+        transition: all 0.3s ease;
+      }
+      select:focus {
+        outline: none;
+        border-color: var(--primary-color);
+        box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+      }
+      select:hover {
+        background: rgba(99, 102, 241, 0.05);
+      }
     `,
   ],
 })
