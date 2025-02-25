@@ -16,3 +16,9 @@ With PolyTalk, you can effortlessly bridge cultural and language gaps, making yo
 Stay tuned for more updates, and thank you for being a part of our journey. 
 
 Happy communicating!
+
+## Install now
+
+Click the button below to download PolyTalk from the Microsoft Store:
+
+[![Download from the Microsoft Store](https://get.microsoft.com/images/en-us%20dark.svg)](https://apps.microsoft.com/detail/9NLCCGZQ48TX)
