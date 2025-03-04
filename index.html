@@ -1,26 +1,55 @@
 <!DOCTYPE html>
 <html lang="en" data-beasties-container>
   <head>
-    <script src="cookieconsent.js"></script>
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-CGRPKT6LZD"></script>
-    <!-- <script>
+    <script src="/cookieconsent.js"></script>
+    <!-- Google Tag Manager -->
+    <script>
       window.dataLayer = window.dataLayer || [];
-      function gtag() {
-        dataLayer.push(arguments);
+      function gtag() { dataLayer.push(arguments); }
+      const defaultSettings = {
+        ad_storage: "granted",
+        ad_user_data: "granted",
+        ad_personalization: "granted",
+        analytics_storage: "granted",
+      };
+
+      const defaultRegionalSettings = {
+        ad_storage: "denied",
+        ad_user_data: "denied",
+        ad_personalization: "denied",
+        analytics_storage: "denied",
+        region: ["AT", "BE", "IS", "LI", "NO"],
+      };
+
+      if (localStorage.getItem("consentMode") === null) {
+        gtag("consent", "default", defaultSettings);
+        gtag("consent", "default", defaultRegionalSettings);
+      } else {
+        gtag("consent", "default", {
+          ...defaultRegionalSettings,
+          ...JSON.parse(localStorage.getItem("consentMode")),
+        });
+        gtag("consent", "default", {
+          ...defaultSettings,
+          ...JSON.parse(localStorage.getItem("consentMode")),
+        });
       }
-      gtag("js", new Date());
-      gtag("config", "G-CGRPKT6LZD");
-    </script> -->
-    <!-- <script
-      id="aclib"
-      type="text/javascript"
-      src="//acscdn.com/script/aclib.js"
-    ></script> -->
-    <!-- <script type="text/javascript">
-      aclib.runAutoTag({
-        zoneId: "h1jbhs10yt",
-      });
-    </script> -->
+      (function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+      new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+      j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;
+      j.src='https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+      })(window,document,'script','dataLayer','G-CGRPKT6LZD'); // Replace XXXXXXX with your GTM ID
+    </script>
+    <!-- End Google Tag Manager -->
+    <!-- Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-CGRPKT6LZD"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-CGRPKT6LZD');
+    </script>
+    <!-- End Google Analytics -->
     <meta charset="utf-8">
     <title>PolyTalk</title>
     <base href="/">
@@ -49,6 +78,12 @@
   <body>
     <app-root></app-root>
     <noscript>Please enable JavaScript to continue using this application.</noscript>
+
+    <!-- Google Tag Manager (noscript) -->
+    <noscript>
+      <iframe src="https://www.googletagmanager.com/ns.html?id=G-CGRPKT6LZD" height="0" width="0" style="display:none;visibility:hidden"></iframe>
+    </noscript>
+    <!-- End Google Tag Manager (noscript) -->
 
     <script>
       window.CookieConsent.init({
@@ -277,49 +312,5 @@
         consentModeHandler: "gtag",
       });
     </script>
-
-    <!-- Google Tag Manager -->
-    <script>
-      window.dataLayer = window.dataLayer || [];
-      function gtag() {
-        dataLayer.push(arguments);
-      }
-      const defaultSettings = {
-        ad_storage: "granted",
-        ad_user_data: "granted",
-        ad_personalization: "granted",
-        analytics_storage: "granted",
-      };
-      const defaultRegionalSettings = {
-        ad_storage: "denied",
-        ad_user_data: "denied",
-        ad_personalization: "denied",
-        analytics_storage: "denied",
-        region: ["AT", "BE", "IS", "LI", "NO"],
-      };
-      if (localStorage.getItem("consentMode") === null) {
-        gtag("consent", "default", defaultSettings);
-        gtag("consent", "default", defaultRegionalSettings);
-      } else {
-        gtag("consent", "default", {
-          ...defaultRegionalSettings,
-          ...JSON.parse(localStorage.getItem("consentMode")),
-        });
-        gtag("consent", "default", {
-          ...defaultSettings,
-          ...JSON.parse(localStorage.getItem("consentMode")),
-        });
-      }
-      (function (w, d, s, l, i) {
-        w[l].push({ "gtm.start": new Date().getTime(), event: "gtm.js" });
-        var f = d.getElementsByTagName(s)[0],
-          j = d.createElement(s),
-          dl = l != "dataLayer" ? "&l=" + l : "";
-        j.async = true;
-        j.src = "https://www.googletagmanager.com/gtm.js?id=" + i + dl;
-        f.parentNode.insertBefore(j, f);
-      })(window, document, "script", "dataLayer", "G-CGRPKT6LZD");
-    </script>
-    <!-- End Google Tag Manager -->
   <link rel="modulepreload" href="chunk-AREV3IU3.js"><script src="polyfills-FFHMD2TL.js" type="module"></script><script src="main-JLTU422S.js" type="module"></script></body>
 </html>
