@@ -102,7 +102,11 @@ import { ThemeService } from './services/theme.service';
         left: 0;
         right: 0;
         padding: 1rem;
-        background: linear-gradient(135deg, var(--gradient-start), var(--gradient-end));
+        background: linear-gradient(
+          135deg,
+          var(--gradient-start),
+          var(--gradient-end)
+        );
         color: white;
         text-align: center;
         z-index: 1000;
@@ -137,7 +141,11 @@ export class AppComponent {
   showInstallPrompt = false;
   private deferredPrompt: any;
 
-  constructor(public updateService: UpdateService, private themeService: ThemeService) {
+  constructor(
+    public updateService: UpdateService,
+    private themeService: ThemeService
+  ) {
+
     window.addEventListener('beforeinstallprompt', (e) => {
       e.preventDefault();
       this.deferredPrompt = e;

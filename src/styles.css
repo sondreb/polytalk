@@ -129,3 +129,8 @@ body.dark-theme {
   --text-light: var(--dark-text-light);
   color-scheme: dark;
 }
+
+
+.consent-give {
+  color: white !important;
+}
