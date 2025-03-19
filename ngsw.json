@@ -1,6 +1,6 @@
 {
   "configVersion": 1,
-  "timestamp": 1741100080854,
+  "timestamp": 1742408967118,
   "index": "/index.html",
   "assetGroups": [
     {
@@ -19,10 +19,10 @@
         "/cookieconsent.min.js",
         "/favicon.png",
         "/index.html",
-        "/main-JLTU422S.js",
+        "/main-4QSBQS76.js",
         "/manifest.webmanifest",
         "/polyfills-FFHMD2TL.js",
-        "/styles-64GC4GEY.css"
+        "/styles-TV3CPRWE.css"
       ],
       "patterns": []
     },
@@ -5265,11 +5265,11 @@
     "/cookieconsent.js": "4291eda7dd98d8656abc235eab847e611abfb6ed",
     "/cookieconsent.min.js": "4af61ac332a684ab76df7390055f6dfc43e44b64",
     "/favicon.png": "b091747a8a6ef2cae7cfc030818e64c7ee80902f",
-    "/index.html": "e583b64259bb6ed3fba523bd7766e0b392185828",
-    "/main-JLTU422S.js": "fce0cbfe3a32c92f7c905ac11b271cbcf12ce5bd",
+    "/index.html": "4ee8163ec9e566b8912e6aa95ac30ba1bed65510",
+    "/main-4QSBQS76.js": "a8ac8ab29fd964570873f6df9627eb309cf65650",
     "/manifest.webmanifest": "f4796476cdc85fa498506cfed138967013125504",
     "/polyfills-FFHMD2TL.js": "f49b49a155bc7d192db62a4c15d0a612b460a667",
-    "/styles-64GC4GEY.css": "3b13b5d589a7260776f8e4847c5d98b6fd003db6"
+    "/styles-TV3CPRWE.css": "af2f158a1c778bc8511dc0960dc29e9d7c8777ed"
   },
   "navigationUrls": [
     {
