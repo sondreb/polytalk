@@ -75,7 +75,7 @@ import { Observable, BehaviorSubject, from } from 'rxjs';
           </button>
         </div>
 
-        <div class="content card">
+        <div class="content card learning-card">
           <div
             *ngFor="let item of currentItems"
             class="item"

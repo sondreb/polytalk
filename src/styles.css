@@ -83,6 +83,10 @@ button:hover {
   box-shadow: 0 8px 12px rgba(0, 0, 0, 0.1), 0 20px 25px -5px rgba(0, 0, 0, 0.1);
 }
 
+.learning-card {
+  padding: 0.4rem;
+}
+
 .grid {
   display: grid;
   gap: 1.5rem;
