@@ -1,15 +1,15 @@
-import { Component, OnInit, AfterViewInit } from '@angular/core';
+import { Component, signal, effect, DestroyRef, inject } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { LanguageService, Language } from '../../services/language.service';
 import { trigger, style, animate, transition, query, stagger } from '@angular/animations';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 @Component({
   selector: 'app-language-selection',
   standalone: true,
   imports: [CommonModule, RouterLink],
   template: `
-
     <script type="text/javascript">
         aclib.runInterstitial({
             zoneId: '9197070',
@@ -17,20 +17,21 @@ import { trigger, style, animate, transition, query, stagger } from '@angular/an
     </script>
 
     <section class="languages">
-      <div class="grid" [@listAnimation]="languages.length">
-        <div
-          *ngFor="let language of languages"
-          class="card language-card"
-          [routerLink]="['/learn', fromLanguageCode, language.code, 'words']"
-          (click)="onLanguageSelect()"
-        >
-          <img
-            [src]="language.flagImage"
-            [alt]="language.name + ' flag'"
-            class="flag-image"
-          />
-          <h2>{{ language.name }}</h2>
-        </div>
+      <div class="grid" [@listAnimation]="languages().length">
+        @for (language of languages(); track language.code) {
+          <div
+            class="card language-card"
+            [routerLink]="['/learn', fromLanguageCode(), language.code, 'words']"
+            (click)="onLanguageSelect()"
+          >
+            <img
+              [src]="language.flagImage"
+              [alt]="language.name + ' flag'"
+              class="flag-image"
+            />
+            <h2>{{ language.name }}</h2>
+          </div>
+        }
       </div>
     </section>
   `,
@@ -118,30 +119,35 @@ import { trigger, style, animate, transition, query, stagger } from '@angular/an
     `,
   ],
 })
-export class LanguageSelectionComponent implements OnInit, AfterViewInit {
-  languages: Language[];
-  fromLanguageCode: string = 'en';
+export class LanguageSelectionComponent {
+  private readonly languageService = inject(LanguageService);
+  private readonly destroyRef = inject(DestroyRef);
+  
+  // Constants
   private readonly FROM_LANGUAGE_KEY = 'polytalk-from-language';
   private readonly TO_LANGUAGE_KEY = 'polytalk-to-language';
+  
+  // Convert properties to signals
+  languages = signal<Language[]>([]);
+  fromLanguageCode = signal<string>('en');
 
-
-  constructor(private languageService: LanguageService) {
-    this.languages = this.languageService.getLanguages();
-  }
-
-  ngOnInit() {
-    // Load saved from language, default to 'en' if not found
+  constructor() {
+    // Initialize languages signal
+    this.languages.set(this.languageService.getLanguages());
+    
+    // Initialize from language signal from localStorage
     const savedFromLanguage = localStorage.getItem(this.FROM_LANGUAGE_KEY);
     if (savedFromLanguage) {
-      this.fromLanguageCode = savedFromLanguage;
+      this.fromLanguageCode.set(savedFromLanguage);
     }
+    
+    // Setup page initialization effect (replaces ngAfterViewInit)
+    effect(() => {
+      window.scrollTo(0, 0);
+    });
   }
 
-  ngAfterViewInit() {
-    window.scrollTo(0, 0);
-  }
-
-  onLanguageSelect() {
+  onLanguageSelect(): void {
     window.scrollTo(0, 0);
   }
 }
