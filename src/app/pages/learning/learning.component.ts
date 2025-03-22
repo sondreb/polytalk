@@ -155,24 +155,20 @@ import { Observable, BehaviorSubject, from } from 'rxjs';
                   <label>
                     <span class="label-text">Word Repeat:</span>
                     <span class="label-icon">🔁</span>
-                    <input
-                      type="number"
-                      [(ngModel)]="wordRepeat"
-                      (ngModelChange)="saveSettings()"
-                      min="1"
-                      max="10"
-                    />
+                    <div class="number-control">
+                      <button class="control-btn" (click)="decrementValue('wordRepeat')">-</button>
+                      <span class="number-value">{{wordRepeat}}</span>
+                      <button class="control-btn" (click)="incrementValue('wordRepeat')">+</button>
+                    </div>
                   </label>
                   <label>
                     <span class="label-text">Loops:</span>
                     <span class="label-icon">↺</span>
-                    <input
-                      type="number"
-                      [(ngModel)]="loopRepeat"
-                      (ngModelChange)="saveSettings()"
-                      min="1"
-                      max="10"
-                    />
+                    <div class="number-control">
+                      <button class="control-btn" (click)="decrementValue('loopRepeat')">-</button>
+                      <span class="number-value">{{loopRepeat}}</span>
+                      <button class="control-btn" (click)="incrementValue('loopRepeat')">+</button>
+                    </div>
                   </label>
                   <label class="checkbox-label">
                     <input
@@ -183,7 +179,6 @@ import { Observable, BehaviorSubject, from } from 'rxjs';
                     <span class="checkbox-text">Bilingual</span>
                   </label>
                 </div>
-
                 <div class="buttons">
                   <button (click)="startPlayback()">
                     <span class="icon">{{ playButtonIcon }}</span>
@@ -340,6 +335,62 @@ import { Observable, BehaviorSubject, from } from 'rxjs';
         color: var(--primary-color);
         font-weight: bold;
       }
+      
+      /* Number control styles */
+      .number-control {
+        display: flex;
+        align-items: center;
+        background: var(--surface-color);
+        border: 2px solid rgba(99, 102, 241, 0.2);
+        border-radius: 8px;
+        overflow: hidden;
+      }
+      
+      .control-btn {
+        width: 32px;
+        height: 32px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: rgba(99, 102, 241, 0.1);
+        border: none;
+        color: var(--text-color);
+        font-size: 1.2rem;
+        font-weight: bold;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        padding: 0;
+        touch-action: manipulation;
+      }
+      
+      .control-btn:hover {
+        background: rgba(99, 102, 241, 0.2);
+      }
+      
+      .control-btn:active {
+        background: rgba(99, 102, 241, 0.3);
+        transform: scale(0.95);
+      }
+      
+      .number-value {
+        min-width: 24px;
+        text-align: center;
+        font-weight: 500;
+        padding: 0 6px;
+      }
+      
+      /* Media query adjustments for the new control */
+      @media (max-width: 768px) {
+        .number-control {
+          width: auto;
+        }
+        
+        .control-btn {
+          width: 28px;
+          height: 28px;
+        }
+      }
+      
       .settings {
         display: flex;
         gap: 1.5rem;
@@ -1454,5 +1505,23 @@ export class LearningComponent implements OnInit, OnDestroy {
     if (this.wakeLock !== null && document.visibilityState === 'visible') {
       await this.keepScreenOn();
     }
+  }
+
+  incrementValue(setting: 'wordRepeat' | 'loopRepeat') {
+    if (setting === 'wordRepeat') {
+      this.wordRepeat = Math.min(10, this.wordRepeat + 1);
+    } else {
+      this.loopRepeat = Math.min(10, this.loopRepeat + 1);
+    }
+    this.saveSettings();
+  }
+
+  decrementValue(setting: 'wordRepeat' | 'loopRepeat') {
+    if (setting === 'wordRepeat') {
+      this.wordRepeat = Math.max(1, this.wordRepeat - 1);
+    } else {
+      this.loopRepeat = Math.max(1, this.loopRepeat - 1);
+    }
+    this.saveSettings();
   }
 }
