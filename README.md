@@ -20,6 +20,8 @@
 
 ## Updates
 
+0.0.4 - Many minor improvements everywhere, including buttons to decrease and increase the repeat times. This makes it easier than the previous input field. Removed some visual margins to make the app look better.
+
 0.0.3 - "Keep screen on" at the bottom of words will keep the screen on your device on while you are learning. This is useful for when you are learning a language and don't want the screen to turn off.
 
 0.0.2 - Added automatic opening of last language selection. This gives a much more pleasant experience for returning users. Added link to Microsoft Store on home.
