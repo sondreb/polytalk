@@ -361,7 +361,7 @@ import { Observable, BehaviorSubject, from } from 'rxjs';
         transition: all 0.2s ease;
         padding: 0;
         touch-action: manipulation;
-   2  }
+     }
       
       .control-btn:hover {
         background: rgba(99, 102, 241, 0.2);
@@ -377,7 +377,7 @@ import { Observable, BehaviorSubject, from } from 'rxjs';
         text-align: center;
         font-weight: 500;
         padding: 0 6px;
-   2  }
+     }
       
       /* Media query adjustments for the new control */
       @media (max-width: 768px) {
