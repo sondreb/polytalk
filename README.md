@@ -20,6 +20,8 @@
 
 ## Updates
 
+0.0.5 - Add links to Google Play Store. Add link to review the app in the About.
+
 0.0.4 - Many minor improvements everywhere, including buttons to decrease and increase the repeat times. This makes it easier than the previous input field. Removed some visual margins to make the app look better.
 
 0.0.3 - "Keep screen on" at the bottom of words will keep the screen on your device on while you are learning. This is useful for when you are learning a language and don't want the screen to turn off.
