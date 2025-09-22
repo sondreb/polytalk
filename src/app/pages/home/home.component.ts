@@ -44,28 +44,52 @@ import { RouterLink, Router, ActivatedRoute } from '@angular/router';
       </div>
     </div>
 
-    <div class="store-banner">
-      <div class="store-content">
-        <div class="store-icon">
-          <a href="https://apps.microsoft.com/detail/9NLCCGZQ48TX">
-            <img
-              src="https://get.microsoft.com/images/en-us%20dark.svg"
-              width="200"
-            />
-          </a>
+    <div class="store-banners">
+      <div class="store-banner microsoft">
+        <div class="store-content">
+          <div class="store-icon">
+            <a href="https://apps.microsoft.com/detail/9NLCCGZQ48TX">
+              <img
+                src="https://get.microsoft.com/images/en-us%20dark.svg"
+                width="200"
+              />
+            </a>
+          </div>
+          <div class="store-text">
+            <h3>Get PolyTalk for Windows</h3>
+            <a
+              href="https://apps.microsoft.com/detail/9NLCCGZQ48TX"
+              target="_blank"
+              class="store-description-link"
+            >
+              Install the native app for a better learning experience
+            </a>
+          </div>
         </div>
-        <div class="store-text">
-          <h3>Get PolyTalk for Windows</h3>
-          <p>Install the native app for a better learning experience</p>
+      </div>
+
+      <div class="store-banner google">
+        <div class="store-content">
+          <div class="store-icon">
+            <a href="https://play.google.com/store/apps/details?id=me.polytalk.twa">
+              <img
+                src="https://play.google.com/intl/en_us/badges/static/images/badges/en_badge_web_generic.png"
+                width="200"
+                alt="Get it on Google Play"
+              />
+            </a>
+          </div>
+          <div class="store-text">
+            <h3>Get PolyTalk for Android</h3>
+            <a
+              href="https://play.google.com/store/apps/details?id=me.polytalk.twa"
+              target="_blank"
+              class="store-description-link"
+            >
+              Download the app for your Android device
+            </a>
+          </div>
         </div>
-        <a
-          href="https://apps.microsoft.com/detail/9NLCCGZQ48TX"
-          target="_blank"
-          class="store-button"
-        >
-          Get it from Microsoft Store
-          <span class="arrow">→</span>
-        </a>
       </div>
     </div>
 
@@ -264,12 +288,25 @@ import { RouterLink, Router, ActivatedRoute } from '@angular/router';
         transform: translateX(4px);
       }
 
-      .store-banner {
-        background: linear-gradient(135deg, #0078d4, #005a9e);
-        border-radius: 24px;
-        margin: 4rem auto;
-        padding: 2rem;
+      .store-banners {
         max-width: 1000px;
+        margin: 4rem auto;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 2rem;
+      }
+
+      .store-banner {
+        border-radius: 24px;
+        padding: 2rem;
+      }
+
+      .store-banner.microsoft {
+        background: linear-gradient(135deg, #0078d4, #005a9e);
+      }
+
+      .store-banner.google {
+        background: linear-gradient(135deg, #01875f, #137333);
       }
 
       .store-content {
@@ -289,37 +326,31 @@ import { RouterLink, Router, ActivatedRoute } from '@angular/router';
         font-weight: 600;
       }
 
-      .store-text p {
+      .store-description-link {
+        display: block;
         margin: 0.5rem 0 0;
         opacity: 0.9;
-      }
-
-      .store-button {
-        display: inline-flex;
-        align-items: center;
-        background: white;
-        color: #0078d4;
-        padding: 0.8rem 1.5rem;
-        border-radius: 12px;
+        color: white;
         text-decoration: none;
-        font-weight: 600;
         transition: all 0.3s ease;
+        cursor: pointer;
       }
 
-      .store-button:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+      .store-description-link:hover {
+        opacity: 1;
+        text-decoration: underline;
+        transform: translateX(4px);
       }
 
       @media (max-width: 768px) {
-        .store-content {
-          flex-direction: column;
-          text-align: center;
+        .store-banners {
+          grid-template-columns: 1fr;
+          margin: 2rem 1rem;
           gap: 1rem;
         }
 
-        .store-banner {
-          margin: 2rem 1rem;
+        .store-content {
+          text-align: center;
         }
       }
 
