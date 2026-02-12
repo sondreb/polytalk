@@ -63,5 +63,28 @@
       "type": "image/png",
       "purpose": "maskable any"
     }
+  ],
+  "screenshots": [
+    {
+      "src": "screenshots/01-home-desktop-light.png",
+      "sizes": "2560x1600",
+      "type": "image/png",
+      "form_factor": "wide",
+      "label": "Home page - Learn Any Language with PolyTalk"
+    },
+    {
+      "src": "screenshots/05-languages-with-favorites.png",
+      "sizes": "2560x1600",
+      "type": "image/png",
+      "form_factor": "wide",
+      "label": "Language selection with favorites"
+    },
+    {
+      "src": "screenshots/08-learning-words-en-es.png",
+      "sizes": "2560x1600",
+      "type": "image/png",
+      "form_factor": "wide",
+      "label": "Learning English to Spanish vocabulary"
+    }
   ]
 }
