@@ -17,6 +17,14 @@
 
 # PolyTalk
 
+## Screenshots
+
+![Home page](screenshots/01-home-desktop-light.png)
+
+![Language selection with favorites](screenshots/05-languages-with-favorites.png)
+
+![Learning English to Spanish vocabulary](screenshots/08-learning-words-en-es.png)
+
 
 ## Updates
 

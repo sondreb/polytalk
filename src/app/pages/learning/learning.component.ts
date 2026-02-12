@@ -69,13 +69,14 @@ import { Observable, BehaviorSubject, from } from 'rxjs';
         </div>
 
         <div class="tabs">
-          <button
-            *ngFor="let tab of tabs"
-            [class.active]="category === tab.toLowerCase()"
-            (click)="selectCategory(tab.toLowerCase())"
-          >
-            {{ tab }}
-          </button>
+          @for (tab of tabs; track tab) {
+            <button
+              [class.active]="category === tab.toLowerCase()"
+              (click)="selectCategory(tab.toLowerCase())"
+            >
+              {{ 'learning.' + tab.toLowerCase() | translate }}
+            </button>
+          }
         </div>
 
         <div class="content card learning-card">
@@ -873,11 +874,7 @@ import { Observable, BehaviorSubject, from } from 'rxjs';
         }
 
         .checkbox-label .checkbox-text {
-          display: none;
-        }
-
-        .checkbox-label::after {
-          content: 'Bilingual';
+          font-size: 0.85rem;
         }
       }
 
@@ -896,8 +893,8 @@ import { Observable, BehaviorSubject, from } from 'rxjs';
           display: none;
         }
 
-        .checkbox-label::after {
-          content: '';
+        .checkbox-label .checkbox-text {
+          font-size: 0.75rem;
         }
       }
 
