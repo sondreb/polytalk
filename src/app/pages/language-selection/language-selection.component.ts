@@ -3,11 +3,12 @@ import { RouterLink } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { LanguageService, Language } from '../../services/language.service';
 import { trigger, style, animate, transition, query, stagger } from '@angular/animations';
+import { TranslatePipe } from '../../pipes/translate.pipe';
 
 @Component({
   selector: 'app-language-selection',
   standalone: true,
-  imports: [CommonModule, RouterLink],
+  imports: [CommonModule, RouterLink, TranslatePipe],
   template: `
     <script type="text/javascript">
         aclib.runInterstitial({
@@ -18,7 +19,7 @@ import { trigger, style, animate, transition, query, stagger } from '@angular/an
     <section class="languages">
       @if (favoriteLanguages().length > 0) {
         <div class="favorites-section">
-          <h3 class="section-title">Favorites</h3>
+          <h3 class="section-title">{{ 'langSelect.favorites' | translate }}</h3>
           <div class="grid" [@listAnimation]="favoriteLanguages().length">
             @for (language of favoriteLanguages(); track language.code) {
               <div
@@ -47,7 +48,7 @@ import { trigger, style, animate, transition, query, stagger } from '@angular/an
 
       <div class="all-languages-section">
         @if (favoriteLanguages().length > 0) {
-          <h3 class="section-title">All Languages</h3>
+          <h3 class="section-title">{{ 'langSelect.allLanguages' | translate }}</h3>
         }
         <div class="grid" [@listAnimation]="languages().length">
           @for (language of languages(); track language.code) {
@@ -132,7 +133,7 @@ import { trigger, style, animate, transition, query, stagger } from '@angular/an
       .remove-favorite {
         position: absolute;
         top: 0.25rem;
-        right: 0.25rem;
+        inset-inline-end: 0.25rem;
         width: 1.5rem;
         height: 1.5rem;
         border-radius: 50%;

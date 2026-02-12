@@ -56,7 +56,7 @@ import { TranslatePipe } from './pipes/translate.pipe';
       .install-button {
         position: fixed;
         bottom: 20px;
-        right: 20px;
+        inset-inline-end: 20px;
         padding: 12px 24px;
         background-color: #007bff;
         color: white;
@@ -113,7 +113,7 @@ import { TranslatePipe } from './pipes/translate.pipe';
         z-index: 1000;
       }
       .update-banner button {
-        margin-left: 1rem;
+        margin-inline-start: 1rem;
         padding: 0.5rem 1rem;
         border: none;
         background: white;

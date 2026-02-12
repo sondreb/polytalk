@@ -1,8 +1,10 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule, ActivatedRoute, Router } from '@angular/router';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { marked } from 'marked';
+import { TranslationService } from '../../services/translation.service';
+import { TranslatePipe } from '../../pipes/translate.pipe';
 
 interface BlogPost {
   title: string;
@@ -16,7 +18,7 @@ interface BlogPost {
 @Component({
   selector: 'app-blog',
   standalone: true,
-  imports: [CommonModule, RouterModule],
+  imports: [CommonModule, RouterModule, TranslatePipe],
   template: `
     <div class="blog-container">
 
@@ -29,11 +31,11 @@ interface BlogPost {
     </div>
 
       @if (loading) {
-        <div class="loading">Loading posts...</div>
+        <div class="loading">{{ 'blog.loading' | translate }}</div>
       } @else if (error) {
         <div class="error">{{error}}</div>
       } @else if (posts.length === 0) {
-        <div class="empty">No blog posts found.</div>
+        <div class="empty">{{ 'blog.noPosts' | translate }}</div>
       } @else {
         @for (post of posts; track post.title) {
           <article class="blog-summary">
@@ -52,7 +54,7 @@ interface BlogPost {
                 <span class="tag">{{tag}}</span>
               }
             </div>
-            <a class="read-more" [routerLink]="['/blog', post.file.replace('.md', '')]">Read more...</a>
+            <a class="read-more" [routerLink]="['/blog', post.file.replace('.md', '')]">{{ 'blog.readMore' | translate }}</a>
           </article>
         }
       }
@@ -100,7 +102,7 @@ interface BlogPost {
       background: var(--surface-color);
       padding: 0.3rem 0.8rem;
       border-radius: 20px;
-      margin-right: 0.5rem;
+      margin-inline-end: 0.5rem;
       font-size: 0.9rem;
       color: var(--text-light);
       display: inline-block;
@@ -158,6 +160,7 @@ interface BlogPost {
   `]
 })
 export class BlogListComponent implements OnInit {
+  private readonly translationService = inject(TranslationService);
   posts: BlogPost[] = [];
   loading = true;
   error: string | null = null;
@@ -175,7 +178,7 @@ export class BlogListComponent implements OnInit {
       this.posts = await response.json();
       this.loading = false;
     } catch (error) {
-      this.error = 'Failed to load blog posts. Please try again later.';
+      this.error = this.translationService.translate('blog.loadError');
       this.loading = false;
       console.error('Error loading blog posts:', error);
     }

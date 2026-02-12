@@ -99,11 +99,11 @@ import { TranslatePipe } from '../../pipes/translate.pipe';
       }
       .success {
         color: green;
-        margin-left: 1em;
+        margin-inline-start: 1em;
       }
       .error {
         color: red;
-        margin-left: 1em;
+        margin-inline-start: 1em;
       }
       select {
         font-size: 1.2rem;

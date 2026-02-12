@@ -104,7 +104,7 @@ import { TranslatePipe } from '../../pipes/translate.pipe';
         color: white;
       }
       .install-button {
-        margin-left: 0.5rem;
+        margin-inline-start: 0.5rem;
         background: linear-gradient(
           135deg,
           var(--gradient-start),
@@ -145,7 +145,7 @@ import { TranslatePipe } from '../../pipes/translate.pipe';
           padding: 0.5rem 0.5rem;
         }
         .install-button {
-          margin-left: 0.25rem;
+          margin-inline-start: 0.25rem;
           padding: 0.5rem 0.75rem;
         }
       }
@@ -174,7 +174,7 @@ import { TranslatePipe } from '../../pipes/translate.pipe';
           padding: 0.4rem 0.4rem;
         }
         .install-button {
-          margin-left: 0.125rem;
+          margin-inline-start: 0.125rem;
           padding: 0.4rem 0.5rem;
           font-size: 0.85rem;
         }

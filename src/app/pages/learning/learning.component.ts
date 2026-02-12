@@ -729,7 +729,7 @@ import { Observable, BehaviorSubject, from } from 'rxjs';
       .item.offline::after {
         content: '⚠️ Offline';
         position: absolute;
-        right: 1rem;
+        inset-inline-end: 1rem;
         top: 50%;
         transform: translateY(-50%);
         font-size: 0.8rem;

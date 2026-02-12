@@ -1,8 +1,10 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule, ActivatedRoute, Router } from '@angular/router';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { marked } from 'marked';
+import { TranslationService } from '../../services/translation.service';
+import { TranslatePipe } from '../../pipes/translate.pipe';
 
 interface BlogPostMetadata {
   title: string;
@@ -14,16 +16,16 @@ interface BlogPostMetadata {
 @Component({
   selector: 'app-blog-post',
   standalone: true,
-  imports: [CommonModule, RouterModule],
+  imports: [CommonModule, RouterModule, TranslatePipe],
   template: `
     <div class="blog-container">
       @if (loading) {
-      <div class="loading">Loading post...</div>
+      <div class="loading">{{ 'blog.loadingPost' | translate }}</div>
       } @else if (error) {
       <div class="error">{{ error }}</div>
       } @else {
       <article class="blog-post">
-        <a class="back-link" routerLink="/blog">← Back to Blog</a>
+        <a class="back-link" routerLink="/blog">← {{ 'blog.backToBlog' | translate }}</a>
         <div>
           <script type="text/javascript">
             aclib.runBanner({
@@ -52,7 +54,7 @@ interface BlogPostMetadata {
           </script>
         </div>
 
-        <a class="back-link" routerLink="/blog">← Back to Blog</a>
+        <a class="back-link" routerLink="/blog">← {{ 'blog.backToBlog' | translate }}</a>
         }
       </article>
       }
@@ -140,7 +142,7 @@ interface BlogPostMetadata {
         background: var(--surface-color);
         padding: 0.3rem 0.8rem;
         border-radius: 20px;
-        margin-right: 0.5rem;
+        margin-inline-end: 0.5rem;
         font-size: 0.9rem;
         color: var(--text-light);
         display: inline-block;
@@ -188,6 +190,7 @@ interface BlogPostMetadata {
   ],
 })
 export class BlogPostComponent implements OnInit {
+  private readonly translationService = inject(TranslationService);
   content: SafeHtml = '';
   metadata: BlogPostMetadata | null = null;
   loading = true;
@@ -230,7 +233,7 @@ export class BlogPostComponent implements OnInit {
 
       this.loading = false;
     } catch (error) {
-      this.error = 'Failed to load blog post. Please try again later.';
+      this.error = this.translationService.translate('blog.postLoadError');
       this.loading = false;
       console.error('Error loading blog post:', error);
     }

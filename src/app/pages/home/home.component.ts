@@ -272,12 +272,16 @@ import { TranslatePipe } from '../../pipes/translate.pipe';
       }
 
       .arrow {
-        margin-left: 0.5rem;
+        margin-inline-start: 0.5rem;
         transition: transform 0.3s ease;
       }
 
       .cta-button:hover .arrow {
         transform: translateX(4px);
+      }
+
+      :host-context([dir='rtl']) .cta-button:hover .arrow {
+        transform: translateX(-4px);
       }
 
       .store-banners {

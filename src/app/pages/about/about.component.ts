@@ -1,47 +1,49 @@
 import { Component } from '@angular/core';
+import { TranslatePipe } from '../../pipes/translate.pipe';
 
 @Component({
   selector: 'app-about',
   standalone: true,
+  imports: [TranslatePipe],
   template: `
     <div class="card page-content">
-      <h1>About PolyTalk</h1>
+      <h1>{{ 'about.title' | translate }}</h1>
       
-      <p>PolyTalk is a fun and intuitive language learning app that helps you learn the basics of any language. What makes PolyTalk unique is its flexibility - you can learn from any language to any language!</p>
+      <p>{{ 'about.intro' | translate }}</p>
 
-      <h2>Our Mission</h2>
-      <p>We believe that language learning should be accessible to everyone, regardless of their native language. Our mission is to break down language barriers and make basic communication possible between people of all backgrounds.</p>
+      <h2>{{ 'about.missionTitle' | translate }}</h2>
+      <p>{{ 'about.missionText' | translate }}</p>
 
-      <h2>Features</h2>
+      <h2>{{ 'about.featuresTitle' | translate }}</h2>
       <ul>
-        <li>Learn from any language to any language</li>
-        <li>Basic vocabulary and common phrases</li>
-        <li>Simple and intuitive interface</li>
-        <li>Free to use</li>
+        <li>{{ 'about.feature1' | translate }}</li>
+        <li>{{ 'about.feature2' | translate }}</li>
+        <li>{{ 'about.feature3' | translate }}</li>
+        <li>{{ 'about.feature4' | translate }}</li>
       </ul>
 
-      <h2>Review Our App</h2>
-      <p>If you enjoy using PolyTalk, we'd love to hear from you! Your reviews help us improve and reach more language learners.</p>
+      <h2>{{ 'about.reviewTitle' | translate }}</h2>
+      <p>{{ 'about.reviewText' | translate }}</p>
       <div class="review-links">
         <a href="https://apps.microsoft.com/detail/9NLCCGZQ48TX" target="_blank" rel="noopener" class="review-link microsoft">
           <span class="review-icon">⭐</span>
           <span class="review-text">
-            <strong>Review on Microsoft Store</strong>
-            <small>Share your experience with Windows users</small>
+            <strong>{{ 'about.reviewMicrosoft' | translate }}</strong>
+            <small>{{ 'about.reviewMicrosoftDesc' | translate }}</small>
           </span>
         </a>
         <a href="https://play.google.com/store/apps/details?id=me.polytalk.twa" target="_blank" rel="noopener" class="review-link google">
           <span class="review-icon">⭐</span>
           <span class="review-text">
-            <strong>Review on Google Play</strong>
-            <small>Help Android users discover PolyTalk</small>
+            <strong>{{ 'about.reviewGoogle' | translate }}</strong>
+            <small>{{ 'about.reviewGoogleDesc' | translate }}</small>
           </span>
         </a>
       </div>
 
-      <h2>Contact</h2>
-      <p>For support or inquiries, please visit our <a href="https://github.com/sondreb/polytalk" target="_blank" rel="noopener">GitHub repository</a></p>
-      <p>Follow us on X: <a href="https://x.com/PolyTalkMe" target="_blank" rel="noopener">PolyTalkMe</a></p>
+      <h2>{{ 'about.contactTitle' | translate }}</h2>
+      <p>{{ 'about.contactGithub' | translate }} <a href="https://github.com/sondreb/polytalk" target="_blank" rel="noopener">{{ 'about.githubRepo' | translate }}</a></p>
+      <p>{{ 'about.followX' | translate }} <a href="https://x.com/PolyTalkMe" target="_blank" rel="noopener">PolyTalkMe</a></p>
     
     </div>
   `,
