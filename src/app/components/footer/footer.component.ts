@@ -1,17 +1,18 @@
 import { Component } from '@angular/core';
 import { RouterLink } from '@angular/router';
+import { TranslatePipe } from '../../pipes/translate.pipe';
 
 @Component({
   selector: 'app-footer',
   standalone: true,
-  imports: [RouterLink],
+  imports: [RouterLink, TranslatePipe],
   template: `
     <footer>
       <div class="footer-content">
         <nav>
-          <a routerLink="/privacy">Privacy</a>
-          <a routerLink="/terms">Terms</a>
-          <a routerLink="/about">About</a>
+          <a routerLink="/privacy">{{ 'footer.privacy' | translate }}</a>
+          <a routerLink="/terms">{{ 'footer.terms' | translate }}</a>
+          <a routerLink="/about">{{ 'footer.about' | translate }}</a>
         </nav>
         <p class="copyright">&copy; {{ currentYear }} PolyTalk.Me | <a href="https://x.com/PolyTalkMe" target="_blank">&#64;PolyTalkMe</a></p>
       </div>

@@ -4,17 +4,28 @@ import { FormsModule } from '@angular/forms';
 import { SettingsService } from '../../services/settings.service';
 import { AudioService } from '../../services/audio.service';
 import { ThemeService } from '../../services/theme.service';
+import { TranslationService } from '../../services/translation.service';
+import { TranslatePipe } from '../../pipes/translate.pipe';
 
 @Component({
   selector: 'app-settings',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, TranslatePipe],
   template: `
     <div class="settings-container">
-      <h2>Settings</h2>
+      <h2>{{ 'settings.title' | translate }}</h2>
 
       <div class="setting-item">
-        <label>Word Delay (ms): {{ wordDelay() }}</label>
+        <label>{{ 'settings.uiLanguage' | translate }}</label>
+        <select [(ngModel)]="selectedUiLanguage" (ngModelChange)="onUiLanguageChange($event)">
+          @for (lang of translationService.supportedLanguages; track lang.code) {
+            <option [value]="lang.code">{{ lang.nativeName }} ({{ lang.name }})</option>
+          }
+        </select>
+      </div>
+
+      <div class="setting-item">
+        <label>{{ 'settings.wordDelay' | translate }} {{ wordDelay() }}</label>
         <input
           type="range"
           [min]="0"
@@ -26,7 +37,7 @@ import { ThemeService } from '../../services/theme.service';
       </div>
 
       <div class="setting-item">
-        <label>Playback Speed: {{ playbackSpeed() }}x</label>
+        <label>{{ 'settings.playbackSpeed' | translate }} {{ playbackSpeed() }}x</label>
         <input
           type="range"
           [min]="0.5"
@@ -38,17 +49,17 @@ import { ThemeService } from '../../services/theme.service';
       </div>
 
       <div class="setting-item">
-        <label for="theme-select">Theme:</label>
+        <label for="theme-select">{{ 'settings.theme' | translate }}</label>
         <select id="theme-select" [(ngModel)]="selectedTheme" (ngModelChange)="onThemeChange($event)">
-          <option value="auto">Auto</option>
-          <option value="light">Light</option>
-          <option value="dark">Dark</option>
+          <option value="auto">{{ 'settings.themeAuto' | translate }}</option>
+          <option value="light">{{ 'settings.themeLight' | translate }}</option>
+          <option value="dark">{{ 'settings.themeDark' | translate }}</option>
         </select>
       </div>
 
       <div class="setting-item">
         <button (click)="clearCache()" [disabled]="isClearingCache()">
-          {{ isClearingCache() ? 'Clearing...' : 'Clear Audio Cache' }}
+          {{ isClearingCache() ? ('settings.clearing' | translate) : ('settings.clearCache' | translate) }}
         </button>
         <span *ngIf="cacheMessage()" [class]="cacheMessageClass()">{{
           cacheMessage()
@@ -56,7 +67,7 @@ import { ThemeService } from '../../services/theme.service';
       </div>
 
       <div class="setting-item">
-        <button (click)="settingsService.resetSettings()">Reset Settings</button>
+        <button (click)="settingsService.resetSettings()">{{ 'settings.resetSettings' | translate }}</button>
       </div>
     </div>
   `,
@@ -121,7 +132,9 @@ export class SettingsComponent {
   themeService = inject(ThemeService);
   audioService = inject(AudioService);
   settingsService = inject(SettingsService);
+  translationService = inject(TranslationService);
   selectedTheme = signal(this.themeService.getSavedTheme());
+  selectedUiLanguage = this.translationService.currentLanguage();
 
   constructor(
   ) {
@@ -146,10 +159,10 @@ export class SettingsComponent {
     this.cacheMessage.set('');
     try {
       await this.audioService.clearAudioCache();
-      this.cacheMessage.set('Cache cleared successfully!');
+      this.cacheMessage.set(this.translationService.translate('settings.cacheCleared'));
       this.cacheMessageClass.set('success');
     } catch (error) {
-      this.cacheMessage.set('Failed to clear cache');
+      this.cacheMessage.set(this.translationService.translate('settings.cacheFailed'));
       this.cacheMessageClass.set('error');
     } finally {
       this.isClearingCache.set(false);
@@ -159,6 +172,10 @@ export class SettingsComponent {
   onThemeChange(theme: string) {
     this.themeService.saveTheme(theme);
     this.themeService.setTheme(theme);
+  }
+
+  onUiLanguageChange(code: string) {
+    this.translationService.setLanguage(code);
   }
 
   ngAfterViewInit() {

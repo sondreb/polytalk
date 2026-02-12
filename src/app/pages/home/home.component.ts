@@ -1,25 +1,23 @@
 import { Component, OnInit } from '@angular/core';
 import { RouterLink, Router, ActivatedRoute } from '@angular/router';
+import { TranslatePipe } from '../../pipes/translate.pipe';
 
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [RouterLink],
+  imports: [RouterLink, TranslatePipe],
   template: `
     <div class="hero">
       <div class="hero-content">
-        <h1>Learn Any Language with PolyTalk</h1>
-        <p>
-          Master basic words, numbers, and essential phrases in any language,
-          and learn more about language learning tips and tricks on our blog.
-        </p>
+        <h1>{{ 'home.title' | translate }}</h1>
+        <p>{{ 'home.subtitle' | translate }}</p>
         <div class="cta-buttons">
           <a routerLink="/languages" class="cta-button primary">
-            Start Learning
+            {{ 'home.startLearning' | translate }}
             <span class="arrow">→</span>
           </a>
           <a routerLink="/blog" class="cta-button secondary">
-            Read Blog
+            {{ 'home.readBlog' | translate }}
             <span class="arrow">→</span>
           </a>
         </div>
@@ -29,18 +27,18 @@ import { RouterLink, Router, ActivatedRoute } from '@angular/router';
     <div class="features grid">
       <div class="card">
         <div class="icon">📚</div>
-        <h2>Words</h2>
-        <p>Learn essential vocabulary with native pronunciation</p>
+        <h2>{{ 'home.words' | translate }}</h2>
+        <p>{{ 'home.wordsDesc' | translate }}</p>
       </div>
       <div class="card">
         <div class="icon">🔢</div>
-        <h2>Numbers</h2>
-        <p>Master counting and basic numerals</p>
+        <h2>{{ 'home.numbers' | translate }}</h2>
+        <p>{{ 'home.numbersDesc' | translate }}</p>
       </div>
       <div class="card">
         <div class="icon">💭</div>
-        <h2>Sentences</h2>
-        <p>Practice common phrases and expressions</p>
+        <h2>{{ 'home.sentences' | translate }}</h2>
+        <p>{{ 'home.sentencesDesc' | translate }}</p>
       </div>
     </div>
 
@@ -56,13 +54,13 @@ import { RouterLink, Router, ActivatedRoute } from '@angular/router';
             </a>
           </div>
           <div class="store-text">
-            <h3>Get PolyTalk for Windows</h3>
+            <h3>{{ 'home.getWindows' | translate }}</h3>
             <a
               href="https://apps.microsoft.com/detail/9NLCCGZQ48TX"
               target="_blank"
               class="store-description-link"
             >
-              Install the native app for a better learning experience
+              {{ 'home.installWindows' | translate }}
             </a>
           </div>
         </div>
@@ -80,13 +78,13 @@ import { RouterLink, Router, ActivatedRoute } from '@angular/router';
             </a>
           </div>
           <div class="store-text">
-            <h3>Get PolyTalk for Android</h3>
+            <h3>{{ 'home.getAndroid' | translate }}</h3>
             <a
               href="https://play.google.com/store/apps/details?id=me.polytalk.twa"
               target="_blank"
               class="store-description-link"
             >
-              Download the app for your Android device
+              {{ 'home.installAndroid' | translate }}
             </a>
           </div>
         </div>
@@ -102,13 +100,7 @@ import { RouterLink, Router, ActivatedRoute } from '@angular/router';
     </div>
 
     <div class="disclaimer">
-      <p>
-        Please note that this application may contain errors in translations,
-        pronunciations, or cultural context. Some content is generated using AI
-        technology, which can occasionally produce inaccurate results. This tool
-        is meant for basic learning purposes only and should not be considered a
-        substitute for professional language instruction.
-      </p>
+      <p>{{ 'home.disclaimer' | translate }}</p>
     </div>
   `,
   styles: [

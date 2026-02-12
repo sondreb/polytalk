@@ -5,15 +5,16 @@ import { NavbarComponent } from './components/navbar/navbar.component';
 import { UpdateService } from './services/update.service';
 import { FooterComponent } from './components/footer/footer.component';
 import { ThemeService } from './services/theme.service';
+import { TranslatePipe } from './pipes/translate.pipe';
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [RouterOutlet, CommonModule, NavbarComponent, FooterComponent],
+  imports: [RouterOutlet, CommonModule, NavbarComponent, FooterComponent, TranslatePipe],
   template: `
     <div *ngIf="updateService.updateAvailable()" class="update-banner">
-      A new version is available!
-      <button (click)="updateService.updateNow()">Update Now</button>
+      {{ 'update.available' | translate }}
+      <button (click)="updateService.updateNow()">{{ 'update.now' | translate }}</button>
     </div>
     <app-navbar
       [showInstall]="showInstallPrompt"

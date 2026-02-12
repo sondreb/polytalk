@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, signal } from '@angular/core';
 
 export interface Language {
   code: string;
@@ -17,6 +17,46 @@ export interface LearningContent {
   providedIn: 'root',
 })
 export class LanguageService {
+  private readonly FAVORITES_KEY = 'polytalk-favorite-languages';
+
+  readonly favoriteLanguageCodes = signal<string[]>(this.loadFavorites());
+
+  private loadFavorites(): string[] {
+    const stored = localStorage.getItem(this.FAVORITES_KEY);
+    if (stored) {
+      try {
+        return JSON.parse(stored);
+      } catch {
+        return [];
+      }
+    }
+    return [];
+  }
+
+  private saveFavorites(codes: string[]): void {
+    localStorage.setItem(this.FAVORITES_KEY, JSON.stringify(codes));
+    this.favoriteLanguageCodes.set(codes);
+  }
+
+  addFavorite(code: string): void {
+    const current = this.favoriteLanguageCodes();
+    if (!current.includes(code)) {
+      this.saveFavorites([...current, code]);
+    }
+  }
+
+  removeFavorite(code: string): void {
+    const current = this.favoriteLanguageCodes();
+    this.saveFavorites(current.filter(c => c !== code));
+  }
+
+  getFavoriteLanguages(): Language[] {
+    const codes = this.favoriteLanguageCodes();
+    return codes
+      .map(code => this.languages.find(l => l.code === code))
+      .filter((l): l is Language => l !== undefined);
+  }
+
   private languages: Language[] = [
     {
       code: 'en',

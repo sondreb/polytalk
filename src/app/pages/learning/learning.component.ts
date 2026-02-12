@@ -4,6 +4,7 @@ import {
   OnDestroy,
   HostListener,
   effect,
+  inject,
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -14,12 +15,14 @@ import {
   LearningContent,
 } from '../../services/language.service';
 import { AudioService } from '../../services/audio.service';
+import { TranslationService } from '../../services/translation.service';
+import { TranslatePipe } from '../../pipes/translate.pipe';
 import { Observable, BehaviorSubject, from } from 'rxjs';
 
 @Component({
   selector: 'app-learning',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, TranslatePipe],
   template: `
     <section class="learning">
       <div class="content-wrapper">
@@ -123,9 +126,9 @@ import { Observable, BehaviorSubject, from } from 'rxjs';
             [disabled]="isDownloading"
             class="download-button"
           >
-            <span *ngIf="!isDownloading">Enable offline</span>
+            <span *ngIf="!isDownloading">{{ 'learning.enableOffline' | translate }}</span>
             <span *ngIf="isDownloading">
-              Downloading... {{ downloadProgress | async }}%
+              {{ 'learning.downloading' | translate }} {{ downloadProgress | async }}%
             </span>
           </button>
 
@@ -134,15 +137,14 @@ import { Observable, BehaviorSubject, from } from 'rxjs';
           @if(wakeLock) { 
 
           <button (click)="releaseScreenLock()" class="download-button">
-            Keep screen off
+            {{ 'learning.keepScreenOff' | translate }}
           </button>
           <p>
-          Screen will not turn off, so you can enjoy the
-          learning experience without interruptions.
+          {{ 'learning.screenOnMessage' | translate }}
           </p>
           } @else {
           <button (click)="keepScreenOn()" class="download-button">
-            Keep screen on
+            {{ 'learning.keepScreenOn' | translate }}
           </button>
           }
         </div>
@@ -153,7 +155,7 @@ import { Observable, BehaviorSubject, from } from 'rxjs';
               <div class="controls card">
                 <div class="settings">
                   <label>
-                    <span class="label-text">Repeat Word:</span>
+                    <span class="label-text">{{ 'learning.repeatWord' | translate }}</span>
                     <span class="label-icon">🔁</span>
                     <div class="number-control">
                       <button class="control-btn" (click)="decrementValue('wordRepeat')">-</button>
@@ -162,7 +164,7 @@ import { Observable, BehaviorSubject, from } from 'rxjs';
                     </div>
                   </label>
                   <label>
-                    <span class="label-text">Repeat Playlist:</span>
+                    <span class="label-text">{{ 'learning.repeatPlaylist' | translate }}</span>
                     <span class="label-icon">↺</span>
                     <div class="number-control">
                       <button class="control-btn" (click)="decrementValue('loopRepeat')">-</button>
@@ -176,7 +178,7 @@ import { Observable, BehaviorSubject, from } from 'rxjs';
                       [(ngModel)]="playBothLanguages"
                       (ngModelChange)="saveSettings()"
                     />
-                    <span class="checkbox-text">Bilingual</span>
+                    <span class="checkbox-text">{{ 'learning.bilingual' | translate }}</span>
                   </label>
                 </div>
                 <div class="buttons">
@@ -186,15 +188,15 @@ import { Observable, BehaviorSubject, from } from 'rxjs';
                   </button>
                   <button (click)="skipPrevious()" [disabled]="!isPlaying" title="Previous word">
                     <span class="icon">⏮</span>
-                    <span class="button-text">Prev</span>
+                    <span class="button-text">{{ 'learning.prev' | translate }}</span>
                   </button>
                   <button (click)="skipNext()" [disabled]="!isPlaying" title="Next word">
                     <span class="icon">⏭</span>
-                    <span class="button-text">Next</span>
+                    <span class="button-text">{{ 'learning.next' | translate }}</span>
                   </button>
                   <button (click)="stopPlayback()" [disabled]="!isPlaying">
                     <span class="icon">■</span>
-                    <span class="button-text">Stop</span>
+                    <span class="button-text">{{ 'learning.stop' | translate }}</span>
                   </button>
                 </div>
               </div>
@@ -1008,10 +1010,14 @@ export class LearningComponent implements OnInit, OnDestroy {
   availableLanguages: Language[] = [];
   private canResume = false;
 
+  private translationService = inject(TranslationService);
+
   // Add getters for button text and icon
   get playButtonText(): string {
-    if (this.isPlaying) return 'Pause';
-    return this.canResume ? 'Resume' : 'Start';
+    if (this.isPlaying) return this.translationService.translate('learning.pause');
+    return this.canResume
+      ? this.translationService.translate('learning.resume')
+      : this.translationService.translate('learning.start');
   }
 
   get playButtonIcon(): string {

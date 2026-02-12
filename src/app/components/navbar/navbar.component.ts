@@ -1,26 +1,27 @@
 import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { CommonModule } from '@angular/common';
+import { TranslatePipe } from '../../pipes/translate.pipe';
 
 @Component({
   selector: 'app-navbar',
   standalone: true,
-  imports: [RouterLink, CommonModule],
+  imports: [RouterLink, CommonModule, TranslatePipe],
   template: `
     <nav class="navbar">
       <div class="content-wrapper">
         <a routerLink="/home" class="brand">PolyTalk.Me</a>
         <div class="nav-links">
           <a routerLink="/languages" class="nav-link">
-            <span class="full-text">Languages</span>
+            <span class="full-text">{{ 'nav.languages' | translate }}</span>
             <span class="icon-only">🌐</span>
           </a>
           <a routerLink="/blog" class="nav-link">
-            <span class="full-text">Blog</span>
+            <span class="full-text">{{ 'nav.blog' | translate }}</span>
             <span class="icon-only">📝</span>
           </a>
           <a routerLink="/settings" class="nav-link">
-            <span class="full-text">Settings</span>
+            <span class="full-text">{{ 'nav.settings' | translate }}</span>
             <span class="icon-only">⚙️</span>
           </a>
           <button
@@ -28,8 +29,8 @@ import { CommonModule } from '@angular/common';
             (click)="onInstallClick()"
             class="install-button"
           >
-            <span>Install</span>
-            <span class="app-text">&nbsp;App</span>
+            <span>{{ 'nav.install' | translate }}</span>
+            <span class="app-text">&nbsp;{{ 'nav.app' | translate }}</span>
           </button>
         </div>
       </div>
