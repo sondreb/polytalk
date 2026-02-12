@@ -153,7 +153,7 @@ import { Observable, BehaviorSubject, from } from 'rxjs';
               <div class="controls card">
                 <div class="settings">
                   <label>
-                    <span class="label-text">Word Repeat:</span>
+                    <span class="label-text">Repeat Word:</span>
                     <span class="label-icon">🔁</span>
                     <div class="number-control">
                       <button class="control-btn" (click)="decrementValue('wordRepeat')">-</button>
@@ -162,7 +162,7 @@ import { Observable, BehaviorSubject, from } from 'rxjs';
                     </div>
                   </label>
                   <label>
-                    <span class="label-text">Loops:</span>
+                    <span class="label-text">Repeat Playlist:</span>
                     <span class="label-icon">↺</span>
                     <div class="number-control">
                       <button class="control-btn" (click)="decrementValue('loopRepeat')">-</button>
@@ -183,6 +183,14 @@ import { Observable, BehaviorSubject, from } from 'rxjs';
                   <button (click)="startPlayback()">
                     <span class="icon">{{ playButtonIcon }}</span>
                     <span class="button-text">{{ playButtonText }}</span>
+                  </button>
+                  <button (click)="skipPrevious()" [disabled]="!isPlaying" title="Previous word">
+                    <span class="icon">⏮</span>
+                    <span class="button-text">Prev</span>
+                  </button>
+                  <button (click)="skipNext()" [disabled]="!isPlaying" title="Next word">
+                    <span class="icon">⏭</span>
+                    <span class="button-text">Next</span>
                   </button>
                   <button (click)="stopPlayback()" [disabled]="!isPlaying">
                     <span class="icon">■</span>
@@ -1206,6 +1214,7 @@ export class LearningComponent implements OnInit, OnDestroy {
           }
         }
 
+        this.audioService.setWordGroupSize(this.wordRepeat * (this.playBothLanguages ? 2 : 1));
         this.audioService.setQueue(audioFiles, this.loopRepeat);
       } else {
         this.currentlyPlayingItem = undefined;
@@ -1228,6 +1237,7 @@ export class LearningComponent implements OnInit, OnDestroy {
           }
         });
 
+        this.audioService.setWordGroupSize(this.wordRepeat * (this.playBothLanguages ? 2 : 1));
         this.audioService.setQueue(audioFiles, this.loopRepeat);
       }
 
@@ -1260,6 +1270,14 @@ export class LearningComponent implements OnInit, OnDestroy {
     this.canResume = false;
     this.stopPlayback();
     this.startPlayback();
+  }
+
+  skipNext() {
+    this.audioService.skipNext();
+  }
+
+  skipPrevious() {
+    this.audioService.skipPrevious();
   }
 
   async playItem(

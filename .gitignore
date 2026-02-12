@@ -40,6 +40,10 @@ testem.log
 # System files
 .DS_Store
 Thumbs.db
+nul
+
+# AI tools
+.codenomad
 
 # Environment variables
 .env

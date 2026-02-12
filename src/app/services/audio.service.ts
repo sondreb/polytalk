@@ -78,19 +78,11 @@ export class AudioService {
 
       navigator.mediaSession.setActionHandler('nexttrack', () => {
         console.log('Next track requested');
-        if (this.isPlayingSignal()) {
-          clearTimeout(this.playbackTimeout);
-          this.playNext();
-        }
+        this.skipNext();
       });
 
       navigator.mediaSession.setActionHandler('previoustrack', () => {
-        if (this.isPlayingSignal() && this.currentIndex > 0) {
-          clearTimeout(this.playbackTimeout);
-          this.currentIndex -= 2; // Go back two steps because playNext will increment
-          if (this.currentIndex < -1) this.currentIndex = -1;
-          this.playNext();
-        }
+        this.skipPrevious();
       });
 
       // Add seek handlers if needed
@@ -352,6 +344,58 @@ export class AudioService {
       console.error('Error in play:', error);
       this.isPlayingSignal.set(false);
     }
+  }
+
+  skipNext() {
+    if (this.isPlayingSignal()) {
+      clearTimeout(this.playbackTimeout);
+      this.audio.pause();
+
+      // Calculate how many queue entries represent one word
+      // to skip to the next actual word rather than a repeat of the same word
+      const wordGroupSize = this.getWordGroupSize();
+      if (wordGroupSize > 1) {
+        // Find the start of the next word group
+        const currentGroupStart = Math.floor(this.currentIndex / wordGroupSize) * wordGroupSize;
+        const nextGroupStart = currentGroupStart + wordGroupSize;
+        // Set to one before the target because playNext increments
+        this.currentIndex = nextGroupStart - 1;
+      }
+
+      this.playNext();
+    }
+  }
+
+  skipPrevious() {
+    if (this.isPlayingSignal()) {
+      clearTimeout(this.playbackTimeout);
+      this.audio.pause();
+
+      const wordGroupSize = this.getWordGroupSize();
+      if (wordGroupSize > 1) {
+        // Find the start of the current word group
+        const currentGroupStart = Math.floor(this.currentIndex / wordGroupSize) * wordGroupSize;
+        // Go to the previous word group (or stay at 0)
+        const prevGroupStart = Math.max(0, currentGroupStart - wordGroupSize);
+        this.currentIndex = prevGroupStart - 1;
+        if (this.currentIndex < -1) this.currentIndex = -1;
+      } else {
+        this.currentIndex -= 2; // Go back two steps because playNext will increment
+        if (this.currentIndex < -1) this.currentIndex = -1;
+      }
+
+      this.playNext();
+    }
+  }
+
+  private wordGroupSize = 1;
+
+  private getWordGroupSize(): number {
+    return this.wordGroupSize;
+  }
+
+  setWordGroupSize(size: number) {
+    this.wordGroupSize = size;
   }
 
   async playSingleFile(audioFile: string) {

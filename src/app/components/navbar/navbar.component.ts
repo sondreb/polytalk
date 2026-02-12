@@ -41,12 +41,11 @@ import { CommonModule } from '@angular/common';
         background: var(--surface-color);
         backdrop-filter: blur(10px);
         box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-        padding: 1rem 0; /* Changed: removed left/right padding */
+        padding: 1rem 0;
         position: sticky;
         top: 0;
         z-index: 100;
         width: 100%;
-        overflow: hidden; /* Added: prevent content overflow */
       }
       .content-wrapper {
         max-width: 1200px;
@@ -55,19 +54,16 @@ import { CommonModule } from '@angular/common';
         justify-content: space-between;
         align-items: center;
         padding: 0 1rem;
-        width: 100%; /* Added: ensure wrapper takes full width */
-        box-sizing: border-box; /* Added: include padding in width calculation */
-      }
-      @media (max-width: 768px) {
-        .content-wrapper {
-          padding: 0 0.5rem;
-        }
+        width: 100%;
+        box-sizing: border-box;
+        gap: 0.5rem;
       }
       .nav-links {
         display: flex;
         align-items: center;
-        gap: 0.25rem; /* Changed from 0.5rem to 0.25rem */
-        flex-shrink: 0; /* Added: prevent nav links from shrinking */
+        gap: 0.25rem;
+        flex-wrap: wrap;
+        justify-content: flex-end;
       }
       .nav-content {
         max-width: 1200px;
@@ -87,8 +83,8 @@ import { CommonModule } from '@angular/common';
         -webkit-background-clip: text;
         -webkit-text-fill-color: transparent;
         text-decoration: none;
-        white-space: nowrap; /* Added: prevent text wrapping */
-        flex-shrink: 0; /* Added: prevent brand from shrinking */
+        white-space: nowrap;
+        flex-shrink: 0;
       }
       .nav-links a {
         color: var(--text-color);
@@ -96,6 +92,7 @@ import { CommonModule } from '@angular/common';
         padding: 0.5rem 1rem;
         border-radius: 8px;
         transition: all 0.3s ease;
+        white-space: nowrap;
       }
       .nav-links a:hover {
         background: linear-gradient(
@@ -106,7 +103,7 @@ import { CommonModule } from '@angular/common';
         color: white;
       }
       .install-button {
-        margin-left: 1rem;
+        margin-left: 0.5rem;
         background: linear-gradient(
           135deg,
           var(--gradient-start),
@@ -119,6 +116,7 @@ import { CommonModule } from '@angular/common';
         border-radius: 8px;
         font-weight: 600;
         transition: all 0.3s ease;
+        white-space: nowrap;
       }
       .install-button:hover {
         background: linear-gradient(
@@ -138,7 +136,19 @@ import { CommonModule } from '@angular/common';
       .app-text {
         display: inline;
       }
-      @media (max-width: 450px) {
+      @media (max-width: 768px) {
+        .content-wrapper {
+          padding: 0 0.5rem;
+        }
+        .nav-links a {
+          padding: 0.5rem 0.5rem;
+        }
+        .install-button {
+          margin-left: 0.25rem;
+          padding: 0.5rem 0.75rem;
+        }
+      }
+      @media (max-width: 550px) {
         .nav-link .icon-only {
           display: inline;
         }
@@ -147,6 +157,25 @@ import { CommonModule } from '@angular/common';
         }
         .app-text {
           display: none;
+        }
+        .brand {
+          font-size: 1.25rem;
+        }
+      }
+      @media (max-width: 350px) {
+        .brand {
+          font-size: 1.1rem;
+        }
+        .nav-links {
+          gap: 0.125rem;
+        }
+        .nav-links a {
+          padding: 0.4rem 0.4rem;
+        }
+        .install-button {
+          margin-left: 0.125rem;
+          padding: 0.4rem 0.5rem;
+          font-size: 0.85rem;
         }
       }
     `,

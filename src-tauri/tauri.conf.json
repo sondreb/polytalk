@@ -5,7 +5,7 @@
   "identifier": "no.brainbox.polytalk",
   "build": {
     "beforeDevCommand": "npm run start",
-    "devUrl": "http://localhost:4200",
+    "devUrl": "http://localhost:4211",
     "beforeBuildCommand": "npm run build",
     "frontendDist": "../dist/app/browser"
   },
