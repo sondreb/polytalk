@@ -25,9 +25,27 @@ export class AudioService {
     isPaused: false
   };
 
+  private queueLengthSignal = signal<number>(0);
+  private queuePositionSignal = signal<number>(0);
+  private loopPositionSignal = signal<number>(0);
+  private loopTotalSignal = signal<number>(1);
+
   // Public computed signals for components to use
   readonly isPlaying = computed(() => this.isPlayingSignal());
   readonly currentFile = computed(() => this.currentFileSignal());
+  /** Number of entries in the current playback queue. */
+  readonly queueLength = computed(() => this.queueLengthSignal());
+  /** 1-based position of the entry currently playing (0 when idle). */
+  readonly queuePosition = computed(() => this.queuePositionSignal());
+  /** 1-based index of the current playlist loop. */
+  readonly loopPosition = computed(() => this.loopPositionSignal());
+  /** Total number of playlist loops configured. */
+  readonly loopTotal = computed(() => this.loopTotalSignal());
+  /** Playback progress across the whole queue, 0-1. */
+  readonly progress = computed(() => {
+    const length = this.queueLengthSignal();
+    return length > 0 ? this.queuePositionSignal() / length : 0;
+  });
 
   constructor(private settingsService: SettingsService) {
     // Initialize audio at the start of constructor
@@ -220,6 +238,11 @@ export class AudioService {
     this.repeatCount = repeat;
     this.currentRepeat = 1;
     this.currentIndex = -1; // Will be incremented to 0 in playNext
+
+    this.queueLengthSignal.set(this.queue.length);
+    this.queuePositionSignal.set(0);
+    this.loopPositionSignal.set(1);
+    this.loopTotalSignal.set(repeat);
 
     // Clear saved state
     this.queueState.files = [];
@@ -453,6 +476,8 @@ export class AudioService {
     this.isPlayingSignal.set(false);
     if (!pause) {
       this.currentFileSignal.set('');
+      this.queuePositionSignal.set(0);
+      this.loopPositionSignal.set(0);
     }
 
     // Update media session
@@ -505,6 +530,9 @@ export class AudioService {
     }
 
     if (this.currentIndex < this.queue.length) {
+      this.queuePositionSignal.set(this.currentIndex + 1);
+      this.loopPositionSignal.set(this.currentRepeat);
+
       // Clear any existing timeout
       if (this.playbackTimeout) {
         clearTimeout(this.playbackTimeout);

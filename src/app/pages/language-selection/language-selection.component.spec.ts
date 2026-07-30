@@ -44,7 +44,25 @@ describe('LanguageSelectionComponent', () => {
 
   it('should load languages from the service', () => {
     const languages = languageService.getLanguages();
-    expect(component.languages).toEqual(languages);
+    expect(component.languages()).toEqual(languages);
+  });
+
+  it('should filter languages with the search query', () => {
+    component.query.set('span');
+    fixture.detectChanges();
+
+    const names = component.filteredLanguages().map((language) => language.name);
+    expect(names).toContain('Spanish');
+    expect(names.length).toBeLessThan(component.languages().length);
+  });
+
+  it('should show an empty state when nothing matches', () => {
+    component.query.set('zzzzz');
+    fixture.detectChanges();
+
+    const compiled = fixture.nativeElement as HTMLElement;
+    expect(component.filteredLanguages().length).toBe(0);
+    expect(compiled.querySelector('.empty')).toBeTruthy();
   });
 
   // it('should save selected from language to localStorage', () => {

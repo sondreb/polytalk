@@ -1,10 +1,12 @@
 import {
   Component,
-  OnInit,
   OnDestroy,
+  OnInit,
   HostListener,
+  computed,
   effect,
   inject,
+  signal,
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -17,7 +19,12 @@ import {
 import { AudioService } from '../../services/audio.service';
 import { TranslationService } from '../../services/translation.service';
 import { TranslatePipe } from '../../pipes/translate.pipe';
-import { Observable, BehaviorSubject, from } from 'rxjs';
+
+export interface LearningItem {
+  native: string;
+  translation: string;
+  key: string;
+}
 
 @Component({
   selector: 'app-learning',
@@ -25,447 +32,846 @@ import { Observable, BehaviorSubject, from } from 'rxjs';
   imports: [CommonModule, FormsModule, TranslatePipe],
   template: `
     <section class="learning">
-      <div class="content-wrapper">
-        <div class="language-header">
-          <div class="language-selector">
-            <img
-              [src]="fromLanguage?.flagImage"
-              [alt]="fromLanguage?.name + ' flag'"
-              class="flag-image"
-            />
+      <header class="language-header card">
+        <div class="language-selector">
+          <img
+            [src]="fromLanguage()?.flagImage"
+            [alt]="fromLanguage()?.name + ' flag'"
+            class="flag-image"
+          />
+          <label class="select-field">
+            <span class="select-label">{{ 'learning.from' | translate }}</span>
             <select
-              [(ngModel)]="fromLanguageCode"
+              [ngModel]="fromLanguageCode()"
               (ngModelChange)="onLanguageChange('from', $event)"
             >
-              <option
-                *ngFor="let lang of availableLanguages"
-                [value]="lang.code"
-              >
-                {{ lang.name }}
-              </option>
+              @for (lang of availableLanguages(); track lang.code) {
+                <option [value]="lang.code">{{ lang.name }}</option>
+              }
             </select>
-          </div>
+          </label>
+        </div>
 
-          <button (click)="switchLanguages()" class="switch-button">⇄</button>
+        <button
+          type="button"
+          (click)="switchLanguages()"
+          class="switch-button"
+          [attr.aria-label]="'learning.swap' | translate"
+          [title]="'learning.swap' | translate"
+        >
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M4 8h13m0 0-3.5-3.5M17 8l-3.5 3.5" />
+            <path d="M20 16H7m0 0 3.5-3.5M7 16l3.5 3.5" />
+          </svg>
+        </button>
 
-          <div class="language-selector">
-            <img
-              [src]="toLanguage?.flagImage"
-              [alt]="toLanguage?.name + ' flag'"
-              class="flag-image"
-            />
+        <div class="language-selector">
+          <img
+            [src]="toLanguage()?.flagImage"
+            [alt]="toLanguage()?.name + ' flag'"
+            class="flag-image"
+          />
+          <label class="select-field">
+            <span class="select-label">{{ 'learning.to' | translate }}</span>
             <select
-              [(ngModel)]="toLanguageCode"
+              [ngModel]="toLanguageCode()"
               (ngModelChange)="onLanguageChange('to', $event)"
             >
-              <option
-                *ngFor="let lang of availableLanguages"
-                [value]="lang.code"
-              >
-                {{ lang.name }}
-              </option>
+              @for (lang of availableLanguages(); track lang.code) {
+                <option [value]="lang.code">{{ lang.name }}</option>
+              }
             </select>
-          </div>
+          </label>
         </div>
+      </header>
 
-        <div class="tabs">
-          @for (tab of tabs; track tab) {
-            <button
-              [class.active]="category === tab.toLowerCase()"
-              (click)="selectCategory(tab.toLowerCase())"
-            >
-              {{ 'learning.' + tab.toLowerCase() | translate }}
-            </button>
-          }
-        </div>
+      <nav class="tabs" role="tablist">
+        @for (tab of tabs; track tab) {
+          <button
+            type="button"
+            role="tab"
+            [attr.aria-selected]="category() === tab"
+            [class.active]="category() === tab"
+            (click)="selectCategory(tab)"
+          >
+            {{ 'learning.' + tab | translate }}
+          </button>
+        }
+      </nav>
 
-        <div class="content card learning-card">
+      <div class="phrase-list card">
+        @for (item of currentItems(); track item.key) {
           <div
-            *ngFor="let item of currentItems"
             class="item"
-            [class.active]="item === currentItem"
-            [class.playing]="item === currentlyPlayingItem"
-            [class.offline]="
-              isOffline &&
-              (unavailableAudio.has(
-                '/assets/audio/en/' +
-                  category +
-                  '/' +
-                  sanitizeKey(item.native) +
-                  '.mp3'
-              ) ||
-                unavailableAudio.has(
-                  '/assets/audio/' +
-                    languageCode +
-                    '/' +
-                    category +
-                    '/' +
-                    sanitizeKey(item.native) +
-                    '.mp3'
-                ))
-            "
+            [class.playing]="item.key === currentlyPlayingItem()?.key"
+            [class.offline]="isItemOffline(item)"
             [id]="'item-' + item.key"
           >
             <div class="native">
-              <button class="play-button" (click)="playItem(item, 'en')">
-                ▶
+              <button
+                type="button"
+                class="play-button"
+                (click)="playItem(item, 'from')"
+                [attr.aria-label]="('learning.listen' | translate) + ': ' + item.native"
+              >
+                <svg viewBox="0 0 24 24" aria-hidden="true">
+                  <path class="solid" d="M8 5.5v13l11-6.5z" />
+                </svg>
               </button>
               <span>{{ item.native }}</span>
             </div>
             <div class="translation">
               <span>{{ item.translation }}</span>
-              <button class="play-button" (click)="playItem(item, 'native')">
-                ▶
+              <button
+                type="button"
+                class="play-button"
+                (click)="playItem(item, 'to')"
+                [attr.aria-label]="('learning.listen' | translate) + ': ' + item.translation"
+              >
+                <svg viewBox="0 0 24 24" aria-hidden="true">
+                  <path class="solid" d="M8 5.5v13l11-6.5z" />
+                </svg>
               </button>
             </div>
           </div>
+        }
+      </div>
+    </section>
+
+    <div class="transport-spacer"></div>
+
+    <div class="transport">
+      <div class="progress-track" aria-hidden="true">
+        <div class="progress-bar" [style.width.%]="progressPercent()"></div>
+      </div>
+
+      <div class="transport-inner controls">
+        <div class="now-playing">
+          @if (currentlyPlayingItem(); as item) {
+            <span class="now-word">{{ item.translation }}</span>
+          } @else {
+            <span class="now-word muted">{{ 'learning.' + category() | translate }}</span>
+          }
+          <span class="now-count">
+            {{ audioService.queuePosition() }} / {{ audioService.queueLength() || currentItems().length }}
+          </span>
+        </div>
+
+        <div class="buttons">
+          <button
+            type="button"
+            class="transport-button"
+            (click)="skipPrevious()"
+            [disabled]="!isPlaying()"
+            [title]="'learning.prev' | translate"
+            [attr.aria-label]="'learning.prev' | translate"
+          >
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M7 6v12" /><path class="solid" d="M18 6.5v11L9.5 12z" />
+            </svg>
+          </button>
+
+          <button
+            type="button"
+            class="transport-button primary"
+            (click)="togglePlayback()"
+            [title]="playButtonText()"
+            [attr.aria-label]="playButtonText()"
+          >
+            @if (isPlaying()) {
+              <svg viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M8.5 5.5v13M15.5 5.5v13" />
+              </svg>
+            } @else {
+              <svg viewBox="0 0 24 24" aria-hidden="true">
+                <path class="solid" d="M8 5.5v13l11-6.5z" />
+              </svg>
+            }
+            <span class="button-text">{{ playButtonText() }}</span>
+          </button>
+
+          <button
+            type="button"
+            class="transport-button"
+            (click)="skipNext()"
+            [disabled]="!isPlaying()"
+            [title]="'learning.next' | translate"
+            [attr.aria-label]="'learning.next' | translate"
+          >
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M17 6v12" /><path class="solid" d="M6 6.5v11L14.5 12z" />
+            </svg>
+          </button>
+
+          <button
+            type="button"
+            class="transport-button"
+            (click)="stopPlayback()"
+            [disabled]="!isPlaying() && !canResume()"
+            [title]="'learning.stop' | translate"
+            [attr.aria-label]="'learning.stop' | translate"
+          >
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <rect class="solid" x="6.5" y="6.5" width="11" height="11" rx="2" />
+            </svg>
+          </button>
+        </div>
+
+        <button
+          type="button"
+          class="options-button"
+          (click)="toggleOptions()"
+          [attr.aria-expanded]="showOptions()"
+          [title]="'learning.options' | translate"
+        >
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M4 8h10M18 8h2M4 16h4M12 16h8" />
+            <circle cx="16" cy="8" r="2.2" />
+            <circle cx="10" cy="16" r="2.2" />
+          </svg>
+          <span class="button-text">{{ 'learning.options' | translate }}</span>
+        </button>
+      </div>
+    </div>
+
+    @if (showOptions()) {
+      <div class="sheet-backdrop" (click)="closeOptions()"></div>
+      <div class="sheet" role="dialog" aria-modal="true">
+        <div class="sheet-header">
+          <h2>{{ 'learning.options' | translate }}</h2>
+          <button
+            type="button"
+            class="close-button"
+            (click)="closeOptions()"
+            [attr.aria-label]="'learning.close' | translate"
+          >
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M6 6l12 12M18 6L6 18" />
+            </svg>
+          </button>
+        </div>
+
+        <div class="settings">
+          <div class="setting-row">
+            <span class="setting-label">🔁 {{ 'learning.repeatWord' | translate }}</span>
+            <div class="number-control">
+              <button
+                type="button"
+                class="control-btn"
+                (click)="decrementValue('wordRepeat')"
+                aria-label="-"
+              >
+                −
+              </button>
+              <span class="number-value">{{ wordRepeat() }}</span>
+              <button
+                type="button"
+                class="control-btn"
+                (click)="incrementValue('wordRepeat')"
+                aria-label="+"
+              >
+                +
+              </button>
+            </div>
+          </div>
+
+          <div class="setting-row">
+            <span class="setting-label">↺ {{ 'learning.repeatPlaylist' | translate }}</span>
+            <div class="number-control">
+              <button
+                type="button"
+                class="control-btn"
+                (click)="decrementValue('loopRepeat')"
+                aria-label="-"
+              >
+                −
+              </button>
+              <span class="number-value">{{ loopRepeat() }}</span>
+              <button
+                type="button"
+                class="control-btn"
+                (click)="incrementValue('loopRepeat')"
+                aria-label="+"
+              >
+                +
+              </button>
+            </div>
+          </div>
+
+          <label class="setting-row toggle-row">
+            <span class="setting-label">🗣 {{ 'learning.bilingual' | translate }}</span>
+            <input
+              type="checkbox"
+              class="switch"
+              [ngModel]="playBothLanguages()"
+              (ngModelChange)="setPlayBothLanguages($event)"
+            />
+          </label>
+
+          <label class="setting-row toggle-row">
+            <span class="setting-label">💡 {{ 'learning.keepScreenOn' | translate }}</span>
+            <input
+              type="checkbox"
+              class="switch"
+              [ngModel]="screenLockActive()"
+              (ngModelChange)="toggleScreenLock($event)"
+            />
+          </label>
         </div>
 
         <div class="offline-controls">
           <button
+            type="button"
             (click)="downloadAllAudio()"
-            [disabled]="isDownloading"
-            class="download-button"
+            [disabled]="isDownloading()"
+            class="download-button btn-primary"
           >
-            <span *ngIf="!isDownloading">{{ 'learning.enableOffline' | translate }}</span>
-            <span *ngIf="isDownloading">
-              {{ 'learning.downloading' | translate }} {{ downloadProgress | async }}%
-            </span>
+            @if (isDownloading()) {
+              {{ 'learning.downloading' | translate }} {{ downloadProgress() }}%
+            } @else {
+              ⬇ {{ 'learning.enableOffline' | translate }}
+            }
           </button>
-
-          <br /><br />
-
-          @if(wakeLock) { 
-
-          <button (click)="releaseScreenLock()" class="download-button">
-            {{ 'learning.keepScreenOff' | translate }}
-          </button>
-          <p>
-          {{ 'learning.screenOnMessage' | translate }}
-          </p>
-          } @else {
-          <button (click)="keepScreenOn()" class="download-button">
-            {{ 'learning.keepScreenOn' | translate }}
-          </button>
+          @if (screenLockActive()) {
+            <p class="hint">{{ 'learning.screenOnMessage' | translate }}</p>
           }
         </div>
-
-        <div class="controls-wrapper">
-          <div class="sticky-container">
-            <div class="content-wrapper">
-              <div class="controls card">
-                <div class="settings">
-                  <label>
-                    <span class="label-text">{{ 'learning.repeatWord' | translate }}</span>
-                    <span class="label-icon">🔁</span>
-                    <div class="number-control">
-                      <button class="control-btn" (click)="decrementValue('wordRepeat')">-</button>
-                      <span class="number-value">{{wordRepeat}}</span>
-                      <button class="control-btn" (click)="incrementValue('wordRepeat')">+</button>
-                    </div>
-                  </label>
-                  <label>
-                    <span class="label-text">{{ 'learning.repeatPlaylist' | translate }}</span>
-                    <span class="label-icon">↺</span>
-                    <div class="number-control">
-                      <button class="control-btn" (click)="decrementValue('loopRepeat')">-</button>
-                      <span class="number-value">{{loopRepeat}}</span>
-                      <button class="control-btn" (click)="incrementValue('loopRepeat')">+</button>
-                    </div>
-                  </label>
-                  <label class="checkbox-label">
-                    <input
-                      type="checkbox"
-                      [(ngModel)]="playBothLanguages"
-                      (ngModelChange)="saveSettings()"
-                    />
-                    <span class="checkbox-text">{{ 'learning.bilingual' | translate }}</span>
-                  </label>
-                </div>
-                <div class="buttons">
-                  <button (click)="startPlayback()">
-                    <span class="icon">{{ playButtonIcon }}</span>
-                    <span class="button-text">{{ playButtonText }}</span>
-                  </button>
-                  <button (click)="skipPrevious()" [disabled]="!isPlaying" title="Previous word">
-                    <span class="icon">⏮</span>
-                    <span class="button-text">{{ 'learning.prev' | translate }}</span>
-                  </button>
-                  <button (click)="skipNext()" [disabled]="!isPlaying" title="Next word">
-                    <span class="icon">⏭</span>
-                    <span class="button-text">{{ 'learning.next' | translate }}</span>
-                  </button>
-                  <button (click)="stopPlayback()" [disabled]="!isPlaying">
-                    <span class="icon">■</span>
-                    <span class="button-text">{{ 'learning.stop' | translate }}</span>
-                  </button>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
       </div>
-    </section>
+    }
   `,
   styles: [
     `
+      :host {
+        display: block;
+      }
+
+      svg {
+        width: 20px;
+        height: 20px;
+        fill: none;
+        stroke: currentColor;
+        stroke-width: 2;
+        stroke-linecap: round;
+        stroke-linejoin: round;
+      }
+
+      svg .solid {
+        fill: currentColor;
+        stroke-width: 1;
+      }
+
       .learning {
-        padding: 1rem 0;
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
         width: 100%;
       }
 
-      .content-wrapper {
-        max-width: 1200px;
-        margin: 0 auto;
-        padding: 0 1rem;
+      /* ---------- Language header ---------- */
+      .language-header {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 1rem;
+        padding: 0.75rem 1rem;
       }
 
-      .controls.card {
-        padding: 0.5rem; /* Reduced from 0.75rem */
-        margin: 0;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        gap: 0.5rem; /* Reduced from 1rem */
-        transition: all 0.3s ease;
-        background: var(--surface-color);
-        width: 100%;
-        box-sizing: border-box;
-        height: 64px; /* Reduced from 72px */
+      .language-header:hover {
+        box-shadow: var(--shadow-sm);
+        border-color: var(--border-color);
       }
 
-      .settings {
+      .language-selector {
         display: flex;
-        gap: 0.75rem; /* Reduced from 1rem */
         align-items: center;
+        gap: 0.75rem;
+        flex: 1;
+        min-width: 0;
+      }
+
+      .language-selector:last-of-type {
+        justify-content: flex-end;
+      }
+
+      .flag-image {
+        width: 40px;
+        height: 30px;
+        border-radius: var(--radius-sm);
+        object-fit: cover;
+        box-shadow: var(--shadow-sm);
+        flex-shrink: 0;
+      }
+
+      .select-field {
+        display: flex;
+        flex-direction: column;
+        gap: 0.15rem;
+        min-width: 0;
+      }
+
+      .select-label {
+        font-size: 0.7rem;
+        font-weight: 600;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+        color: var(--text-light);
+      }
+
+      .select-field select {
+        max-width: 100%;
+        min-width: 140px;
+        padding: 0.35rem 0.5rem;
+        font-weight: 600;
+        border-radius: var(--radius-sm);
+        background: var(--surface-muted);
+      }
+
+      .switch-button {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 42px;
+        height: 42px;
+        padding: 0;
+        flex-shrink: 0;
+        border-radius: var(--radius-pill);
+        color: var(--primary-color);
+        background: var(--primary-soft);
+        border-color: transparent;
+      }
+
+      .switch-button:hover:not(:disabled) {
+        background: var(--primary-soft-hover);
+      }
+
+      /* ---------- Tabs ---------- */
+      .tabs {
+        display: inline-flex;
+        align-self: center;
+        gap: 0.25rem;
+        padding: 0.25rem;
+        background: var(--surface-muted);
+        border: 1px solid var(--border-color);
+        border-radius: var(--radius-pill);
+      }
+
+      .tabs button {
+        padding: 0.5rem 1.25rem;
+        border: none;
         background: transparent;
-        border-radius: 12px;
+        border-radius: var(--radius-pill);
+        font-size: 0.95rem;
+        color: var(--text-light);
+        min-width: 96px;
       }
 
-      .label-icon {
-        display: none;
-        font-size: 1.2rem;
-      }
-
-      .settings label {
-        display: flex;
-        align-items: center;
-        gap: 0.5rem; /* Reduced from 0.75rem */
-        margin: 0;
-        font-weight: 500;
+      .tabs button:hover:not(.active) {
+        background: var(--primary-soft);
         color: var(--text-color);
       }
 
-      @media (max-width: 768px) {
-        .settings {
-          gap: 0.5rem; /* Reduce gap on mobile */
-        }
-
-        .settings label {
-          gap: 0.25rem; /* Reduce gap between label elements */
-        }
-
-        .buttons button {
-          padding: 0.75rem;
-          min-width: unset;
-        }
-
-        .button-text {
-          display: none; /* Hide button text on mobile */
-        }
-
-        .checkbox-text {
-          display: none; /* Hide checkbox text on mobile */
-        }
-      }
-
-      /* Remove/update these media queries that were changing the layout */
-      @media (max-width: 768px) {
-        .controls.card {
-          flex-direction: row;
-          gap: 0.5rem;
-        }
-
-        .settings {
-          flex-direction: row;
-          width: auto;
-        }
-      }
-
-      .controls-wrapper {
-        position: relative;
-        height: 72px;
-      }
-
-      .sticky-container {
-        position: fixed;
-        bottom: 0;
-        left: 0;
-        right: 0;
-        z-index: 99;
+      .tabs button.active {
         background: var(--surface-color);
-        backdrop-filter: blur(10px);
-        box-shadow: 0 -1px 3px rgba(0, 0, 0, 0.1);
-        height: 72px;
+        color: var(--primary-color);
+        box-shadow: var(--shadow-sm);
       }
 
-      .buttons {
-        display: flex;
-        gap: 1rem;
+      /* ---------- Phrase list ---------- */
+      .phrase-list {
+        padding: 0.25rem;
+        overflow: hidden;
       }
+
+      .phrase-list:hover {
+        box-shadow: var(--shadow-sm);
+        border-color: var(--border-color);
+      }
+
       .item {
         display: flex;
+        align-items: center;
         justify-content: space-between;
-        padding: 1.25rem;
-        border-bottom: 1px solid rgba(99, 102, 241, 0.1);
-        transition: all 0.3s ease;
-        scroll-margin-bottom: 150px;
+        gap: 1rem;
+        padding: 0.6rem 0.75rem;
+        border-radius: var(--radius-md);
+        border-bottom: 1px solid var(--border-color);
+        transition: background var(--duration) var(--ease),
+          color var(--duration) var(--ease);
+        scroll-margin-block: 120px;
       }
+
+      .item:last-child {
+        border-bottom: none;
+      }
+
       .item:hover {
-        background: rgba(99, 102, 241, 0.05);
+        background: var(--primary-soft);
       }
-      .item.active {
-        background: var(--background-color);
-        border-radius: 8px;
-      }
+
       .item.playing {
         background: linear-gradient(
           135deg,
           var(--gradient-start),
           var(--gradient-end)
         );
-        color: white;
-        transform: scale(1.02);
-        box-shadow: 0 4px 12px rgba(99, 102, 241, 0.2);
-        border-radius: 8px;
+        color: #fff;
+        box-shadow: var(--shadow-brand);
       }
-      .item.playing .translation {
-        color: white;
+
+      .item.playing .translation,
+      .item.playing .native span {
+        color: #fff;
       }
+
+      .item.playing .play-button {
+        background: rgba(255, 255, 255, 0.2);
+        color: #fff;
+      }
+
+      .native,
       .translation {
-        color: var(--primary-color);
-        font-weight: bold;
-      }
-      
-      /* Number control styles */
-      .number-control {
         display: flex;
         align-items: center;
-        background: var(--surface-color);
-        border: 2px solid rgba(99, 102, 241, 0.2);
-        border-radius: 8px;
-        overflow: hidden;
+        gap: 0.75rem;
+        min-width: 0;
       }
-      
-      .control-btn {
-        width: 32px;
-        height: 32px;
+
+      .native span,
+      .translation span {
+        overflow-wrap: anywhere;
+      }
+
+      .translation {
+        color: var(--primary-color);
+        font-weight: 600;
+        text-align: end;
+      }
+
+      .play-button {
+        width: 36px;
+        height: 36px;
+        padding: 0;
         display: flex;
         align-items: center;
         justify-content: center;
-        background: rgba(99, 102, 241, 0.1);
-        border: none;
-        color: var(--text-color);
-        font-size: 1.2rem;
-        font-weight: bold;
-        cursor: pointer;
-        transition: all 0.2s ease;
+        border-radius: var(--radius-pill);
+        background: var(--primary-soft);
+        color: var(--primary-color);
+        border-color: transparent;
+        flex-shrink: 0;
+      }
+
+      .play-button:hover:not(:disabled) {
+        background: var(--primary-soft-hover);
+      }
+
+      .play-button svg {
+        width: 16px;
+        height: 16px;
+      }
+
+      .item.offline {
+        opacity: 0.5;
+      }
+
+      .item.offline .play-button {
+        cursor: not-allowed;
+      }
+
+      /* ---------- Transport bar ---------- */
+      .transport-spacer {
+        height: 84px;
+      }
+
+      .transport {
+        position: fixed;
+        inset-inline: 0;
+        bottom: 0;
+        z-index: 99;
+        background: color-mix(in srgb, var(--surface-color) 88%, transparent);
+        backdrop-filter: blur(14px);
+        border-top: 1px solid var(--border-color);
+        box-shadow: 0 -4px 20px rgba(16, 24, 40, 0.08);
+        padding-bottom: env(safe-area-inset-bottom);
+      }
+
+      .progress-track {
+        height: 3px;
+        width: 100%;
+        background: var(--border-color);
+      }
+
+      .progress-bar {
+        height: 100%;
+        width: 0;
+        background: linear-gradient(
+          90deg,
+          var(--gradient-start),
+          var(--gradient-end)
+        );
+        transition: width 0.3s var(--ease);
+      }
+
+      .transport-inner {
+        max-width: 1200px;
+        margin: 0 auto;
+        display: grid;
+        grid-template-columns: 1fr auto 1fr;
+        align-items: center;
+        gap: 1rem;
+        padding: 0.6rem 1rem;
+      }
+
+      .now-playing {
+        display: flex;
+        flex-direction: column;
+        min-width: 0;
+      }
+
+      .now-word {
+        font-weight: 600;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+
+      .now-word.muted {
+        color: var(--text-light);
+      }
+
+      .now-count {
+        font-size: 0.8rem;
+        color: var(--text-light);
+        font-variant-numeric: tabular-nums;
+      }
+
+      .buttons {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+      }
+
+      .transport-button {
+        width: 44px;
+        height: 44px;
         padding: 0;
-        touch-action: manipulation;
-     }
-      
-      .control-btn:hover {
-        background: rgba(99, 102, 241, 0.2);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.5rem;
+        border-radius: var(--radius-pill);
+        background: transparent;
+        border-color: transparent;
+        color: var(--text-color);
       }
-      
-      .control-btn:active {
-        background: rgba(99, 102, 241, 0.3);
-        transform: scale(0.95);
+
+      .transport-button svg {
+        width: 20px;
+        height: 20px;
       }
-      
-      .number-value {
-        min-width: 24px;
-        text-align: center;
-        font-weight: 500;
-        padding: 0 6px;
-     }
-      
-      /* Media query adjustments for the new control */
-      @media (max-width: 768px) {
-        .number-control {
-          width: auto;
+
+      .transport-button.primary {
+        width: auto;
+        min-width: 56px;
+        height: 52px;
+        padding: 0 1.5rem;
+        background: linear-gradient(
+          135deg,
+          var(--gradient-start),
+          var(--gradient-end)
+        );
+        color: #fff;
+        box-shadow: var(--shadow-brand);
+      }
+
+      .transport-button.primary:hover:not(:disabled) {
+        filter: brightness(1.06);
+        background: linear-gradient(
+          135deg,
+          var(--gradient-start),
+          var(--gradient-end)
+        );
+      }
+
+      .transport-button.primary svg {
+        width: 22px;
+        height: 22px;
+      }
+
+      .options-button {
+        justify-self: end;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        background: transparent;
+        border-color: transparent;
+        color: var(--text-light);
+      }
+
+      .options-button svg {
+        width: 20px;
+        height: 20px;
+      }
+
+      /* ---------- Options sheet ---------- */
+      .sheet-backdrop {
+        position: fixed;
+        inset: 0;
+        background: var(--overlay-color);
+        z-index: 100;
+        animation: fade 0.2s var(--ease);
+      }
+
+      .sheet {
+        position: fixed;
+        inset-inline: 0;
+        bottom: 0;
+        z-index: 101;
+        margin: 0 auto;
+        max-width: 520px;
+        background: var(--surface-color);
+        border: 1px solid var(--border-color);
+        border-bottom: none;
+        border-radius: var(--radius-xl) var(--radius-xl) 0 0;
+        box-shadow: var(--shadow-lg);
+        padding: 1.25rem 1.25rem calc(1.25rem + env(safe-area-inset-bottom));
+        animation: slide-up 0.25s var(--ease);
+      }
+
+      @keyframes fade {
+        from {
+          opacity: 0;
         }
-        
-        .control-btn {
-          width: 28px;
-          height: 28px;
+        to {
+          opacity: 1;
         }
       }
-      
+
+      @keyframes slide-up {
+        from {
+          transform: translateY(100%);
+        }
+        to {
+          transform: translateY(0);
+        }
+      }
+
+      .sheet-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 0.5rem;
+      }
+
+      .sheet-header h2 {
+        margin: 0;
+        font-size: 1.1rem;
+      }
+
+      .close-button {
+        width: 36px;
+        height: 36px;
+        padding: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: var(--radius-pill);
+        background: transparent;
+        border-color: transparent;
+        color: var(--text-light);
+      }
+
+      .close-button svg {
+        width: 18px;
+        height: 18px;
+      }
+
       .settings {
         display: flex;
-        gap: 1.5rem;
-        margin-bottom: 1rem;
-        padding: 0.75rem;
-        background: rgba(99, 102, 241, 0.05);
-        border-radius: 12px;
+        flex-direction: column;
       }
 
-      .settings label {
+      .setting-row {
         display: flex;
         align-items: center;
-        gap: 0.75rem;
-        font-weight: 500;
-        color: var(--text-color);
+        justify-content: space-between;
+        gap: 1rem;
+        padding: 0.75rem 0;
+        border-bottom: 1px solid var(--border-color);
       }
 
-      .settings input[type='number'] {
-        width: 45px; /* Increased from 20px */
-        padding: 0.5rem;
-        border: 2px solid rgba(99, 102, 241, 0.2);
-        border-radius: 8px;
-        font-size: 1rem;
-        font-weight: 500;
-        color: var(--text-color);
-        background: var(--surface-color);
-        transition: all 0.2s ease;
-        text-align: center;
-        -moz-appearance: textfield; /* Firefox */
+      .setting-row:last-child {
+        border-bottom: none;
       }
 
-      .settings input[type='number']::-webkit-outer-spin-button,
-      .settings input[type='number']::-webkit-inner-spin-button {
-        -webkit-appearance: none;
-        margin: 0;
-      }
-
-      .settings input[type='number']:focus {
-        outline: none;
-        border-color: var(--primary-color);
-        box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
-      }
-
-      .checkbox-label {
-        display: flex;
-        align-items: center;
-        gap: 0.75rem;
+      .toggle-row {
         cursor: pointer;
       }
 
-      .checkbox-label input[type='checkbox'] {
+      .setting-label {
+        font-weight: 500;
+      }
+
+      .number-control {
+        display: flex;
+        align-items: center;
+        background: var(--surface-muted);
+        border: 1px solid var(--border-color);
+        border-radius: var(--radius-pill);
+        overflow: hidden;
+      }
+
+      .control-btn {
+        width: 36px;
+        height: 36px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: transparent;
+        border: none;
+        border-radius: 0;
+        color: var(--text-color);
+        font-size: 1.15rem;
+        padding: 0;
+        touch-action: manipulation;
+      }
+
+      .number-value {
+        min-width: 32px;
+        text-align: center;
+        font-weight: 600;
+        font-variant-numeric: tabular-nums;
+      }
+
+      .switch {
         appearance: none;
         -webkit-appearance: none;
-        width: 1.5rem;
-        height: 1.5rem;
-        border: 2px solid rgba(99, 102, 241, 0.2);
-        border-radius: 6px;
-        background: var(--surface-color);
-        cursor: pointer;
         position: relative;
-        transition: all 0.2s ease;
+        width: 46px;
+        height: 26px;
+        border-radius: var(--radius-pill);
+        background: var(--surface-muted);
+        border: 1px solid var(--border-color);
+        cursor: pointer;
+        padding: 0;
+        flex-shrink: 0;
+        transition: background var(--duration) var(--ease);
       }
 
-      .checkbox-label input[type='checkbox']:checked {
+      .switch::after {
+        content: '';
+        position: absolute;
+        top: 2px;
+        inset-inline-start: 2px;
+        width: 20px;
+        height: 20px;
+        border-radius: 50%;
+        background: var(--surface-color);
+        box-shadow: var(--shadow-sm);
+        transition: transform var(--duration) var(--ease);
+      }
+
+      .switch:checked {
         background: linear-gradient(
           135deg,
           var(--gradient-start),
@@ -474,903 +880,543 @@ import { Observable, BehaviorSubject, from } from 'rxjs';
         border-color: transparent;
       }
 
-      .checkbox-label input[type='checkbox']:checked::after {
-        content: '✓';
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-        color: white;
-        font-size: 1rem;
-        font-weight: bold;
+      .switch:checked::after {
+        transform: translateX(20px);
       }
 
-      .checkbox-label input[type='checkbox']:focus {
-        outline: none;
-        border-color: var(--primary-color);
-        box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
-      }
-
-      @media (max-width: 768px) {
-        .learning {
-          padding: 0.5rem 0;
-        }
-
-        .checkbox-label {
-          width: 100%;
-        }
-        .tabs button {
-          padding: 0.5rem 1rem;
-          min-width: 80px;
-        }
-        .item {
-          padding: 0.75rem 0.5rem;
-        }
-        .content.card {
-          padding: 0.25rem;
-        }
-        .controls.card {
-          padding: 0.5rem;
-          margin: 0 0.25rem;
-        }
-      }
-      .buttons button {
-        padding: 0.75rem 1.5rem;
-        border-radius: 8px;
-        cursor: pointer;
-        transition: all 0.2s ease;
-        min-width: 120px; /* Consistent min-width for both buttons */
-        width: 120px; /* Fixed width for both buttons */
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        gap: 0.5rem;
-      }
-
-      @media (max-width: 768px) {
-        .buttons button {
-          width: 48px; /* Fixed width for mobile */
-          min-width: 48px;
-          padding: 0.75rem;
-        }
-      }
-
-      .buttons button:disabled {
-        opacity: 0.9;
-        cursor: not-allowed;
-        background: #94a3b8; /* Slate 400 - lighter gray with better contrast */
-        color: #f1f5f9; /* Slate 100 - very light color for text */
-        border: none;
-        box-shadow: none;
-        transform: none;
-      }
-
-      .buttons button:disabled:hover {
-        transform: none;
-        background: #94a3b8; /* Keep the same color on hover */
-      }
-
-      .buttons button:not(:disabled):hover {
-        background-color: var(--primary-color);
-        color: white;
-      }
-      .language-header {
-        text-align: center;
-        margin-bottom: 2rem;
-        font-size: 1.5rem;
-        color: var(--primary-color);
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        gap: 1rem;
-      }
-      .flag-image {
-        width: 48px;
-        height: 36px;
-        border-radius: 4px;
-      }
-      .tabs {
-        display: flex;
-        justify-content: center;
-        gap: 0.5rem;
-        margin-bottom: 1rem;
-        padding: 0.75rem;
-        background: transparent;
-        border-radius: 12px;
-        box-shadow: none;
-      }
-      .tabs button {
-        padding: 0.75rem 1.5rem;
-        border: 1px solid transparent;
-        background: transparent;
-        border-radius: 8px;
-        cursor: pointer;
-        font-size: 1rem;
-        transition: all 0.2s ease;
-        color: var(--text-color);
-        font-weight: 500;
-        min-width: 100px;
-      }
-      .tabs button.active {
-        background: linear-gradient(
-          135deg,
-          var(--gradient-start),
-          var(--gradient-end)
-        );
-        color: white;
-        font-weight: 600;
-      }
-      .tabs button:hover:not(.active) {
-        background: var(--background-color);
-      }
-      .native,
-      .translation {
-        display: flex;
-        align-items: center;
-        gap: 1rem; /* Increased from 0.5rem to 1rem for more spacing */
-      }
-
-      .play-button {
-        width: 40px;
-        height: 40px;
-        padding: 0;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        border-radius: 50%;
-        background: linear-gradient(
-          135deg,
-          var(--gradient-start),
-          var(--gradient-end)
-        );
-        flex-shrink: 0; /* Prevent button from shrinking */
-      }
-      .controls.card {
-        padding: 0.75rem;
-        margin: 0 0.5rem;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        gap: 1rem;
-        transition: all 0.3s ease;
-        background: var(--surface-color);
-      }
-      .controls.card.sticky {
-        position: fixed;
-        top: 64px; /* Adjust based on navbar height */
-        left: 0;
-        right: 0;
-        margin: 0;
-        border-radius: 0;
-        background: rgba(255, 255, 255, 0.8);
-        backdrop-filter: blur(10px);
-        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-        z-index: 99;
-      }
-      .controls-wrapper {
-        position: relative;
-      }
-
-      .controls-placeholder {
-        height: 0;
-      }
-
-      .controls-placeholder.visible {
-        height: 85px; /* Adjust this value to match your controls height */
-      }
-
-      @media (max-width: 768px) {
-        .controls-placeholder.visible {
-          height: 200px; /* Adjust for mobile layout where controls stack */
-        }
-      }
-
-      @media (max-width: 768px) {
-        .settings {
-          flex-direction: row;
-          gap: 0.75rem;
-          width: 100%;
-        }
-      }
-      .settings {
-        display: flex;
-        gap: 1.5rem;
-        padding: 0;
-        margin: 0;
-        background: transparent;
-        border-radius: 12px;
-        align-items: center;
-      }
-
-      .settings label {
-        display: flex;
-        align-items: center;
-        gap: 0.75rem;
-        margin: 0;
-        font-weight: 500;
-        color: var(--text-color);
+      :host-context([dir='rtl']) .switch:checked::after {
+        transform: translateX(-20px);
       }
 
       .offline-controls {
-        padding: 2em 0 1em 0;
+        margin-top: 1rem;
         text-align: center;
       }
 
       .download-button {
-        padding: 0.75rem 1.5rem;
-        border-radius: 8px;
-        cursor: pointer;
-        transition: all 0.2s ease;
-        min-width: 200px;
-        background: linear-gradient(
-          135deg,
-          var(--gradient-start),
-          var(--gradient-end)
-        );
-        color: white;
-        border: none;
-      }
-
-      .download-button:disabled {
-        opacity: 0.7;
-        cursor: wait;
-      }
-
-      @media (max-width: 768px) {
-        .offline-controls {
-          margin: 1rem 0.25rem;
-        }
-      }
-      .item.offline {
-        opacity: 0.5;
-        position: relative;
-      }
-
-      .item.offline::after {
-        content: '⚠️ Offline';
-        position: absolute;
-        inset-inline-end: 1rem;
-        top: 50%;
-        transform: translateY(-50%);
-        font-size: 0.8rem;
-        color: #666;
-      }
-
-      .item.offline .play-button {
-        opacity: 0.5;
-        cursor: not-allowed;
-        background: #ccc;
-      }
-
-      .language-header {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        gap: 2rem;
-        margin-bottom: 2rem;
-        padding: 1rem;
-      }
-
-      .language-selector {
-        display: flex;
-        align-items: center;
-        gap: 1rem;
-      }
-
-      .language-direction {
-        font-size: 1.5rem;
-        color: var(--primary-color);
-        font-weight: bold;
-      }
-
-      .switch-button {
-        font-size: 1.5rem;
-        color: var(--primary-color);
-        background: transparent;
-        border: none;
-        cursor: pointer;
-        transition: all 0.2s ease;
-      }
-
-      .switch-button:hover {
-        color: var(--gradient-end);
-      }
-
-      select {
-        padding: 0.5rem;
-        border-radius: 8px;
-        border: 2px solid rgba(99, 102, 241, 0.2);
-        background: var(--surface-color);
-        font-size: 1rem;
-        color: var(--text-color);
-        cursor: pointer;
-        min-width: 150px;
-      }
-
-      select:focus {
-        outline: none;
-        border-color: var(--primary-color);
-        box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
-      }
-
-      @media (max-width: 768px) {
-        .language-header {
-          flex-direction: column;
-          gap: 1rem;
-        }
-      }
-
-      .controls-wrapper {
-        position: relative;
-        margin-bottom: 1rem;
-      }
-
-      .sticky-container {
-        position: fixed;
-        bottom: 0;
-        left: 0;
-        right: 0;
-        z-index: 99;
-        background: var(--surface-color);
-        backdrop-filter: blur(10px);
-        box-shadow: 0 -1px 3px rgba(0, 0, 0, 0.1);
-      }
-
-      .controls.card {
-        padding: 0.75rem;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        gap: 1rem;
-        background: transparent;
         width: 100%;
-        box-sizing: border-box;
-        margin: 0;
-        border-radius: 12px 12px 0 0;
-        border: none;
-        box-shadow: none;
       }
 
-      .item {
-        display: flex;
-        justify-content: space-between;
-        padding: 1.25rem;
-        border-bottom: 1px solid rgba(99, 102, 241, 0.1);
-        transition: all 0.3s ease;
-        scroll-margin-bottom: 150px;
+      .hint {
+        margin: 0.75rem 0 0;
+        font-size: 0.85rem;
+        color: var(--text-light);
       }
 
-      /* Override card hover effect for controls - updated to explicitly handle inner elements */
-      .controls.card:hover,
-      .content.card:hover {
-        /* Added content.card here */
-        transform: none;
-        box-shadow: none;
-      }
-
-      /* Keep hover effect only for play buttons and other interactive elements */
-      .buttons button:not(:disabled):hover {
-        transform: translateY(-2px);
-      }
-
-      .play-button:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 4px 12px rgba(99, 102, 241, 0.2);
-      }
-
-      .icon {
-        font-size: 1.2rem;
-        line-height: 1;
-      }
-
-      @media (max-width: 1024px) {
-        .button-text {
+      /* ---------- Responsive ---------- */
+      @media (max-width: 900px) {
+        .transport-button.primary .button-text,
+        .options-button .button-text {
           display: none;
         }
 
-        .buttons button {
-          min-width: unset;
-          padding: 0.75rem;
+        .transport-button.primary {
+          width: 52px;
+          min-width: 52px;
+          padding: 0;
         }
 
-        .checkbox-label .checkbox-text {
-          font-size: 0.85rem;
+        .options-button {
+          width: 44px;
+          height: 44px;
+          padding: 0;
+          justify-content: center;
+          border-radius: var(--radius-pill);
         }
       }
 
-      @media (max-width: 768px) {
-        .label-text {
+      @media (max-width: 640px) {
+        .language-header {
+          gap: 0.5rem;
+          padding: 0.5rem;
+        }
+
+        .flag-image {
+          width: 32px;
+          height: 24px;
+        }
+
+        .select-field select {
+          min-width: 0;
+          width: 100%;
+          font-size: 0.9rem;
+        }
+
+        .select-label {
           display: none;
         }
 
-        .label-icon {
-          display: inline-block;
-        }
-      }
-
-      @media (max-width: 600px) {
-        .label-icon {
-          display: none;
-        }
-
-        .checkbox-label .checkbox-text {
-          font-size: 0.75rem;
-        }
-      }
-
-      @media (max-width: 768px) {
-        .controls.card {
-          padding: 0.25rem; /* Reduced from 0.5rem */
-          gap: 0.25rem; /* Reduced from 0.5rem */
-        }
-
-        .settings {
-          gap: 0.25rem; /* Reduced from 0.75rem */
-        }
-
-        .settings label {
-          gap: 0.25rem; /* Reduced from 0.5rem */
-        }
-
-        .settings input[type='number'] {
-          padding: 0.25rem;
-          width: 35px; /* Increased from 16px for mobile */
-        }
-
-        .checkbox-label {
-          gap: 0.25rem; /* Reduced from 0.75rem */
-        }
-
-        .buttons {
-          gap: 0.5rem; /* Reduced from 1rem */
-        }
-
-        .buttons button {
-          padding: 0.5rem; /* Reduced from 0.75rem */
-          width: 40px; /* Reduced from 48px */
-          min-width: 40px; /* Reduced from 48px */
-        }
-
-        .checkbox-label input[type='checkbox'] {
-          width: 1.25rem; /* Reduced from 1.5rem */
-          height: 1.25rem; /* Reduced from 1.5rem */
-        }
-      }
-
-      @media (max-width: 768px) {
-        .learning {
-          padding: 0;
-        }
-
-        .content-wrapper {
-          padding: 0;
-        }
-
-        .content.card {
-          margin: 0;
-          padding: 0;
+        .tabs button {
+          min-width: 0;
+          padding: 0.5rem 0.9rem;
+          font-size: 0.9rem;
         }
 
         .item {
           padding: 0.5rem;
+          gap: 0.5rem;
         }
 
         .native,
         .translation {
-          gap: 0.5rem; /* Reduce spacing between play button and text */
+          gap: 0.5rem;
         }
 
-        /* Reduce margins around other elements */
-        .language-header {
-          margin-bottom: 0.5rem;
-          padding: 0.5rem;
+        .transport-inner {
+          grid-template-columns: 1fr auto;
+          gap: 0.5rem;
+          padding: 0.5rem 0.75rem;
         }
 
-        .tabs {
-          margin-bottom: 0.5rem;
-          padding: 0.25rem;
+        .now-playing {
+          display: none;
         }
 
-        .offline-controls {
-          margin: 0.5rem 0;
+        .buttons {
+          gap: 0.25rem;
+        }
+
+        .transport-spacer {
+          height: 76px;
+        }
+
+        .sheet {
+          max-width: none;
         }
       }
     `,
   ],
 })
 export class LearningComponent implements OnInit, OnDestroy {
-  languageCode: string = '';
-  category: string = '';
-  content?: LearningContent;
-  currentItems: { native: string; translation: string; key: string }[] = [];
-  currentItem?: { native: string; translation: string; key: string };
-  isLooping: boolean = false;
-  wordRepeat = 1;
-  loopRepeat = 2;
-  isPlaying = false;
-  playBothLanguages = true; // New property
-  currentlyPlayingItem?: { native: string; translation: string; key: string };
-  private playbackTimeout: any;
+  private readonly route = inject(ActivatedRoute);
+  private readonly router = inject(Router);
+  private readonly languageService = inject(LanguageService);
+  private readonly translationService = inject(TranslationService);
+  readonly audioService = inject(AudioService);
+
   private readonly SETTINGS_KEY = 'polytalk-settings';
   private readonly FROM_LANGUAGE_KEY = 'polytalk-from-language';
   private readonly TO_LANGUAGE_KEY = 'polytalk-to-language';
-  selectedLanguage?: Language;
-  tabs = ['Words', 'Numbers', 'Sentences'];
-  isDownloading = false;
-  downloadProgress = new BehaviorSubject<number>(0);
-  isOffline = false;
-  unavailableAudio = new Set<string>();
-  fromLanguageCode: string = 'en';
-  toLanguageCode: string = '';
-  fromLanguage?: Language;
-  toLanguage?: Language;
-  availableLanguages: Language[] = [];
-  private canResume = false;
 
-  private translationService = inject(TranslationService);
+  readonly tabs = ['words', 'numbers', 'sentences'];
 
-  // Add getters for button text and icon
-  get playButtonText(): string {
-    if (this.isPlaying) return this.translationService.translate('learning.pause');
-    return this.canResume
+  // Route / content state
+  readonly category = signal<string>('words');
+  readonly currentItems = signal<LearningItem[]>([]);
+  readonly availableLanguages = signal<Language[]>([]);
+  readonly fromLanguageCode = signal<string>('en');
+  readonly toLanguageCode = signal<string>('');
+
+  readonly fromLanguage = computed(() =>
+    this.availableLanguages().find((l) => l.code === this.fromLanguageCode())
+  );
+  readonly toLanguage = computed(() =>
+    this.availableLanguages().find((l) => l.code === this.toLanguageCode())
+  );
+
+  // Playback settings
+  readonly wordRepeat = signal(1);
+  readonly loopRepeat = signal(2);
+  readonly playBothLanguages = signal(true);
+
+  // Playback state
+  readonly isPlaying = computed(() => this.audioService.isPlaying());
+  readonly canResume = signal(false);
+  readonly currentlyPlayingItem = signal<LearningItem | undefined>(undefined);
+  readonly progressPercent = computed(() =>
+    Math.round(this.audioService.progress() * 100)
+  );
+
+  // UI state
+  readonly showOptions = signal(false);
+  readonly isDownloading = signal(false);
+  readonly downloadProgress = signal(0);
+  readonly isOffline = signal(!navigator.onLine);
+  readonly unavailableAudio = signal<Set<string>>(new Set<string>());
+  readonly screenLockActive = signal(false);
+
+  private wakeLock: WakeLockSentinel | null = null;
+
+  readonly playButtonText = computed(() => {
+    this.translationService.languageChange();
+    if (this.isPlaying()) {
+      return this.translationService.translate('learning.pause');
+    }
+    return this.canResume()
       ? this.translationService.translate('learning.resume')
       : this.translationService.translate('learning.start');
-  }
+  });
 
-  get playButtonIcon(): string {
-    if (this.isPlaying) return '⏸';
-    return this.canResume ? '▶' : '▶';
-  }
-
-  constructor(
-    private route: ActivatedRoute,
-    private router: Router,
-    private languageService: LanguageService,
-    private audioService: AudioService
-  ) {
+  constructor() {
     this.loadSettings();
-    // Add offline detection
-    this.isOffline = !navigator.onLine;
-    window.addEventListener('online', () => this.handleConnectionChange(true));
-    window.addEventListener('offline', () =>
-      this.handleConnectionChange(false)
-    );
 
-    effect(() => {
-      this.isPlaying = this.audioService.isPlaying();
-    });
+    window.addEventListener('online', this.onOnline);
+    window.addEventListener('offline', this.onOffline);
 
     effect(() => {
       const file = this.audioService.currentFile();
       if (!file) {
-        this.currentlyPlayingItem = undefined;
+        this.currentlyPlayingItem.set(undefined);
         return;
       }
 
-      // Extract the word from the file path and sanitize it
       const fileName = file.split('/').pop()?.replace('.mp3', '');
-      if (fileName) {
-        this.currentlyPlayingItem = this.currentItems.find(
-          (item) => this.sanitizeKey(item.key) === this.sanitizeKey(fileName)
-        );
+      if (!fileName) return;
 
-        // Scroll to the currently playing item
-        if (this.currentlyPlayingItem) {
-          const element = document.getElementById(
-            `item-${this.currentlyPlayingItem.key}`
-          );
-          if (element) {
-            element.scrollIntoView({
-              behavior: 'smooth',
-              block: 'center',
-            });
-          }
-        }
+      const match = this.currentItems().find(
+        (item) => this.sanitizeKey(item.key) === this.sanitizeKey(fileName)
+      );
+      this.currentlyPlayingItem.set(match);
+
+      if (match) {
+        const element = document.getElementById(`item-${match.key}`);
+        element?.scrollIntoView({ behavior: 'smooth', block: 'center' });
       }
     });
   }
 
-  ngOnInit() {
-    this.availableLanguages = this.languageService.getLanguages();
+  ngOnInit(): void {
+    this.availableLanguages.set(this.languageService.getLanguages());
 
     this.route.params.subscribe((params) => {
-      // Scroll to top when route params change
       window.scrollTo(0, 0);
 
-      this.fromLanguageCode = params['fromLanguage'];
+      this.fromLanguageCode.set(params['fromLanguage'] ?? 'en');
+      this.toLanguageCode.set(params['toLanguage'] ?? '');
+      this.category.set(params['category'] ?? 'words');
 
-      this.fromLanguageCode = params['fromLanguage'];
-      this.toLanguageCode = params['toLanguage'];
-      this.category = params['category'];
-
-      this.updateLanguages();
+      this.persistLanguages();
       this.loadItems();
     });
   }
 
-  ngOnDestroy() {
+  ngOnDestroy(): void {
     this.stopPlayback();
-    // Ensure proper cleanup of audio service
-    // No cleanup method available on audioService
+    void this.releaseScreenLock();
+    window.removeEventListener('online', this.onOnline);
+    window.removeEventListener('offline', this.onOffline);
   }
 
-  loadItems() {
-    if (!this.toLanguageCode) return;
+  private onOnline = () => {
+    this.isOffline.set(false);
+    this.unavailableAudio.set(new Set<string>());
+  };
 
-    const toContent = this.languageService.getContent(this.toLanguageCode);
-    const fromContent = this.languageService.getContent(this.fromLanguageCode);
+  private onOffline = () => this.isOffline.set(true);
+
+  loadItems(): void {
+    if (!this.toLanguageCode()) return;
+
+    const toContent = this.languageService.getContent(this.toLanguageCode());
+    const fromContent = this.languageService.getContent(
+      this.fromLanguageCode()
+    );
 
     if (!toContent || !fromContent) return;
 
-    this.toLanguage = this.languageService
-      .getLanguages()
-      .find((lang) => lang.code === this.toLanguageCode);
+    const category = this.category() as keyof LearningContent;
+    const toItems = toContent[category];
+    const fromItems = fromContent[category];
 
-    const toItems = toContent[this.category as keyof LearningContent];
-    const fromItems = fromContent[this.category as keyof LearningContent];
+    if (!toItems || !fromItems) return;
 
-    // Keep the English key as 'native' for audio file references
-    this.currentItems = Object.entries(toItems).map(([key, toTranslation]) => ({
-      native: fromItems[key], // Translation in 'from' language
-      translation: toTranslation, // Translation in 'to' language
-      key: key, // Keep the English key for audio files
-    }));
-
-    if (this.currentItems.length > 0) {
-      this.currentItem = this.currentItems[0];
-    }
+    this.currentItems.set(
+      Object.entries(toItems).map(([key, toTranslation]) => ({
+        native: fromItems[key],
+        translation: toTranslation,
+        key,
+      }))
+    );
   }
 
-  playNext() {
-    // Implementation for audio playback
+  isItemOffline(item: LearningItem): boolean {
+    if (!this.isOffline()) return false;
+    const unavailable = this.unavailableAudio();
+    const name = this.sanitizeKey(item.key);
+    return (
+      unavailable.has(this.audioPath(this.fromLanguageCode(), name)) ||
+      unavailable.has(this.audioPath(this.toLanguageCode(), name))
+    );
   }
 
-  toggleLoop() {
-    this.isLooping = !this.isLooping;
-    // Implementation for loop playback
+  private audioPath(languageCode: string, fileName: string): string {
+    return `/assets/audio/${languageCode}/${this.category()}/${fileName}.mp3`;
   }
 
-  private loadSettings() {
+  // ---------- Settings ----------
+
+  private loadSettings(): void {
     const settings = localStorage.getItem(this.SETTINGS_KEY);
     if (settings) {
-      const parsed = JSON.parse(settings);
-      this.wordRepeat = parsed.wordRepeat || 1;
-      this.loopRepeat = parsed.loopRepeat || 2;
-      this.playBothLanguages = parsed.playBothLanguages ?? true;
-    }
-
-    // Load from language from storage
-    const savedFromLanguage = localStorage.getItem(this.FROM_LANGUAGE_KEY);
-    if (savedFromLanguage && this.fromLanguageCode === 'en') {
-      // Only override if current is default 'en'
-      this.fromLanguageCode = savedFromLanguage;
-      this.updateLanguages();
+      try {
+        const parsed = JSON.parse(settings);
+        this.wordRepeat.set(parsed.wordRepeat || 1);
+        this.loopRepeat.set(parsed.loopRepeat || 2);
+        this.playBothLanguages.set(parsed.playBothLanguages ?? true);
+      } catch (error) {
+        console.error('Failed to parse stored settings', error);
+      }
     }
   }
 
-  saveSettings() {
-    // Stop any current playback and reset resume state
-    if (this.isPlaying) {
+  saveSettings(): void {
+    if (this.isPlaying()) {
       this.stopPlayback();
     }
-    this.canResume = false;
+    this.canResume.set(false);
 
-    const settings = {
-      wordRepeat: this.wordRepeat,
-      loopRepeat: this.loopRepeat,
-      playBothLanguages: this.playBothLanguages,
-    };
-    localStorage.setItem(this.SETTINGS_KEY, JSON.stringify(settings));
+    localStorage.setItem(
+      this.SETTINGS_KEY,
+      JSON.stringify({
+        wordRepeat: this.wordRepeat(),
+        loopRepeat: this.loopRepeat(),
+        playBothLanguages: this.playBothLanguages(),
+      })
+    );
   }
 
-  async startPlayback() {
-    // If playing, pause playback
-    if (this.isPlaying) {
+  setPlayBothLanguages(value: boolean): void {
+    this.playBothLanguages.set(value);
+    this.saveSettings();
+  }
+
+  incrementValue(setting: 'wordRepeat' | 'loopRepeat'): void {
+    const target = setting === 'wordRepeat' ? this.wordRepeat : this.loopRepeat;
+    target.set(Math.min(20, target() + 1));
+    this.saveSettings();
+  }
+
+  decrementValue(setting: 'wordRepeat' | 'loopRepeat'): void {
+    const target = setting === 'wordRepeat' ? this.wordRepeat : this.loopRepeat;
+    target.set(Math.max(1, target() - 1));
+    this.saveSettings();
+  }
+
+  // ---------- Options sheet ----------
+
+  toggleOptions(): void {
+    this.showOptions.update((open) => !open);
+  }
+
+  closeOptions(): void {
+    this.showOptions.set(false);
+  }
+
+  @HostListener('document:keydown.escape')
+  onEscape(): void {
+    this.closeOptions();
+  }
+
+  // ---------- Playback ----------
+
+  async togglePlayback(): Promise<void> {
+    if (this.isPlaying()) {
+      this.pausePlayback();
+      return;
+    }
+    await this.startPlayback();
+  }
+
+  async startPlayback(): Promise<void> {
+    if (this.isPlaying()) {
       this.pausePlayback();
       return;
     }
 
-    // Reset queue if settings have changed
     if (this.settingsChanged()) {
-      this.canResume = false;
+      this.canResume.set(false);
     }
 
-    // Only prepare new queue if not resuming from pause
-    if (!this.canResume) {
-      let audioFiles: string[] = [];
-      // ...existing queue preparation code...
-      if (this.isOffline) {
-        // Check all audio files first
-        const unavailableFiles: string[] = [];
+    if (!this.canResume()) {
+      const audioFiles = await this.buildQueue();
+      if (audioFiles.length === 0) return;
 
-        for (const item of this.currentItems) {
-          const sanitizedFileName = this.sanitizeKey(item.key);
-          if (this.playBothLanguages) {
-            const fromFile = `/assets/audio/${this.fromLanguageCode}/${this.category}/${sanitizedFileName}.mp3`;
-            const toFile = `/assets/audio/${this.toLanguageCode}/${this.category}/${sanitizedFileName}.mp3`;
-
-            if (!(await this.checkAudioAvailability(fromFile))) {
-              unavailableFiles.push(fromFile);
-            } else {
-              audioFiles.push(fromFile);
-            }
-
-            if (!(await this.checkAudioAvailability(toFile))) {
-              unavailableFiles.push(toFile);
-            } else {
-              audioFiles.push(toFile);
-            }
-          } else {
-            const toFile = `/assets/audio/${this.toLanguageCode}/${this.category}/${sanitizedFileName}.mp3`;
-            if (!(await this.checkAudioAvailability(toFile))) {
-              unavailableFiles.push(toFile);
-            } else {
-              audioFiles.push(toFile);
-            }
-          }
-        }
-
-        if (unavailableFiles.length > 0) {
-          unavailableFiles.forEach((file) => this.unavailableAudio.add(file));
-          if (audioFiles.length === 0) {
-            return;
-          }
-        }
-
-        this.audioService.setWordGroupSize(this.wordRepeat * (this.playBothLanguages ? 2 : 1));
-        this.audioService.setQueue(audioFiles, this.loopRepeat);
-      } else {
-        this.currentlyPlayingItem = undefined;
-
-        this.currentItems.forEach((item) => {
-          const sanitizedFileName = this.sanitizeKey(item.key);
-          for (let i = 0; i < this.wordRepeat; i++) {
-            if (this.playBothLanguages) {
-              audioFiles.push(
-                `/assets/audio/${this.fromLanguageCode}/${this.category}/${sanitizedFileName}.mp3`
-              );
-              audioFiles.push(
-                `/assets/audio/${this.toLanguageCode}/${this.category}/${sanitizedFileName}.mp3`
-              );
-            } else {
-              audioFiles.push(
-                `/assets/audio/${this.toLanguageCode}/${this.category}/${sanitizedFileName}.mp3`
-              );
-            }
-          }
-        });
-
-        this.audioService.setWordGroupSize(this.wordRepeat * (this.playBothLanguages ? 2 : 1));
-        this.audioService.setQueue(audioFiles, this.loopRepeat);
-      }
-
-      // Start caching audio files in the background
+      this.audioService.setWordGroupSize(
+        this.wordRepeat() * (this.playBothLanguages() ? 2 : 1)
+      );
+      this.audioService.setQueue(audioFiles, this.loopRepeat());
       this.audioService.cacheAudioFiles(audioFiles);
     }
 
     this.audioService.play();
-    this.canResume = false;
+    this.canResume.set(false);
   }
 
-  pausePlayback() {
-    this.audioService.stop(true); // Pass true to indicate pause
-    this.canResume = true;
-  }
+  private async buildQueue(): Promise<string[]> {
+    const audioFiles: string[] = [];
+    const unavailableFiles: string[] = [];
+    this.currentlyPlayingItem.set(undefined);
 
-  stopPlayback() {
-    this.currentlyPlayingItem = undefined;
-    this.canResume = false; // Reset canResume since we're doing a full stop
-    this.audioService.stop(false); // Pass false to indicate full stop
+    for (const item of this.currentItems()) {
+      const fileName = this.sanitizeKey(item.key);
+      const files = this.playBothLanguages()
+        ? [
+            this.audioPath(this.fromLanguageCode(), fileName),
+            this.audioPath(this.toLanguageCode(), fileName),
+          ]
+        : [this.audioPath(this.toLanguageCode(), fileName)];
 
-    if (this.playbackTimeout) {
-      clearTimeout(this.playbackTimeout);
-      this.playbackTimeout = null;
+      for (let repeat = 0; repeat < this.wordRepeat(); repeat++) {
+        for (const file of files) {
+          if (this.isOffline() && !(await this.checkAudioAvailability(file))) {
+            unavailableFiles.push(file);
+            continue;
+          }
+          audioFiles.push(file);
+        }
+      }
     }
+
+    if (unavailableFiles.length > 0) {
+      const unavailable = new Set(this.unavailableAudio());
+      unavailableFiles.forEach((file) => unavailable.add(file));
+      this.unavailableAudio.set(unavailable);
+    }
+
+    return audioFiles;
   }
 
-  // Add method to force restart playback
-  restartPlayback() {
-    this.canResume = false;
-    this.stopPlayback();
-    this.startPlayback();
+  pausePlayback(): void {
+    this.audioService.stop(true);
+    this.canResume.set(true);
   }
 
-  skipNext() {
+  stopPlayback(): void {
+    this.currentlyPlayingItem.set(undefined);
+    this.canResume.set(false);
+    this.audioService.stop(false);
+  }
+
+  skipNext(): void {
     this.audioService.skipNext();
   }
 
-  skipPrevious() {
+  skipPrevious(): void {
     this.audioService.skipPrevious();
   }
 
-  async playItem(
-    item: { native: string; translation: string; key: string },
-    language: 'en' | 'native'
-  ) {
-    const sanitizedFileName = this.sanitizeKey(item.key); // Use English key for file name
+  async playItem(item: LearningItem, direction: 'from' | 'to'): Promise<void> {
+    const fileName = this.sanitizeKey(item.key);
     const langCode =
-      language === 'en' ? this.fromLanguageCode : this.toLanguageCode;
-    const audioFile = `/assets/audio/${langCode}/${this.category}/${sanitizedFileName}.mp3`;
+      direction === 'from' ? this.fromLanguageCode() : this.toLanguageCode();
+    const audioFile = this.audioPath(langCode, fileName);
 
-    if (this.isOffline) {
-      const isAvailable = await this.checkAudioAvailability(audioFile);
-      if (!isAvailable) {
-        this.unavailableAudio.add(audioFile);
-        return; // Don't attempt to play
-      }
+    if (this.isOffline() && !(await this.checkAudioAvailability(audioFile))) {
+      const unavailable = new Set(this.unavailableAudio());
+      unavailable.add(audioFile);
+      this.unavailableAudio.set(unavailable);
+      return;
     }
 
     this.audioService.playSingleFile(audioFile);
   }
 
-  selectCategory(category: string) {
-    this.canResume = false;
+  // ---------- Navigation ----------
+
+  selectCategory(category: string): void {
+    this.canResume.set(false);
     this.router.navigate([
       '/learn',
-      this.fromLanguageCode,
-      this.toLanguageCode,
+      this.fromLanguageCode(),
+      this.toLanguageCode(),
       category,
     ]);
   }
 
-  sanitizeKey(key: string) {
-    // Remove question marks and other invalid filename characters
+  onLanguageChange(type: 'from' | 'to', value: string): void {
+    this.canResume.set(false);
+    if (type === 'from') {
+      this.fromLanguageCode.set(value);
+    } else {
+      this.toLanguageCode.set(value);
+    }
+    this.persistLanguages();
+    this.navigateToCurrent();
+  }
+
+  switchLanguages(): void {
+    const from = this.fromLanguageCode();
+    this.fromLanguageCode.set(this.toLanguageCode());
+    this.toLanguageCode.set(from);
+    this.persistLanguages();
+    this.navigateToCurrent();
+  }
+
+  private navigateToCurrent(): void {
+    this.router.navigate([
+      '/learn',
+      this.fromLanguageCode(),
+      this.toLanguageCode(),
+      this.category(),
+    ]);
+  }
+
+  private persistLanguages(): void {
+    localStorage.setItem(this.FROM_LANGUAGE_KEY, this.fromLanguageCode());
+    if (this.toLanguageCode()) {
+      localStorage.setItem(this.TO_LANGUAGE_KEY, this.toLanguageCode());
+    }
+  }
+
+  sanitizeKey(key: string): string {
     return key.replace(/[?<>:"/\\|*]/g, '').trim();
   }
 
-  // sanitizeText(text: string): string {
-  //   return text
-  //     .toLowerCase()
-  //     .replace(/[^a-z0-9\s]/g, '') // Remove special characters but keep spaces (\s)
-  //     .trim();
-  // }
+  // ---------- Screen wake lock ----------
 
-  wakeLock: WakeLockSentinel | null = null;
+  async toggleScreenLock(enabled: boolean): Promise<void> {
+    if (enabled) {
+      await this.keepScreenOn();
+    } else {
+      await this.releaseScreenLock();
+    }
+  }
 
-  async releaseScreenLock() {
+  async keepScreenOn(): Promise<void> {
+    try {
+      if (this.wakeLock || !('wakeLock' in navigator)) return;
+
+      this.wakeLock = await navigator.wakeLock.request('screen');
+      this.screenLockActive.set(true);
+      this.wakeLock.addEventListener('release', () => {
+        this.wakeLock = null;
+        this.screenLockActive.set(false);
+      });
+    } catch (error) {
+      console.error(error);
+      this.screenLockActive.set(false);
+    }
+  }
+
+  async releaseScreenLock(): Promise<void> {
     if (!this.wakeLock) {
+      this.screenLockActive.set(false);
       return;
     }
 
-    this.wakeLock.release();
+    await this.wakeLock.release();
     this.wakeLock = null;
+    this.screenLockActive.set(false);
   }
 
-  async keepScreenOn() {
-    try {
-      if (this.wakeLock) {
-        return;
-      }
+  // ---------- Offline ----------
 
-      this.wakeLock = await navigator.wakeLock.request('screen');
+  async downloadAllAudio(): Promise<void> {
+    if (this.isDownloading()) return;
 
-      this.wakeLock.addEventListener('release', () => {
-        this.wakeLock = null;
-      });
-
-    } catch (err) {
-      console.error(err);
-    }
-  }
-
-  async downloadAllAudio() {
-    if (this.isDownloading) return;
-
-    this.isDownloading = true;
-    this.downloadProgress.next(0);
+    this.isDownloading.set(true);
+    this.downloadProgress.set(0);
 
     try {
       const cache = await caches.open('audio-cache');
       const audioFiles: string[] = [];
       const allCategories = ['words', 'numbers', 'sentences'];
 
-      // Get content for both languages
       const fromContent = this.languageService.getContent(
-        this.fromLanguageCode
+        this.fromLanguageCode()
       );
-      const toContent = this.languageService.getContent(this.toLanguageCode);
+      const toContent = this.languageService.getContent(this.toLanguageCode());
 
-      // Build list of all audio files across all categories
       allCategories.forEach((category) => {
         const fromItems = fromContent
           ? fromContent[category as keyof LearningContent]
@@ -1379,65 +1425,51 @@ export class LearningComponent implements OnInit, OnDestroy {
           ? toContent[category as keyof LearningContent]
           : {};
 
-        // Use the keys from both languages
         const allKeys = new Set([
-          ...Object.keys(fromItems),
-          ...Object.keys(toItems),
+          ...Object.keys(fromItems ?? {}),
+          ...Object.keys(toItems ?? {}),
         ]);
 
         allKeys.forEach((key) => {
-          const sanitizedFileName = this.sanitizeKey(key);
-          // Add both language versions
+          const fileName = this.sanitizeKey(key);
           audioFiles.push(
-            `/assets/audio/${this.fromLanguageCode}/${category}/${sanitizedFileName}.mp3`
+            `/assets/audio/${this.fromLanguageCode()}/${category}/${fileName}.mp3`
           );
           audioFiles.push(
-            `/assets/audio/${this.toLanguageCode}/${category}/${sanitizedFileName}.mp3`
+            `/assets/audio/${this.toLanguageCode()}/${category}/${fileName}.mp3`
           );
         });
       });
 
-      // Download and cache each file
       let completed = 0;
-
       for (const file of audioFiles) {
         try {
-          // Check if already cached
           const cached = await cache.match(file);
           if (!cached) {
             const response = await fetch(file);
             if (response.ok) {
-              // Only cache successful responses
               await cache.put(file, response);
             }
           }
-
-          completed++;
-          this.downloadProgress.next(
-            Math.round((completed / audioFiles.length) * 100)
-          );
         } catch (error) {
           console.error(`Error caching file ${file}:`, error);
+        } finally {
+          completed++;
+          this.downloadProgress.set(
+            Math.round((completed / audioFiles.length) * 100)
+          );
         }
       }
     } catch (error) {
       console.error('Error downloading audio files:', error);
     } finally {
-      this.isDownloading = false;
-      // Reset progress after a short delay
-      setTimeout(() => this.downloadProgress.next(0), 2000);
-    }
-  }
-
-  private handleConnectionChange(isOnline: boolean) {
-    this.isOffline = !isOnline;
-    if (isOnline) {
-      this.unavailableAudio.clear();
+      this.isDownloading.set(false);
+      setTimeout(() => this.downloadProgress.set(0), 2000);
     }
   }
 
   async checkAudioAvailability(audioPath: string): Promise<boolean> {
-    if (!this.isOffline) return true;
+    if (!this.isOffline()) return true;
 
     try {
       const cache = await caches.open('audio-cache');
@@ -1449,51 +1481,8 @@ export class LearningComponent implements OnInit, OnDestroy {
     }
   }
 
-  updateLanguages() {
-    this.fromLanguage = this.availableLanguages.find(
-      (lang) => lang.code === this.fromLanguageCode
-    );
-    this.toLanguage = this.availableLanguages.find(
-      (lang) => lang.code === this.toLanguageCode
-    );
+  // ---------- Misc ----------
 
-    localStorage.setItem(this.FROM_LANGUAGE_KEY, this.fromLanguageCode);
-    localStorage.setItem(this.TO_LANGUAGE_KEY, this.toLanguageCode);
-  }
-
-  onLanguageChange(type: 'from' | 'to', value: string) {
-    this.canResume = false;
-    if (type === 'from') {
-      this.fromLanguageCode = value;
-      // Save from language preference
-      localStorage.setItem(this.FROM_LANGUAGE_KEY, value);
-    } else {
-      this.toLanguageCode = value;
-      localStorage.setItem(this.TO_LANGUAGE_KEY, value);
-    }
-    this.updateLanguages();
-    this.router.navigate([
-      '/learn',
-      this.fromLanguageCode,
-      this.toLanguageCode,
-      this.category,
-    ]);
-  }
-
-  switchLanguages() {
-    const temp = this.fromLanguageCode;
-    this.fromLanguageCode = this.toLanguageCode;
-    this.toLanguageCode = temp;
-    this.updateLanguages();
-    this.router.navigate([
-      '/learn',
-      this.fromLanguageCode,
-      this.toLanguageCode,
-      this.category,
-    ]);
-  }
-
-  // Add a method to track settings changes
   private lastSettings = {
     wordRepeat: 1,
     loopRepeat: 2,
@@ -1502,47 +1491,27 @@ export class LearningComponent implements OnInit, OnDestroy {
 
   private settingsChanged(): boolean {
     const changed =
-      this.wordRepeat !== this.lastSettings.wordRepeat ||
-      this.loopRepeat !== this.lastSettings.loopRepeat ||
-      this.playBothLanguages !== this.lastSettings.playBothLanguages;
+      this.wordRepeat() !== this.lastSettings.wordRepeat ||
+      this.loopRepeat() !== this.lastSettings.loopRepeat ||
+      this.playBothLanguages() !== this.lastSettings.playBothLanguages;
 
-    // Update last settings
     this.lastSettings = {
-      wordRepeat: this.wordRepeat,
-      loopRepeat: this.loopRepeat,
-      playBothLanguages: this.playBothLanguages,
+      wordRepeat: this.wordRepeat(),
+      loopRepeat: this.loopRepeat(),
+      playBothLanguages: this.playBothLanguages(),
     };
 
     return changed;
   }
 
-  // Add a method to handle stop button click with additional safety
   @HostListener('document:visibilitychange')
-  async onVisibilityChange() {
-    if (document.hidden && this.isPlaying) {
+  async onVisibilityChange(): Promise<void> {
+    if (document.hidden && this.isPlaying()) {
       this.stopPlayback();
     }
 
-    if (this.wakeLock !== null && document.visibilityState === 'visible') {
+    if (this.screenLockActive() && document.visibilityState === 'visible') {
       await this.keepScreenOn();
     }
-  }
-
-  incrementValue(setting: 'wordRepeat' | 'loopRepeat') {
-    if (setting === 'wordRepeat') {
-      this.wordRepeat = Math.min(20, this.wordRepeat + 1);
-    } else {
-      this.loopRepeat = Math.min(20, this.loopRepeat + 1);
-    }
-    this.saveSettings();
-  }
-
-  decrementValue(setting: 'wordRepeat' | 'loopRepeat') {
-    if (setting === 'wordRepeat') {
-      this.wordRepeat = Math.max(1, this.wordRepeat - 1);
-    } else {
-      this.loopRepeat = Math.max(1, this.loopRepeat - 1);
-    }
-    this.saveSettings();
   }
 }

@@ -13,112 +13,152 @@ import { TranslatePipe } from '../../pipes/translate.pipe';
   imports: [CommonModule, FormsModule, TranslatePipe],
   template: `
     <div class="settings-container">
-      <h2>{{ 'settings.title' | translate }}</h2>
+      <h1>{{ 'settings.title' | translate }}</h1>
 
-      <div class="setting-item">
-        <label>{{ 'settings.uiLanguage' | translate }}</label>
-        <select [(ngModel)]="selectedUiLanguage" (ngModelChange)="onUiLanguageChange($event)">
-          @for (lang of translationService.supportedLanguages; track lang.code) {
-            <option [value]="lang.code">{{ lang.nativeName }} ({{ lang.name }})</option>
-          }
-        </select>
-      </div>
+      <section class="card">
+        <div class="setting-item">
+          <label for="ui-language-select">{{ 'settings.uiLanguage' | translate }}</label>
+          <select
+            id="ui-language-select"
+            [(ngModel)]="selectedUiLanguage"
+            (ngModelChange)="onUiLanguageChange($event)"
+          >
+            @for (lang of translationService.supportedLanguages; track lang.code) {
+              <option [value]="lang.code">{{ lang.nativeName }} ({{ lang.name }})</option>
+            }
+          </select>
+        </div>
 
-      <div class="setting-item">
-        <label>{{ 'settings.wordDelay' | translate }} {{ wordDelay() }}</label>
-        <input
-          type="range"
-          [min]="0"
-          [max]="3000"
-          [step]="50"
-          [ngModel]="wordDelay()"
-          (ngModelChange)="updateWordDelay($event)"
-        />
-      </div>
+        <div class="setting-item">
+          <label for="theme-select">{{ 'settings.theme' | translate }}</label>
+          <select id="theme-select" [(ngModel)]="selectedTheme" (ngModelChange)="onThemeChange($event)">
+            <option value="auto">{{ 'settings.themeAuto' | translate }}</option>
+            <option value="light">{{ 'settings.themeLight' | translate }}</option>
+            <option value="dark">{{ 'settings.themeDark' | translate }}</option>
+          </select>
+        </div>
+      </section>
 
-      <div class="setting-item">
-        <label>{{ 'settings.playbackSpeed' | translate }} {{ playbackSpeed() }}x</label>
-        <input
-          type="range"
-          [min]="0.5"
-          [max]="2"
-          [step]="0.1"
-          [ngModel]="playbackSpeed()"
-          (ngModelChange)="updatePlaybackSpeed($event)"
-        />
-      </div>
+      <section class="card">
+        <div class="setting-item">
+          <label for="word-delay">
+            {{ 'settings.wordDelay' | translate }}
+            <span class="value">{{ wordDelay() }}</span>
+          </label>
+          <input
+            id="word-delay"
+            type="range"
+            [min]="0"
+            [max]="3000"
+            [step]="50"
+            [ngModel]="wordDelay()"
+            (ngModelChange)="updateWordDelay($event)"
+          />
+        </div>
 
-      <div class="setting-item">
-        <label for="theme-select">{{ 'settings.theme' | translate }}</label>
-        <select id="theme-select" [(ngModel)]="selectedTheme" (ngModelChange)="onThemeChange($event)">
-          <option value="auto">{{ 'settings.themeAuto' | translate }}</option>
-          <option value="light">{{ 'settings.themeLight' | translate }}</option>
-          <option value="dark">{{ 'settings.themeDark' | translate }}</option>
-        </select>
-      </div>
+        <div class="setting-item">
+          <label for="playback-speed">
+            {{ 'settings.playbackSpeed' | translate }}
+            <span class="value">{{ playbackSpeed() }}x</span>
+          </label>
+          <input
+            id="playback-speed"
+            type="range"
+            [min]="0.5"
+            [max]="2"
+            [step]="0.1"
+            [ngModel]="playbackSpeed()"
+            (ngModelChange)="updatePlaybackSpeed($event)"
+          />
+        </div>
+      </section>
 
-      <div class="setting-item">
+      <section class="card actions">
         <button (click)="clearCache()" [disabled]="isClearingCache()">
           {{ isClearingCache() ? ('settings.clearing' | translate) : ('settings.clearCache' | translate) }}
         </button>
-        <span *ngIf="cacheMessage()" [class]="cacheMessageClass()">{{
-          cacheMessage()
-        }}</span>
-      </div>
-
-      <div class="setting-item">
-        <button (click)="settingsService.resetSettings()">{{ 'settings.resetSettings' | translate }}</button>
-      </div>
+        <button (click)="settingsService.resetSettings()">
+          {{ 'settings.resetSettings' | translate }}
+        </button>
+        @if (cacheMessage()) {
+          <span class="status" [class]="cacheMessageClass()">{{ cacheMessage() }}</span>
+        }
+      </section>
     </div>
   `,
   styles: [
     `
-      .settings-container {
-        max-width: 600px;
-        margin: 2rem auto;
-        padding: 0 1rem;
+      :host {
+        display: block;
       }
-      .setting-item {
-        margin: 2rem 0;
+      .settings-container {
+        max-width: 640px;
+        margin: 0 auto;
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+      }
+      h1 {
+        font-size: 1.75rem;
+        margin: 0 0 0.5rem;
+      }
+      .card {
+        display: flex;
+        flex-direction: column;
+      }
+      .card:hover {
+        box-shadow: var(--shadow-sm);
+        border-color: var(--border-color);
+      }
+      .setting-item + .setting-item {
+        margin-top: 1.25rem;
+        padding-top: 1.25rem;
+        border-top: 1px solid var(--border-color);
       }
       .setting-item label {
-        display: block;
-        margin-bottom: 0.5rem;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 1rem;
+        margin-bottom: 0.6rem;
+        font-weight: 500;
+      }
+      .value {
+        color: var(--primary-color);
+        font-weight: 600;
+        font-variant-numeric: tabular-nums;
+      }
+      select {
+        width: 100%;
+        cursor: pointer;
       }
       input[type='range'] {
         width: 100%;
-      }
-      button {
-        padding: 0.5rem 1rem;
-        margin-bottom: 0.5rem;
+        padding: 0;
+        border: none;
+        background: transparent;
+        accent-color: var(--primary-color);
         cursor: pointer;
       }
-      button:disabled {
-        cursor: not-allowed;
-        opacity: 0.7;
+      input[type='range']:focus {
+        box-shadow: none;
+      }
+      .actions {
+        flex-direction: row;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 0.75rem;
+      }
+      .status {
+        font-size: 0.9rem;
+        font-weight: 500;
       }
       .success {
-        color: green;
-        margin-inline-start: 1em;
+        color: var(--secondary-dark);
       }
       .error {
-        color: red;
-        margin-inline-start: 1em;
-      }
-      select {
-        font-size: 1.2rem;
-        padding: 0.5rem;
-        border-radius: 8px;
-        border: 2px solid rgba(99, 102, 241, 0.2);
-        background: var(--surface-color);
-        color: var(--text-color);
-        cursor: pointer;
-        transition: all 0.3s ease;
-      }
-      select:focus {
-        outline: none;
-        border-color: var(--primary-color);
-        box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+        color: var(--accent-color);
       }
     `,
   ],

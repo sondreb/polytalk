@@ -1,37 +1,35 @@
-import { Component, Input, Output, EventEmitter } from '@angular/core';
-import { RouterLink } from '@angular/router';
+import { Component, input, output } from '@angular/core';
+import { RouterLink, RouterLinkActive } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { TranslatePipe } from '../../pipes/translate.pipe';
 
 @Component({
   selector: 'app-navbar',
   standalone: true,
-  imports: [RouterLink, CommonModule, TranslatePipe],
+  imports: [RouterLink, RouterLinkActive, CommonModule, TranslatePipe],
   template: `
     <nav class="navbar">
       <div class="content-wrapper">
         <a routerLink="/home" class="brand">PolyTalk.Me</a>
         <div class="nav-links">
-          <a routerLink="/languages" class="nav-link">
+          <a routerLink="/languages" routerLinkActive="active" class="nav-link">
             <span class="full-text">{{ 'nav.languages' | translate }}</span>
             <span class="icon-only">🌐</span>
           </a>
-          <a routerLink="/blog" class="nav-link">
+          <a routerLink="/blog" routerLinkActive="active" class="nav-link">
             <span class="full-text">{{ 'nav.blog' | translate }}</span>
             <span class="icon-only">📝</span>
           </a>
-          <a routerLink="/settings" class="nav-link">
+          <a routerLink="/settings" routerLinkActive="active" class="nav-link">
             <span class="full-text">{{ 'nav.settings' | translate }}</span>
             <span class="icon-only">⚙️</span>
           </a>
-          <button
-            *ngIf="showInstall"
-            (click)="onInstallClick()"
-            class="install-button"
-          >
-            <span>{{ 'nav.install' | translate }}</span>
-            <span class="app-text">&nbsp;{{ 'nav.app' | translate }}</span>
-          </button>
+          @if (showInstall()) {
+            <button (click)="installClicked.emit()" class="install-button btn-primary">
+              <span>{{ 'nav.install' | translate }}</span>
+              <span class="app-text">&nbsp;{{ 'nav.app' | translate }}</span>
+            </button>
+          }
         </div>
       </div>
     </nav>
@@ -39,10 +37,10 @@ import { TranslatePipe } from '../../pipes/translate.pipe';
   styles: [
     `
       .navbar {
-        background: var(--surface-color);
-        backdrop-filter: blur(10px);
-        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-        padding: 1rem 0;
+        background: color-mix(in srgb, var(--surface-color) 85%, transparent);
+        backdrop-filter: blur(12px);
+        border-bottom: 1px solid var(--border-color);
+        padding: 0.75rem 0;
         position: sticky;
         top: 0;
         z-index: 100;
@@ -66,67 +64,44 @@ import { TranslatePipe } from '../../pipes/translate.pipe';
         flex-wrap: wrap;
         justify-content: flex-end;
       }
-      .nav-content {
-        max-width: 1200px;
-        margin: 0 auto;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-      }
       .brand {
-        font-size: 1.5rem;
-        font-weight: bold;
+        font-size: 1.4rem;
+        font-weight: 800;
+        letter-spacing: -0.02em;
         background: linear-gradient(
           135deg,
           var(--gradient-start),
           var(--gradient-end)
         );
         -webkit-background-clip: text;
+        background-clip: text;
         -webkit-text-fill-color: transparent;
         text-decoration: none;
         white-space: nowrap;
         flex-shrink: 0;
       }
       .nav-links a {
-        color: var(--text-color);
+        color: var(--text-light);
         text-decoration: none;
-        padding: 0.5rem 1rem;
-        border-radius: 8px;
-        transition: all 0.3s ease;
+        font-weight: 500;
+        padding: 0.5rem 0.9rem;
+        border-radius: var(--radius-sm);
+        transition: background var(--duration) var(--ease),
+          color var(--duration) var(--ease);
         white-space: nowrap;
       }
       .nav-links a:hover {
-        background: linear-gradient(
-          135deg,
-          var(--gradient-start),
-          var(--gradient-end)
-        );
-        color: white;
+        background: var(--primary-soft);
+        color: var(--primary-color);
+      }
+      .nav-links a.active {
+        color: var(--primary-color);
+        background: var(--primary-soft);
       }
       .install-button {
         margin-inline-start: 0.5rem;
-        background: linear-gradient(
-          135deg,
-          var(--gradient-start),
-          var(--gradient-end)
-        );
-        background-size: 200% 100%;
-        background-position: 0% 0%;
-        color: white;
-        padding: 0.5rem 1.5rem;
-        border-radius: 8px;
-        font-weight: 600;
-        transition: all 0.3s ease;
+        padding: 0.5rem 1.1rem;
         white-space: nowrap;
-      }
-      .install-button:hover {
-        background: linear-gradient(
-          135deg,
-          var(--secondary-color),
-          var(--secondary-dark)
-        );
-        background-size: 200% 100%;
-        background-position: 100% 0%;
       }
       .nav-link .icon-only {
         display: none;
@@ -142,7 +117,7 @@ import { TranslatePipe } from '../../pipes/translate.pipe';
           padding: 0 0.5rem;
         }
         .nav-links a {
-          padding: 0.5rem 0.5rem;
+          padding: 0.5rem 0.6rem;
         }
         .install-button {
           margin-inline-start: 0.25rem;
@@ -152,6 +127,7 @@ import { TranslatePipe } from '../../pipes/translate.pipe';
       @media (max-width: 550px) {
         .nav-link .icon-only {
           display: inline;
+          font-size: 1.15rem;
         }
         .nav-link .full-text {
           display: none;
@@ -160,18 +136,18 @@ import { TranslatePipe } from '../../pipes/translate.pipe';
           display: none;
         }
         .brand {
-          font-size: 1.25rem;
+          font-size: 1.2rem;
         }
       }
       @media (max-width: 350px) {
         .brand {
-          font-size: 1.1rem;
+          font-size: 1.05rem;
         }
         .nav-links {
           gap: 0.125rem;
         }
         .nav-links a {
-          padding: 0.4rem 0.4rem;
+          padding: 0.4rem;
         }
         .install-button {
           margin-inline-start: 0.125rem;
@@ -183,10 +159,6 @@ import { TranslatePipe } from '../../pipes/translate.pipe';
   ],
 })
 export class NavbarComponent {
-  @Input() showInstall = false;
-  @Output() installClicked = new EventEmitter<void>();
-
-  onInstallClick() {
-    this.installClicked.emit();
-  }
+  readonly showInstall = input(false);
+  readonly installClicked = output<void>();
 }

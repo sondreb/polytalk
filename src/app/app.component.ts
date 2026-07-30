@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, inject, signal } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { NavbarComponent } from './components/navbar/navbar.component';
@@ -12,12 +12,14 @@ import { TranslatePipe } from './pipes/translate.pipe';
   standalone: true,
   imports: [RouterOutlet, CommonModule, NavbarComponent, FooterComponent, TranslatePipe],
   template: `
-    <div *ngIf="updateService.updateAvailable()" class="update-banner">
-      {{ 'update.available' | translate }}
-      <button (click)="updateService.updateNow()">{{ 'update.now' | translate }}</button>
-    </div>
+    @if (updateService.updateAvailable()) {
+      <div class="update-banner">
+        {{ 'update.available' | translate }}
+        <button (click)="updateService.updateNow()">{{ 'update.now' | translate }}</button>
+      </div>
+    }
     <app-navbar
-      [showInstall]="showInstallPrompt"
+      [showInstall]="showInstallPrompt()"
       (installClicked)="installPwa()"
     />
     <main>
@@ -27,59 +29,12 @@ import { TranslatePipe } from './pipes/translate.pipe';
   `,
   styles: [
     `
-      .fullscreen-container {
-        position: relative;
-        width: 100vw;
-        height: 100vh;
-        overflow: hidden;
-      }
-
-      .fullscreen-container .logo {
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-      }
-
-      .fullscreen-container h1 {
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-        color: white;
-        font-size: 3rem;
-        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
-      }
-
-      .install-button {
-        position: fixed;
-        bottom: 20px;
-        inset-inline-end: 20px;
-        padding: 12px 24px;
-        background-color: #007bff;
-        color: white;
-        border: none;
-        border-radius: 24px;
-        font-size: 1.1rem;
-        cursor: pointer;
-        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
-        z-index: 1000;
-        transition: transform 0.2s;
-      }
-
-      .install-button:hover {
-        transform: scale(1.05);
-        background-color: #0056b3;
-      }
-
       main {
         flex: 1;
         width: 100%;
         max-width: 1200px;
         margin: 0 auto;
-        padding: 2rem;
+        padding: 2rem 1.5rem;
         display: flex;
         flex-direction: column;
         box-sizing: border-box;
@@ -93,7 +48,7 @@ import { TranslatePipe } from './pipes/translate.pipe';
 
       @media (max-width: 480px) {
         main {
-          padding: 0.5rem;
+          padding: 0.75rem;
         }
       }
 
@@ -139,18 +94,17 @@ import { TranslatePipe } from './pipes/translate.pipe';
   ],
 })
 export class AppComponent {
-  showInstallPrompt = false;
+  readonly updateService = inject(UpdateService);
+  private readonly themeService = inject(ThemeService);
+
+  readonly showInstallPrompt = signal(false);
   private deferredPrompt: any;
 
-  constructor(
-    public updateService: UpdateService,
-    private themeService: ThemeService
-  ) {
-
+  constructor() {
     window.addEventListener('beforeinstallprompt', (e) => {
       e.preventDefault();
       this.deferredPrompt = e;
-      this.showInstallPrompt = true;
+      this.showInstallPrompt.set(true);
     });
 
     this.themeService.applyTheme();
@@ -163,7 +117,7 @@ export class AppComponent {
     const { outcome } = await this.deferredPrompt.userChoice;
 
     if (outcome === 'accepted') {
-      this.showInstallPrompt = false;
+      this.showInstallPrompt.set(false);
     }
 
     this.deferredPrompt = null;

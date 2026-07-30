@@ -1,5 +1,5 @@
-import { Component, OnInit } from '@angular/core';
-import { RouterLink, Router, ActivatedRoute } from '@angular/router';
+import { Component } from '@angular/core';
+import { RouterLink } from '@angular/router';
 import { TranslatePipe } from '../../pipes/translate.pipe';
 
 @Component({
@@ -107,31 +107,29 @@ import { TranslatePipe } from '../../pipes/translate.pipe';
     `
       .hero {
         text-align: center;
-        padding: 8rem 1rem;
+        padding: 5rem 1.5rem;
         background: linear-gradient(
             125deg,
-            rgba(130, 80, 255, 0.15) 0%,
-            rgba(255, 110, 110, 0.15) 30%,
-            rgba(80, 200, 255, 0.15) 100%
+            rgba(130, 80, 255, 0.16) 0%,
+            rgba(255, 110, 110, 0.12) 45%,
+            rgba(80, 200, 255, 0.16) 100%
           ),
           radial-gradient(
             circle at top right,
-            rgba(255, 170, 100, 0.12) 0%,
-            rgba(130, 80, 255, 0.08) 50%,
-            transparent 100%
+            rgba(255, 170, 100, 0.14) 0%,
+            transparent 60%
           ),
           radial-gradient(
             circle at bottom left,
-            rgba(80, 200, 255, 0.15) 0%,
-            rgba(130, 80, 255, 0.1) 50%,
-            transparent 100%
+            rgba(80, 200, 255, 0.16) 0%,
+            transparent 60%
           );
-        border-radius: 32px;
-        margin: 2rem 0;
+        border-radius: var(--radius-xl);
+        border: 1px solid var(--border-color);
+        margin: 0 0 4rem;
         position: relative;
         overflow: hidden;
-        box-shadow: inset 0 0 100px rgba(130, 80, 255, 0.1),
-          0 10px 40px rgba(130, 80, 255, 0.1);
+        box-shadow: var(--shadow-sm);
       }
 
       .hero::before {
@@ -164,45 +162,62 @@ import { TranslatePipe } from '../../pipes/translate.pipe';
       }
 
       .features.grid {
-        margin: 6rem auto;
+        margin: 0 auto 4rem;
         display: grid;
         grid-template-columns: repeat(3, 1fr);
-        gap: 2.5rem;
+        gap: 1.5rem;
         max-width: 1200px;
-        padding: 0 1rem;
       }
 
       .card {
-        padding: 2.5rem 2rem;
+        padding: 2rem 1.5rem;
         text-align: center;
         background: var(--surface-color);
-        border-radius: 24px;
-        border: 1px solid rgba(99, 102, 241, 0.1);
-        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        border-radius: var(--radius-lg);
+        border: 1px solid var(--border-color);
+        transition: transform var(--duration) var(--ease),
+          box-shadow var(--duration) var(--ease),
+          border-color var(--duration) var(--ease);
         position: relative;
       }
 
+      .card h2 {
+        font-size: 1.15rem;
+        margin: 0 0 0.5rem;
+      }
+
+      .card p {
+        margin: 0;
+        color: var(--text-light);
+        font-size: 0.95rem;
+      }
+
       .card:hover {
-        transform: translateY(-8px);
-        box-shadow: 0 20px 40px rgba(99, 102, 241, 0.2);
-        border-color: rgba(99, 102, 241, 0.2);
+        transform: translateY(-4px);
+        box-shadow: var(--shadow-lg);
+        border-color: var(--primary-color);
       }
 
       .icon {
-        font-size: 2.5rem;
-        margin-bottom: 1.5rem;
-        display: inline-block;
-        transform: scale(1);
-        transition: transform 0.3s ease;
+        font-size: 2rem;
+        margin-bottom: 1rem;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 56px;
+        height: 56px;
+        border-radius: var(--radius-lg);
+        background: var(--primary-soft);
+        transition: transform var(--duration) var(--ease);
       }
 
       .card:hover .icon {
-        transform: scale(1.2);
+        transform: scale(1.08);
       }
 
       h1 {
-        font-size: 4rem;
-        line-height: 1.2;
+        font-size: 3.25rem;
+        line-height: 1.1;
         font-weight: 800;
         background: linear-gradient(
           135deg,
@@ -210,16 +225,18 @@ import { TranslatePipe } from '../../pipes/translate.pipe';
           var(--gradient-end)
         );
         -webkit-background-clip: text;
+        background-clip: text;
         -webkit-text-fill-color: transparent;
-        margin-bottom: 2rem;
-        padding-bottom: 0.2em;
+        margin: 0 0 1.5rem;
+        padding-bottom: 0.15em;
       }
 
       .hero p {
-        font-size: 1.4rem;
-        margin-bottom: 2.5rem;
-        color: var(--text-color);
-        opacity: 0.9;
+        font-size: 1.15rem;
+        line-height: 1.6;
+        max-width: 46rem;
+        margin: 0 auto 2rem;
+        color: var(--text-light);
       }
 
       .cta-buttons {
@@ -232,12 +249,12 @@ import { TranslatePipe } from '../../pipes/translate.pipe';
       .cta-button {
         display: inline-flex;
         align-items: center;
-        padding: 1.2rem 3rem;
+        padding: 0.95rem 2.25rem;
         text-decoration: none;
-        border-radius: 16px;
-        font-size: 1.2rem;
+        border-radius: var(--radius-md);
+        font-size: 1.05rem;
         font-weight: 600;
-        transition: all 0.3s ease;
+        transition: all var(--duration) var(--ease);
       }
 
       .cta-button.primary {
@@ -247,14 +264,13 @@ import { TranslatePipe } from '../../pipes/translate.pipe';
           var(--gradient-end)
         );
         color: white;
-        box-shadow: 0 8px 20px rgba(99, 102, 241, 0.3);
+        box-shadow: var(--shadow-brand);
       }
 
       .cta-button.secondary {
-        background: transparent;
+        background: var(--surface-color);
         color: var(--text-color);
-        border: 2px solid var(--text-color);
-        opacity: 0.8;
+        border: 1px solid var(--border-strong);
       }
 
       .cta-button:hover {
@@ -266,9 +282,8 @@ import { TranslatePipe } from '../../pipes/translate.pipe';
       }
 
       .cta-button.secondary:hover {
-        opacity: 1;
-        border-color: var(--gradient-end);
-        color: var(--gradient-end);
+        border-color: var(--primary-color);
+        color: var(--primary-color);
       }
 
       .arrow {
@@ -286,15 +301,22 @@ import { TranslatePipe } from '../../pipes/translate.pipe';
 
       .store-banners {
         max-width: 1000px;
-        margin: 4rem auto;
+        margin: 0 auto 3rem;
         display: grid;
         grid-template-columns: 1fr 1fr;
-        gap: 2rem;
+        gap: 1.5rem;
       }
 
       .store-banner {
-        border-radius: 24px;
-        padding: 2rem;
+        border-radius: var(--radius-lg);
+        padding: 1.5rem;
+        transition: transform var(--duration) var(--ease),
+          box-shadow var(--duration) var(--ease);
+      }
+
+      .store-banner:hover {
+        transform: translateY(-3px);
+        box-shadow: var(--shadow-lg);
       }
 
       .store-banner.microsoft {
@@ -317,7 +339,7 @@ import { TranslatePipe } from '../../pipes/translate.pipe';
       }
 
       .store-text h3 {
-        font-size: 1.5rem;
+        font-size: 1.25rem;
         margin: 0;
         font-weight: 600;
       }
@@ -351,66 +373,40 @@ import { TranslatePipe } from '../../pipes/translate.pipe';
       }
 
       .disclaimer {
-        margin-top: 3rem;
+        margin: 0 auto;
         padding: 1rem;
         text-align: center;
-        color: var(--text-color);
-        opacity: 0.8;
-        font-size: 0.9rem;
+        color: var(--text-light);
+        font-size: 0.85rem;
+        line-height: 1.6;
         max-width: 800px;
-        margin-left: auto;
-        margin-right: auto;
       }
 
       @media (max-width: 768px) {
         .hero {
-          padding: 4rem 1rem;
+          padding: 3rem 1rem;
+          margin-bottom: 2.5rem;
         }
 
         h1 {
-          font-size: 2.5rem;
+          font-size: 2.25rem;
         }
 
         .hero p {
-          font-size: 1.2rem;
+          font-size: 1.05rem;
         }
 
         .features.grid {
           grid-template-columns: 1fr;
-          gap: 1.5rem;
-          margin: 3rem auto;
+          gap: 1rem;
+          margin-bottom: 2.5rem;
         }
 
         .card {
-          padding: 2rem 1.5rem;
+          padding: 1.5rem 1.25rem;
         }
       }
     `,
   ],
 })
-export class HomeComponent implements OnInit {
-  constructor(private router: Router, private route: ActivatedRoute) {}
-
-  ngOnInit() {
-    // Check if we're accessing home directly (not through navigation)
-    if (this.route.snapshot.queryParams['direct'] !== 'true') {
-      const fromLang = localStorage.getItem('lastFromLanguage');
-      const toLang = localStorage.getItem('lastToLanguage');
-
-      if (fromLang && toLang) {
-        this.router.navigate(['/learn'], {
-          queryParams: {
-            from: fromLang,
-            to: toLang,
-          },
-        });
-      }
-    }
-  }
-
-  // Static method to store language preferences
-  static storeLanguagePreference(fromLang: string, toLang: string) {
-    localStorage.setItem('lastFromLanguage', fromLang);
-    localStorage.setItem('lastToLanguage', toLang);
-  }
-}
+export class HomeComponent {}

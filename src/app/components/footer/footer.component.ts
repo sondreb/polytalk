@@ -22,9 +22,9 @@ import { TranslatePipe } from '../../pipes/translate.pipe';
     `
       footer {
         width: 100%;
-        padding: 1rem;
+        padding: 1.5rem 1rem;
         background: var(--surface-color);
-        border-top: 1px solid rgba(99, 102, 241, 0.1);
+        border-top: 1px solid var(--border-color);
         box-sizing: border-box;
         flex-shrink: 0;
       }
@@ -36,13 +36,17 @@ import { TranslatePipe } from '../../pipes/translate.pipe';
         box-sizing: border-box;
       }
       nav {
-        margin-bottom: 1rem;
+        display: flex;
+        justify-content: center;
+        flex-wrap: wrap;
+        gap: 1.5rem;
+        margin-bottom: 0.75rem;
       }
       nav a {
-        margin: 0 1rem;
         color: var(--text-light);
         text-decoration: none;
-        transition: color 0.3s;
+        font-size: 0.9rem;
+        transition: color var(--duration) var(--ease);
       }
       nav a:hover {
         color: var(--primary-color);
@@ -52,7 +56,7 @@ import { TranslatePipe } from '../../pipes/translate.pipe';
         margin: 0;
       }
       .copyright {
-        font-size: 0.875rem; /* 14px when base font-size is 16px */
+        font-size: 0.85rem;
         color: var(--text-light);
       }
     `,

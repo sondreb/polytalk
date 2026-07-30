@@ -1,23 +1,79 @@
-/* You can add global styles to this file, and also import other style files */
+/* ==========================================================================
+   PolyTalk — global styles & design tokens
+   ========================================================================== */
 
-/* Custom Scrollbar Styles */
 :root {
+  /* Brand */
   --primary-color: #6366f1;
   --primary-dark: #4f46e5;
   --secondary-color: #10b981;
   --secondary-dark: #059669;
-  --background-color: #f8fafc;
-  --surface-color: #ffffff;
-  --text-color: #1e293b;
-  --text-light: #64748b;
   --accent-color: #f43f5e;
   --gradient-start: #6366f1;
   --gradient-end: #8b5cf6;
-  color-scheme: light;  /* This tells browsers to use their native light scrollbars */
+
+  /* Light palette (default) */
+  --light-background-color: #f6f7fb;
+  --light-surface-color: #ffffff;
+  --light-surface-muted: #f1f3f9;
+  --light-text-color: #101828;
+  --light-text-light: #667085;
+  --light-border-color: rgba(16, 24, 40, 0.09);
+  --light-border-strong: rgba(16, 24, 40, 0.16);
+  --light-overlay: rgba(16, 24, 40, 0.45);
+
+  /* Dark palette */
+  --dark-background-color: #0f1420;
+  --dark-surface-color: #171d2b;
+  --dark-surface-muted: #1f2637;
+  --dark-text-color: #eef1f7;
+  --dark-text-light: #98a2b3;
+  --dark-border-color: rgba(255, 255, 255, 0.09);
+  --dark-border-strong: rgba(255, 255, 255, 0.18);
+  --dark-overlay: rgba(0, 0, 0, 0.6);
+
+  /* Active theme (light by default) */
+  --background-color: var(--light-background-color);
+  --surface-color: var(--light-surface-color);
+  --surface-muted: var(--light-surface-muted);
+  --text-color: var(--light-text-color);
+  --text-light: var(--light-text-light);
+  --border-color: var(--light-border-color);
+  --border-strong: var(--light-border-strong);
+  --overlay-color: var(--light-overlay);
+
+  /* Tinted brand surfaces (work on both themes) */
+  --primary-soft: rgba(99, 102, 241, 0.1);
+  --primary-soft-hover: rgba(99, 102, 241, 0.18);
+
+  /* Radii */
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 16px;
+  --radius-xl: 24px;
+  --radius-pill: 999px;
+
+  /* Elevation */
+  --shadow-sm: 0 1px 2px rgba(16, 24, 40, 0.06);
+  --shadow-md: 0 4px 12px rgba(16, 24, 40, 0.08);
+  --shadow-lg: 0 12px 32px rgba(16, 24, 40, 0.12);
+  --shadow-brand: 0 8px 20px rgba(99, 102, 241, 0.28);
+
+  /* Motion */
+  --ease: cubic-bezier(0.4, 0, 0.2, 1);
+  --duration: 0.2s;
+
+  color-scheme: light;
 }
 
-*, *::before, *::after {
+*,
+*::before,
+*::after {
   box-sizing: border-box;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
 }
 
 body {
@@ -27,17 +83,26 @@ body {
   padding: 0;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, Roboto,
-    "Helvetica Neue", Arial, sans-serif;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, Roboto,
+    'Helvetica Neue', Arial, sans-serif;
   background-color: var(--background-color);
   color: var(--text-color);
+  transition: background-color var(--duration) var(--ease),
+    color var(--duration) var(--ease);
 }
 
-/* Add global link styles */
+h1,
+h2,
+h3,
+h4 {
+  line-height: 1.25;
+  letter-spacing: -0.015em;
+}
+
 a {
   color: var(--primary-color);
   text-decoration: none;
-  transition: color 0.3s ease;
+  transition: color var(--duration) var(--ease);
 }
 
 a:hover {
@@ -48,49 +113,119 @@ a:visited {
   color: var(--primary-color);
 }
 
+/* Base button: neutral by default, opt into brand styling with .btn-primary */
 button {
-  font-size: 16px;
-  padding: 12px 24px;
+  font: inherit;
+  font-weight: 600;
+  padding: 0.65rem 1.15rem;
+  color: var(--text-color);
+  background: var(--surface-muted);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  transition: background var(--duration) var(--ease),
+    border-color var(--duration) var(--ease), color var(--duration) var(--ease),
+    box-shadow var(--duration) var(--ease), transform var(--duration) var(--ease);
+}
+
+button:hover:not(:disabled) {
+  background: var(--primary-soft);
+  border-color: var(--border-strong);
+}
+
+button:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+.btn-primary {
   background: linear-gradient(
     135deg,
     var(--gradient-start),
     var(--gradient-end)
   );
-  color: white;
-  border: none;
-  border-radius: 12px;
-  cursor: pointer;
-  font-weight: 600;
-  transition: all 0.3s ease;
+  color: #fff;
+  border-color: transparent;
+  box-shadow: var(--shadow-brand);
 }
 
-button:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(99, 102, 241, 0.2);
+.btn-primary:hover:not(:disabled) {
+  background: linear-gradient(
+    135deg,
+    var(--gradient-start),
+    var(--gradient-end)
+  );
+  border-color: transparent;
+  transform: translateY(-1px);
+  filter: brightness(1.05);
+}
+
+/* Consistent, visible keyboard focus everywhere */
+:focus-visible {
+  outline: 2px solid var(--primary-color);
+  outline-offset: 2px;
+}
+
+input,
+select,
+textarea {
+  font: inherit;
+  color: var(--text-color);
+  background: var(--surface-color);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  padding: 0.55rem 0.75rem;
+  transition: border-color var(--duration) var(--ease),
+    box-shadow var(--duration) var(--ease);
+}
+
+input:focus,
+select:focus,
+textarea:focus {
+  outline: none;
+  border-color: var(--primary-color);
+  box-shadow: 0 0 0 3px var(--primary-soft);
 }
 
 .card {
   background: var(--surface-color);
-  border-radius: 16px;
+  border-radius: var(--radius-lg);
   padding: 1.5rem;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05), 0 10px 15px -3px rgba(0, 0, 0, 0.1);
-  border: 1px solid rgba(99, 102, 241, 0.1);
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  box-shadow: var(--shadow-sm);
+  border: 1px solid var(--border-color);
+  transition: transform var(--duration) var(--ease),
+    box-shadow var(--duration) var(--ease),
+    border-color var(--duration) var(--ease);
 }
 
 .card:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 8px 12px rgba(0, 0, 0, 0.1), 0 20px 25px -5px rgba(0, 0, 0, 0.1);
-}
-
-.learning-card {
-  padding: 0.4rem;
+  box-shadow: var(--shadow-md);
+  border-color: var(--border-strong);
 }
 
 .grid {
   display: grid;
   gap: 1.5rem;
   grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+}
+
+/* Visually hidden but available to screen readers */
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* Scrollbars */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: var(--border-strong) transparent;
 }
 
 @media (max-width: 768px) {
@@ -103,25 +238,16 @@ button:hover {
   }
 }
 
-/* CSS variables for light and dark themes */
-:root {
-  --light-background-color: #f8fafc;
-  --light-surface-color: #ffffff;
-  --light-text-color: #1e293b;
-  --light-text-light: #64748b;
-
-  --dark-background-color: #1e293b;
-  --dark-surface-color: #2d3748;
-  --dark-text-color: #f8fafc;
-  --dark-text-light: #a0aec0;
-}
-
 /* Light theme */
 body.light-theme {
   --background-color: var(--light-background-color);
   --surface-color: var(--light-surface-color);
+  --surface-muted: var(--light-surface-muted);
   --text-color: var(--light-text-color);
   --text-light: var(--light-text-light);
+  --border-color: var(--light-border-color);
+  --border-strong: var(--light-border-strong);
+  --overlay-color: var(--light-overlay);
   color-scheme: light;
 }
 
@@ -129,12 +255,33 @@ body.light-theme {
 body.dark-theme {
   --background-color: var(--dark-background-color);
   --surface-color: var(--dark-surface-color);
+  --surface-muted: var(--dark-surface-muted);
   --text-color: var(--dark-text-color);
   --text-light: var(--dark-text-light);
+  --border-color: var(--dark-border-color);
+  --border-strong: var(--dark-border-strong);
+  --overlay-color: var(--dark-overlay);
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.4);
+  --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.45);
+  --shadow-lg: 0 12px 32px rgba(0, 0, 0, 0.55);
+  --primary-soft: rgba(129, 140, 248, 0.16);
+  --primary-soft-hover: rgba(129, 140, 248, 0.26);
   color-scheme: dark;
 }
 
+/* Cookie consent bar (third-party widget) — keep its own contrast intact */
+#cconsent-bar button {
+  border-radius: var(--radius-sm);
+  font-weight: 600;
+}
 
-.consent-give {
-  color: white !important;
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
 }
