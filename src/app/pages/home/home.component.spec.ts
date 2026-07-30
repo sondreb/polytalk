@@ -32,11 +32,6 @@ describe('HomeComponent', () => {
     expect(compiled.querySelector('.cta-button.primary')?.textContent).toContain('Start Learning');
   });
 
-  it('should render read blog button', () => {
-    const compiled = fixture.nativeElement as HTMLElement;
-    expect(compiled.querySelector('.cta-button.secondary')?.textContent).toContain('Read Blog');
-  });
-
   it('should render features section', () => {
     const compiled = fixture.nativeElement as HTMLElement;
     expect(compiled.querySelector('.features')?.textContent).toContain('Words');

@@ -14,11 +14,6 @@ describe('PolyTalk App', () => {
     expect(element(by.css('app-about h1')).getText()).toEqual('About PolyTalk');
   });
 
-  it('should navigate to the Blog page', () => {
-    element(by.css('a[routerLink="/blog"]')).click();
-    expect(element(by.css('app-blog h1')).getText()).toEqual('Blog');
-  });
-
   it('should navigate to the Language Selection page', () => {
     element(by.css('a[routerLink="/languages"]')).click();
     expect(element(by.css('app-language-selection h1')).getText()).toEqual('Select a Language');

@@ -16,10 +16,6 @@ import { TranslatePipe } from '../../pipes/translate.pipe';
             {{ 'home.startLearning' | translate }}
             <span class="arrow">→</span>
           </a>
-          <a routerLink="/blog" class="cta-button secondary">
-            {{ 'home.readBlog' | translate }}
-            <span class="arrow">→</span>
-          </a>
         </div>
       </div>
     </div>

@@ -301,22 +301,6 @@ const screenshots: ScreenshotConfig[] = [
     delay: 800,
   },
 
-  // ═══════════════════════════════════════════════
-  // BLOG
-  // ═══════════════════════════════════════════════
-  {
-    name: '21-blog-desktop',
-    url: '/blog',
-    viewport: { width: 1280, height: 800 },
-    delay: 1500,
-  },
-  {
-    name: '22-blog-desktop-dark',
-    url: '/blog',
-    viewport: { width: 1280, height: 800 },
-    darkMode: true,
-    delay: 1500,
-  },
 ];
 
 async function generateScreenshots() {

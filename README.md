@@ -40,25 +40,6 @@
 
 0.0.1 - Initial release with 39 languages supported. Available on Microsoft Store.
 
-## Blog Section
-
-The app now includes a 'Blog' section focused on language, cultures, learning basic translations, and travel logs. The blog section includes:
-
-* Articles on effective language learning techniques
-* Tips for memorizing vocabulary and grammar rules
-* Reviews of language learning apps and tools
-* Interviews with polyglots and language experts
-* Articles about cultural customs and traditions from different countries
-* Travel guides and tips for language learners
-* Personal travel stories and experiences
-* Recommendations for cultural events and festivals
-* Lists of essential phrases and vocabulary for travelers
-* Practical language guides for specific situations (e.g., ordering food, asking for directions)
-* Audio recordings of native speakers pronouncing common phrases
-* Interactive language exercises and quizzes
-
-Blog content is managed as static files within the `src/assets/blog` directory, with each blog post as a markdown file.
-
 ## Development server
 
 Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The application will automatically reload if you change any of the source files.

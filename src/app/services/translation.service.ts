@@ -121,7 +121,6 @@ export class TranslationService {
 const EN_TRANSLATIONS: TranslationKeys = {
   // Navbar
   'nav.languages': 'Languages',
-  'nav.blog': 'Blog',
   'nav.settings': 'Settings',
   'nav.install': 'Install',
   'nav.app': 'App',
@@ -129,9 +128,8 @@ const EN_TRANSLATIONS: TranslationKeys = {
   // Home
   'home.title': 'Learn Any Language with PolyTalk',
   'home.subtitle':
-    'Master basic words, numbers, and essential phrases in any language, and learn more about language learning tips and tricks on our blog.',
+    'Master basic words, numbers, and essential phrases in any language, and learn more about language learning tips and tricks.',
   'home.startLearning': 'Start Learning',
-  'home.readBlog': 'Read Blog',
   'home.words': 'Words',
   'home.wordsDesc': 'Learn essential vocabulary with native pronunciation',
   'home.numbers': 'Numbers',
@@ -224,15 +222,6 @@ const EN_TRANSLATIONS: TranslationKeys = {
   'about.contactGithub': 'For support or inquiries, please visit our',
   'about.githubRepo': 'GitHub repository',
   'about.followX': 'Follow us on X:',
-
-  // Blog
-  'blog.loading': 'Loading posts...',
-  'blog.noPosts': 'No blog posts found.',
-  'blog.readMore': 'Read more...',
-  'blog.loadingPost': 'Loading post...',
-  'blog.backToBlog': 'Back to Blog',
-  'blog.loadError': 'Failed to load blog posts. Please try again later.',
-  'blog.postLoadError': 'Failed to load blog post. Please try again later.',
 };
 
 // =============================================================================
@@ -240,15 +229,13 @@ const EN_TRANSLATIONS: TranslationKeys = {
 // =============================================================================
 const ES_TRANSLATIONS: TranslationKeys = {
   'nav.languages': 'Idiomas',
-  'nav.blog': 'Blog',
   'nav.settings': 'Ajustes',
   'nav.install': 'Instalar',
   'nav.app': 'App',
   'home.title': 'Aprende Cualquier Idioma con PolyTalk',
   'home.subtitle':
-    'Domina palabras básicas, números y frases esenciales en cualquier idioma, y aprende más sobre consejos y trucos de aprendizaje de idiomas en nuestro blog.',
+    'Domina palabras básicas, números y frases esenciales en cualquier idioma, y aprende más sobre consejos y trucos de aprendizaje de idiomas.',
   'home.startLearning': 'Empezar a Aprender',
-  'home.readBlog': 'Leer Blog',
   'home.words': 'Palabras',
   'home.wordsDesc': 'Aprende vocabulario esencial con pronunciación nativa',
   'home.numbers': 'Números',
@@ -329,13 +316,6 @@ const ES_TRANSLATIONS: TranslationKeys = {
   'about.contactGithub': 'Para soporte o consultas, visita nuestro',
   'about.githubRepo': 'repositorio de GitHub',
   'about.followX': 'Síguenos en X:',
-  'blog.loading': 'Cargando publicaciones...',
-  'blog.noPosts': 'No se encontraron publicaciones.',
-  'blog.readMore': 'Leer más...',
-  'blog.loadingPost': 'Cargando publicación...',
-  'blog.backToBlog': 'Volver al Blog',
-  'blog.loadError': 'Error al cargar las publicaciones. Inténtalo de nuevo más tarde.',
-  'blog.postLoadError': 'Error al cargar la publicación. Inténtalo de nuevo más tarde.',
 };
 
 // =============================================================================
@@ -343,15 +323,13 @@ const ES_TRANSLATIONS: TranslationKeys = {
 // =============================================================================
 const FR_TRANSLATIONS: TranslationKeys = {
   'nav.languages': 'Langues',
-  'nav.blog': 'Blog',
   'nav.settings': 'Paramètres',
   'nav.install': 'Installer',
   'nav.app': 'App',
   'home.title': 'Apprenez N\'importe Quelle Langue avec PolyTalk',
   'home.subtitle':
-    'Maîtrisez les mots de base, les chiffres et les phrases essentielles dans n\'importe quelle langue, et découvrez nos conseils et astuces d\'apprentissage sur notre blog.',
+    'Maîtrisez les mots de base, les chiffres et les phrases essentielles dans n\'importe quelle langue, et découvrez nos conseils et astuces d\'apprentissage des langues.',
   'home.startLearning': 'Commencer à Apprendre',
-  'home.readBlog': 'Lire le Blog',
   'home.words': 'Mots',
   'home.wordsDesc': 'Apprenez le vocabulaire essentiel avec la prononciation native',
   'home.numbers': 'Chiffres',
@@ -432,13 +410,6 @@ const FR_TRANSLATIONS: TranslationKeys = {
   'about.contactGithub': 'Pour le support ou les questions, visitez notre',
   'about.githubRepo': 'dépôt GitHub',
   'about.followX': 'Suivez-nous sur X :',
-  'blog.loading': 'Chargement des articles...',
-  'blog.noPosts': 'Aucun article trouvé.',
-  'blog.readMore': 'Lire la suite...',
-  'blog.loadingPost': 'Chargement de l\'article...',
-  'blog.backToBlog': 'Retour au Blog',
-  'blog.loadError': 'Échec du chargement des articles. Veuillez réessayer plus tard.',
-  'blog.postLoadError': 'Échec du chargement de l\'article. Veuillez réessayer plus tard.',
 };
 
 // =============================================================================
@@ -446,15 +417,13 @@ const FR_TRANSLATIONS: TranslationKeys = {
 // =============================================================================
 const DE_TRANSLATIONS: TranslationKeys = {
   'nav.languages': 'Sprachen',
-  'nav.blog': 'Blog',
   'nav.settings': 'Einstellungen',
   'nav.install': 'Installieren',
   'nav.app': 'App',
   'home.title': 'Lerne Jede Sprache mit PolyTalk',
   'home.subtitle':
-    'Meistere grundlegende Wörter, Zahlen und wichtige Sätze in jeder Sprache und erfahre mehr über Tipps und Tricks zum Sprachenlernen in unserem Blog.',
+    'Meistere grundlegende Wörter, Zahlen und wichtige Sätze in jeder Sprache und erfahre mehr über Tipps und Tricks zum Sprachenlernen.',
   'home.startLearning': 'Lernen Starten',
-  'home.readBlog': 'Blog Lesen',
   'home.words': 'Wörter',
   'home.wordsDesc': 'Lerne wichtigen Wortschatz mit muttersprachlicher Aussprache',
   'home.numbers': 'Zahlen',
@@ -535,13 +504,6 @@ const DE_TRANSLATIONS: TranslationKeys = {
   'about.contactGithub': 'Für Support oder Anfragen, besuche unser',
   'about.githubRepo': 'GitHub-Repository',
   'about.followX': 'Folge uns auf X:',
-  'blog.loading': 'Beiträge werden geladen...',
-  'blog.noPosts': 'Keine Blogbeiträge gefunden.',
-  'blog.readMore': 'Weiterlesen...',
-  'blog.loadingPost': 'Beitrag wird geladen...',
-  'blog.backToBlog': 'Zurück zum Blog',
-  'blog.loadError': 'Fehler beim Laden der Beiträge. Bitte versuche es später erneut.',
-  'blog.postLoadError': 'Fehler beim Laden des Beitrags. Bitte versuche es später erneut.',
 };
 
 // =============================================================================
@@ -549,15 +511,13 @@ const DE_TRANSLATIONS: TranslationKeys = {
 // =============================================================================
 const ZH_TRANSLATIONS: TranslationKeys = {
   'nav.languages': '语言',
-  'nav.blog': '博客',
   'nav.settings': '设置',
   'nav.install': '安装',
   'nav.app': '应用',
   'home.title': '用 PolyTalk 学习任何语言',
   'home.subtitle':
-    '掌握任何语言的基本单词、数字和必要短语，并在我们的博客上了解更多语言学习的技巧。',
+    '掌握任何语言的基本单词、数字和必要短语，并了解更多语言学习技巧。',
   'home.startLearning': '开始学习',
-  'home.readBlog': '阅读博客',
   'home.words': '单词',
   'home.wordsDesc': '通过母语发音学习基本词汇',
   'home.numbers': '数字',
@@ -637,13 +597,6 @@ const ZH_TRANSLATIONS: TranslationKeys = {
   'about.contactGithub': '如需支持或咨询，请访问我们的',
   'about.githubRepo': 'GitHub 仓库',
   'about.followX': '在 X 上关注我们：',
-  'blog.loading': '正在加载文章...',
-  'blog.noPosts': '未找到博客文章。',
-  'blog.readMore': '阅读更多...',
-  'blog.loadingPost': '正在加载文章...',
-  'blog.backToBlog': '返回博客',
-  'blog.loadError': '加载文章失败，请稍后重试。',
-  'blog.postLoadError': '加载文章失败，请稍后重试。',
 };
 
 // =============================================================================
@@ -651,15 +604,13 @@ const ZH_TRANSLATIONS: TranslationKeys = {
 // =============================================================================
 const JA_TRANSLATIONS: TranslationKeys = {
   'nav.languages': '言語',
-  'nav.blog': 'ブログ',
   'nav.settings': '設定',
   'nav.install': 'インストール',
   'nav.app': 'アプリ',
   'home.title': 'PolyTalkでどんな言語も学ぼう',
   'home.subtitle':
-    'どんな言語でも基本的な単語、数字、重要なフレーズをマスターし、ブログで言語学習のヒントやコツを学びましょう。',
+    'どんな言語でも基本的な単語、数字、重要なフレーズをマスターし、言語学習のヒントやコツをもっと学びましょう。',
   'home.startLearning': '学習を始める',
-  'home.readBlog': 'ブログを読む',
   'home.words': '単語',
   'home.wordsDesc': 'ネイティブの発音で基本語彙を学ぶ',
   'home.numbers': '数字',
@@ -739,13 +690,6 @@ const JA_TRANSLATIONS: TranslationKeys = {
   'about.contactGithub': 'サポートやお問い合わせは、こちらをご覧ください',
   'about.githubRepo': 'GitHubリポジトリ',
   'about.followX': 'Xでフォロー：',
-  'blog.loading': '記事を読み込み中...',
-  'blog.noPosts': 'ブログ記事が見つかりません。',
-  'blog.readMore': '続きを読む...',
-  'blog.loadingPost': '記事を読み込み中...',
-  'blog.backToBlog': 'ブログに戻る',
-  'blog.loadError': '記事の読み込みに失敗しました。後でもう一度お試しください。',
-  'blog.postLoadError': '記事の読み込みに失敗しました。後でもう一度お試しください。',
 };
 
 // =============================================================================
@@ -753,15 +697,13 @@ const JA_TRANSLATIONS: TranslationKeys = {
 // =============================================================================
 const PT_TRANSLATIONS: TranslationKeys = {
   'nav.languages': 'Idiomas',
-  'nav.blog': 'Blog',
   'nav.settings': 'Configurações',
   'nav.install': 'Instalar',
   'nav.app': 'App',
   'home.title': 'Aprenda Qualquer Idioma com o PolyTalk',
   'home.subtitle':
-    'Domine palavras básicas, números e frases essenciais em qualquer idioma, e aprenda mais sobre dicas e truques de aprendizado de idiomas no nosso blog.',
+    'Domine palavras básicas, números e frases essenciais em qualquer idioma, e aprenda mais sobre dicas e truques de aprendizado de idiomas.',
   'home.startLearning': 'Começar a Aprender',
-  'home.readBlog': 'Ler Blog',
   'home.words': 'Palavras',
   'home.wordsDesc': 'Aprenda vocabulário essencial com pronúncia nativa',
   'home.numbers': 'Números',
@@ -842,13 +784,6 @@ const PT_TRANSLATIONS: TranslationKeys = {
   'about.contactGithub': 'Para suporte ou dúvidas, visite nosso',
   'about.githubRepo': 'repositório GitHub',
   'about.followX': 'Siga-nos no X:',
-  'blog.loading': 'Carregando publicações...',
-  'blog.noPosts': 'Nenhuma publicação encontrada.',
-  'blog.readMore': 'Leia mais...',
-  'blog.loadingPost': 'Carregando publicação...',
-  'blog.backToBlog': 'Voltar ao Blog',
-  'blog.loadError': 'Falha ao carregar publicações. Tente novamente mais tarde.',
-  'blog.postLoadError': 'Falha ao carregar a publicação. Tente novamente mais tarde.',
 };
 
 // =============================================================================
@@ -856,15 +791,13 @@ const PT_TRANSLATIONS: TranslationKeys = {
 // =============================================================================
 const AR_TRANSLATIONS: TranslationKeys = {
   'nav.languages': 'اللغات',
-  'nav.blog': 'المدونة',
   'nav.settings': 'الإعدادات',
   'nav.install': 'تثبيت',
   'nav.app': 'التطبيق',
   'home.title': 'تعلم أي لغة مع PolyTalk',
   'home.subtitle':
-    'أتقن الكلمات الأساسية والأرقام والعبارات الضرورية في أي لغة، واكتشف المزيد من النصائح والحيل لتعلم اللغات على مدونتنا.',
+    'أتقن الكلمات الأساسية والأرقام والعبارات الضرورية في أي لغة، واكتشف المزيد من النصائح والحيل لتعلم اللغات.',
   'home.startLearning': 'ابدأ التعلم',
-  'home.readBlog': 'اقرأ المدونة',
   'home.words': 'كلمات',
   'home.wordsDesc': 'تعلم المفردات الأساسية مع النطق الأصلي',
   'home.numbers': 'أرقام',
@@ -945,13 +878,6 @@ const AR_TRANSLATIONS: TranslationKeys = {
   'about.contactGithub': 'للدعم أو الاستفسارات، يرجى زيارة',
   'about.githubRepo': 'مستودع GitHub',
   'about.followX': 'تابعنا على X:',
-  'blog.loading': 'جارٍ تحميل المقالات...',
-  'blog.noPosts': 'لم يتم العثور على مقالات.',
-  'blog.readMore': 'اقرأ المزيد...',
-  'blog.loadingPost': 'جارٍ تحميل المقال...',
-  'blog.backToBlog': 'العودة إلى المدونة',
-  'blog.loadError': 'فشل في تحميل المقالات. يرجى المحاولة مرة أخرى لاحقًا.',
-  'blog.postLoadError': 'فشل في تحميل المقال. يرجى المحاولة مرة أخرى لاحقًا.',
 };
 
 // =============================================================================
@@ -959,15 +885,13 @@ const AR_TRANSLATIONS: TranslationKeys = {
 // =============================================================================
 const NO_TRANSLATIONS: TranslationKeys = {
   'nav.languages': 'Språk',
-  'nav.blog': 'Blogg',
   'nav.settings': 'Innstillinger',
   'nav.install': 'Installer',
   'nav.app': 'App',
   'home.title': 'Lær Ethvert Språk med PolyTalk',
   'home.subtitle':
-    'Mestre grunnleggende ord, tall og viktige fraser på ethvert språk, og lær mer om tips og triks for språklæring på bloggen vår.',
+    'Mestre grunnleggende ord, tall og viktige fraser på ethvert språk, og lær mer om tips og triks for språklæring.',
   'home.startLearning': 'Begynn å Lære',
-  'home.readBlog': 'Les Bloggen',
   'home.words': 'Ord',
   'home.wordsDesc': 'Lær viktig vokabular med morsmålsuttale',
   'home.numbers': 'Tall',
@@ -1048,13 +972,6 @@ const NO_TRANSLATIONS: TranslationKeys = {
   'about.contactGithub': 'For støtte eller henvendelser, besøk vårt',
   'about.githubRepo': 'GitHub-repositorium',
   'about.followX': 'Følg oss på X:',
-  'blog.loading': 'Laster innlegg...',
-  'blog.noPosts': 'Ingen blogginnlegg funnet.',
-  'blog.readMore': 'Les mer...',
-  'blog.loadingPost': 'Laster innlegg...',
-  'blog.backToBlog': 'Tilbake til Bloggen',
-  'blog.loadError': 'Kunne ikke laste innlegg. Prøv igjen senere.',
-  'blog.postLoadError': 'Kunne ikke laste innlegget. Prøv igjen senere.',
 };
 
 // =============================================================================
@@ -1062,15 +979,13 @@ const NO_TRANSLATIONS: TranslationKeys = {
 // =============================================================================
 const KO_TRANSLATIONS: TranslationKeys = {
   'nav.languages': '언어',
-  'nav.blog': '블로그',
   'nav.settings': '설정',
   'nav.install': '설치',
   'nav.app': '앱',
   'home.title': 'PolyTalk으로 모든 언어를 배우세요',
   'home.subtitle':
-    '모든 언어의 기본 단어, 숫자, 필수 구문을 마스터하고 블로그에서 언어 학습 팁과 요령을 배우세요.',
+    '모든 언어의 기본 단어, 숫자, 필수 구문을 마스터하고 언어 학습 팁과 요령을 더 알아보세요.',
   'home.startLearning': '학습 시작',
-  'home.readBlog': '블로그 읽기',
   'home.words': '단어',
   'home.wordsDesc': '원어민 발음으로 필수 어휘 학습',
   'home.numbers': '숫자',
@@ -1150,13 +1065,6 @@ const KO_TRANSLATIONS: TranslationKeys = {
   'about.contactGithub': '지원 또는 문의사항은',
   'about.githubRepo': 'GitHub 저장소',
   'about.followX': 'X에서 팔로우:',
-  'blog.loading': '게시물 로딩 중...',
-  'blog.noPosts': '블로그 게시물을 찾을 수 없습니다.',
-  'blog.readMore': '더 읽기...',
-  'blog.loadingPost': '게시물 로딩 중...',
-  'blog.backToBlog': '블로그로 돌아가기',
-  'blog.loadError': '게시물을 불러오는데 실패했습니다. 나중에 다시 시도해주세요.',
-  'blog.postLoadError': '게시물을 불러오는데 실패했습니다. 나중에 다시 시도해주세요.',
 };
 
 // =============================================================================
@@ -1164,15 +1072,13 @@ const KO_TRANSLATIONS: TranslationKeys = {
 // =============================================================================
 const HI_TRANSLATIONS: TranslationKeys = {
   'nav.languages': 'भाषाएँ',
-  'nav.blog': 'ब्लॉग',
   'nav.settings': 'सेटिंग्स',
   'nav.install': 'इंस्टॉल',
   'nav.app': 'ऐप',
   'home.title': 'PolyTalk के साथ कोई भी भाषा सीखें',
   'home.subtitle':
-    'किसी भी भाषा में बुनियादी शब्द, संख्याएँ और आवश्यक वाक्यांश सीखें, और हमारे ब्लॉग पर भाषा सीखने की टिप्स और ट्रिक्स जानें।',
+    'किसी भी भाषा में बुनियादी शब्द, संख्याएँ और आवश्यक वाक्यांश सीखें, और भाषा सीखने की टिप्स और ट्रिक्स के बारे में और जानें।',
   'home.startLearning': 'सीखना शुरू करें',
-  'home.readBlog': 'ब्लॉग पढ़ें',
   'home.words': 'शब्द',
   'home.wordsDesc': 'मूल उच्चारण के साथ आवश्यक शब्दावली सीखें',
   'home.numbers': 'संख्याएँ',
@@ -1253,11 +1159,4 @@ const HI_TRANSLATIONS: TranslationKeys = {
   'about.contactGithub': 'सहायता या पूछताछ के लिए, कृपया हमारे',
   'about.githubRepo': 'GitHub रिपॉजिटरी',
   'about.followX': 'X पर फ़ॉलो करें:',
-  'blog.loading': 'पोस्ट लोड हो रही हैं...',
-  'blog.noPosts': 'कोई ब्लॉग पोस्ट नहीं मिली।',
-  'blog.readMore': 'और पढ़ें...',
-  'blog.loadingPost': 'पोस्ट लोड हो रही है...',
-  'blog.backToBlog': 'ब्लॉग पर वापस जाएँ',
-  'blog.loadError': 'पोस्ट लोड करने में विफल। कृपया बाद में पुनः प्रयास करें।',
-  'blog.postLoadError': 'पोस्ट लोड करने में विफल। कृपया बाद में पुनः प्रयास करें।',
 };

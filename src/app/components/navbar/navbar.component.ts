@@ -16,10 +16,6 @@ import { TranslatePipe } from '../../pipes/translate.pipe';
             <span class="full-text">{{ 'nav.languages' | translate }}</span>
             <span class="icon-only">🌐</span>
           </a>
-          <a routerLink="/blog" routerLinkActive="active" class="nav-link">
-            <span class="full-text">{{ 'nav.blog' | translate }}</span>
-            <span class="icon-only">📝</span>
-          </a>
           <a routerLink="/settings" routerLinkActive="active" class="nav-link">
             <span class="full-text">{{ 'nav.settings' | translate }}</span>
             <span class="icon-only">⚙️</span>
