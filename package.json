@@ -1,6 +1,6 @@
 {
   "name": "app",
-  "version": "0.0.5",
+  "version": "0.0.6",
   "scripts": {
     "ng": "ng",
     "e2e": "ng e2e",
@@ -19,7 +19,10 @@
     "tauri:build:win-arm64": "tauri build --target arm64ec-pc-windows-msvc",
     "tauri:build:osx-x64": "tauri build --target x86_64-apple-darwin",
     "tauri:build:osx-arm64": "tauri build --target aarch64-apple-darwin",
-    "tauri:build:linux-x64": "tauri build --target x86_64-unknown-linux-gnu"
+    "tauri:build:linux-x64": "tauri build --target x86_64-unknown-linux-gnu",
+    "android:init": "cd src-android && bubblewrap init --manifest https://polytalk.me/manifest.webmanifest",
+    "android:build": "node scripts/android-build.js",
+    "android:update": "node scripts/android-update.js"
   },
   "private": true,
   "dependencies": {
@@ -42,6 +45,7 @@
     "@angular-devkit/build-angular": "^19.1.8",
     "@angular/cli": "^19.1.8",
     "@angular/compiler-cli": "^19.1.7",
+    "@bubblewrap/cli": "^1.22.0",
     "@playwright/test": "1.50.1",
     "@tauri-apps/cli": "^2",
     "@types/jasmine": "~5.1.7",

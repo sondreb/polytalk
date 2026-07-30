@@ -22,6 +22,11 @@ npm run watch
 # Tauri desktop dev / build
 npm run tauri:dev
 npm run tauri:build
+
+# Android TWA (Google Play) - uses Bubblewrap + latest Android Browser Helper
+npm run android:init    # Generate/regenerate src-android/ project
+npm run android:update  # Update to latest Bubblewrap/Android SDK versions
+npm run android:build   # Build AAB for Google Play (reads signing from src-android/local.properties)
 ```
 
 ## Test Commands

@@ -1,0 +1,18 @@
+# Copy this file to local.properties and fill in your signing key passwords.
+# local.properties is gitignored and must never be committed.
+
+# Path to your Android SDK. Update this to match your machine, or leave it
+# commented out if ANDROID_HOME / ANDROID_SDK_ROOT is already set.
+# sdk.dir=C:\\Users\\YOUR_USERNAME\\AppData\\Local\\Android\\Sdk
+
+# Path to the signing keystore, relative to the src-android/ directory.
+key.store=signing.keystore
+
+# Alias of the signing key inside the keystore.
+key.alias=my-key-alias
+
+# Password for the keystore file.
+key.store.password=YOUR_KEYSTORE_PASSWORD
+
+# Password for the signing key alias.
+key.alias.password=YOUR_KEY_PASSWORD

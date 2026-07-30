@@ -28,6 +28,8 @@
 
 ## Updates
 
+0.0.6 - Update Android TWA build to use the latest Bubblewrap, Android SDK, and Android Browser Helper versions.
+
 0.0.5 - Add links to Google Play Store. Add link to review the app in the About.
 
 0.0.4 - Many minor improvements everywhere, including buttons to decrease and increase the repeat times. This makes it easier than the previous input field. Removed some visual margins to make the app look better.
@@ -76,6 +78,26 @@ Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.
 ## Running end-to-end tests
 
 Run `ng e2e` to execute the end-to-end tests via a platform of your choice. To use this command, you need to first add a package that implements end-to-end testing capabilities.
+
+## Android build
+
+PolyTalk is published on Google Play as a Trusted Web Activity (TWA). The Android wrapper is generated with [Bubblewrap](https://github.com/GoogleChromeLabs/bubblewrap) using the latest Android Browser Helper and Android SDK versions.
+
+```bash
+# Generate or regenerate the Android project in src-android/
+npm run android:init
+
+# Update the generated project to the latest Bubblewrap/Android Browser Helper versions
+npm run android:update
+
+# Build the Android App Bundle (AAB) for Google Play
+# Requires src-android/local.properties with your signing passwords
+npm run android:build
+```
+
+The TWA configuration is stored in [src-android/twa-manifest.json](src-android/twa-manifest.json). Remember to bump `appVersionCode` and `appVersionName` before each release.
+
+Signing credentials are read from `src-android/local.properties`. Copy `src-android/local.properties.example` to `src-android/local.properties` and fill in your passwords. `android:build` bypasses Bubblewrap's interactive prompts by invoking Gradle directly. Do not commit `local.properties` or the keystore.
 
 ## Further help
 
