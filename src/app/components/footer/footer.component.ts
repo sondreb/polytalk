@@ -14,7 +14,18 @@ import { TranslatePipe } from '../../pipes/translate.pipe';
           <a routerLink="/terms">{{ 'footer.terms' | translate }}</a>
           <a routerLink="/about">{{ 'footer.about' | translate }}</a>
         </nav>
-        <p class="copyright">&copy; {{ currentYear }} PolyTalk.Me | <a href="https://x.com/PolyTalkMe" target="_blank">&#64;PolyTalkMe</a></p>
+        <p class="copyright">
+          &copy; {{ currentYear }}
+          <img
+            src="polytalk-icon.svg"
+            alt="PolyTalk.Me"
+            width="20"
+            height="20"
+            class="footer-logo"
+          />
+          <span class="visually-hidden">PolyTalk.Me</span> |
+          <a href="https://x.com/PolyTalkMe" target="_blank">&#64;PolyTalkMe</a>
+        </p>
       </div>
     </footer>
   `,
@@ -58,6 +69,28 @@ import { TranslatePipe } from '../../pipes/translate.pipe';
       .copyright {
         font-size: 0.85rem;
         color: var(--text-light);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-wrap: wrap;
+        gap: 0.35rem;
+      }
+      .footer-logo {
+        width: 20px;
+        height: 20px;
+        display: inline-block;
+        vertical-align: middle;
+      }
+      .visually-hidden {
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        padding: 0;
+        margin: -1px;
+        overflow: hidden;
+        clip: rect(0, 0, 0, 0);
+        white-space: nowrap;
+        border: 0;
       }
     `,
   ],

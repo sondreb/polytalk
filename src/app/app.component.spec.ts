@@ -28,10 +28,14 @@ describe('AppComponent', () => {
   //   expect(app.title).toEqual('app');
   // });
 
-  it('should render title', () => {
+  it('should render the brand logo', () => {
     const fixture = TestBed.createComponent(AppComponent);
     fixture.detectChanges();
     const compiled = fixture.nativeElement as HTMLElement;
-    expect(compiled.querySelector('.brand')?.textContent).toContain('PolyTalk.Me');
+    const brand = compiled.querySelector('.brand');
+    expect(brand?.textContent).toContain('PolyTalk.Me');
+    const logo = brand?.querySelector<HTMLImageElement>('img.brand-logo');
+    expect(logo?.getAttribute('src')).toBe('polytalk-icon.svg');
+    expect(logo?.getAttribute('alt')).toBe('PolyTalk.Me');
   });
 });

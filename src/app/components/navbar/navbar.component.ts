@@ -10,7 +10,16 @@ import { TranslatePipe } from '../../pipes/translate.pipe';
   template: `
     <nav class="navbar">
       <div class="content-wrapper">
-        <a routerLink="/home" class="brand">PolyTalk.Me</a>
+        <a routerLink="/home" class="brand" aria-label="PolyTalk.Me">
+          <img
+            src="polytalk-icon.svg"
+            alt="PolyTalk.Me"
+            width="44"
+            height="44"
+            class="brand-logo"
+          />
+          <span class="visually-hidden">PolyTalk.Me</span>
+        </a>
         <div class="nav-links">
           <a routerLink="/languages" routerLinkActive="active" class="nav-link">
             <span class="full-text">{{ 'nav.languages' | translate }}</span>
@@ -61,20 +70,36 @@ import { TranslatePipe } from '../../pipes/translate.pipe';
         justify-content: flex-end;
       }
       .brand {
-        font-size: 1.4rem;
-        font-weight: 800;
-        letter-spacing: -0.02em;
-        background: linear-gradient(
-          135deg,
-          var(--gradient-start),
-          var(--gradient-end)
-        );
-        -webkit-background-clip: text;
-        background-clip: text;
-        -webkit-text-fill-color: transparent;
+        display: inline-flex;
+        align-items: center;
         text-decoration: none;
-        white-space: nowrap;
         flex-shrink: 0;
+        line-height: 0;
+        border-radius: var(--radius-sm);
+        transition: transform var(--duration) var(--ease);
+      }
+      .brand:hover {
+        transform: scale(1.05);
+      }
+      .brand:focus-visible {
+        outline: 2px solid var(--primary-color);
+        outline-offset: 4px;
+      }
+      .brand-logo {
+        width: 44px;
+        height: 44px;
+        display: block;
+      }
+      .visually-hidden {
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        padding: 0;
+        margin: -1px;
+        overflow: hidden;
+        clip: rect(0, 0, 0, 0);
+        white-space: nowrap;
+        border: 0;
       }
       .nav-links a {
         color: var(--text-light);
@@ -131,13 +156,15 @@ import { TranslatePipe } from '../../pipes/translate.pipe';
         .app-text {
           display: none;
         }
-        .brand {
-          font-size: 1.2rem;
+        .brand-logo {
+          width: 34px;
+          height: 34px;
         }
       }
       @media (max-width: 350px) {
-        .brand {
-          font-size: 1.05rem;
+        .brand-logo {
+          width: 30px;
+          height: 30px;
         }
         .nav-links {
           gap: 0.125rem;

@@ -14,7 +14,7 @@
   "enableNotifications": true,
   "startUrl": "/",
   "iconUrl": "https://polytalk.me/icons/icon-512x512.png",
-  "maskableIconUrl": "https://polytalk.me/icons/icon-512x512.png",
+  "maskableIconUrl": "https://polytalk.me/icons/maskable-512x512.png",
   "splashScreenFadeOutDuration": 300,
   "signingKey": {
     "path": "signing.keystore",

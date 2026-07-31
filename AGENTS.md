@@ -27,6 +27,10 @@ npm run tauri:build
 npm run android:init    # Generate/regenerate src-android/ project
 npm run android:update  # Update to latest Bubblewrap/Android SDK versions
 npm run android:build   # Build AAB for Google Play (reads signing from src-android/local.properties)
+
+# Regenerate all app icons from public/polytalk-icon.svg (web/PWA, iOS, Android, social card)
+npm run generate:icons
+npx tauri icon public/icons/polytalk-icon.png   # then refresh the desktop icons
 ```
 
 ## Test Commands

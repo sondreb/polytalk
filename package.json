@@ -9,6 +9,7 @@
     "watch": "ng build --watch --configuration development",
     "deploy": "ng deploy --repo=https://github.com/sondreb/polytalk.git --cname=polytalk.me --name=SondreB --email=sondre@outlook.com",
     "test": "ng test",
+    "generate:icons": "node scripts/generate-icons.js",
     "tauri": "tauri",
     "version-number": "node -p \"require('./package.json').version\"",
     "tauri:dev": "tauri dev",
