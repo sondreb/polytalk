@@ -1,6 +1,6 @@
 {
   "configVersion": 1,
-  "timestamp": 1785448598920,
+  "timestamp": 1785502072789,
   "index": "/index.html",
   "assetGroups": [
     {
@@ -20,9 +20,12 @@
         "/cookieconsent.min.js",
         "/favicon.png",
         "/index.html",
-        "/main-SYS67C76.js",
+        "/main-FP2H6I7I.js",
         "/manifest.webmanifest",
         "/polyfills-FFHMD2TL.js",
+        "/polytalk-icon.svg",
+        "/polytalk-wordmark-dark.svg",
+        "/polytalk-wordmark.svg",
         "/styles-L5DWQIFQ.css"
       ],
       "patterns": []
@@ -35,6 +38,11 @@
         "ignoreVary": true
       },
       "urls": [
+        "/apple-touch-icon-120x120.png",
+        "/apple-touch-icon-152x152.png",
+        "/apple-touch-icon-167x167.png",
+        "/apple-touch-icon-180x180.png",
+        "/apple-touch-icon.png",
         "/assets/audio/af/numbers/0.mp3",
         "/assets/audio/af/numbers/1.mp3",
         "/assets/audio/af/numbers/10.mp3",
@@ -2629,7 +2637,8 @@
         "/assets/flags/za.png",
         "/assets/flags/zm.png",
         "/assets/flags/zw.png",
-        "/assets/polytalk-social.png"
+        "/assets/polytalk-social.png",
+        "/polytalk.svg"
       ],
       "patterns": []
     }
@@ -2650,6 +2659,11 @@
     }
   ],
   "hashTable": {
+    "/apple-touch-icon-120x120.png": "66d1e9c7afa99d9d2f7603bb7a08837ce46ec43f",
+    "/apple-touch-icon-152x152.png": "efb83ce4b25f67bfa00f538d29dfd189e5bda931",
+    "/apple-touch-icon-167x167.png": "70da33eb15193b581a1f6d75c72bea9da3ecaf0e",
+    "/apple-touch-icon-180x180.png": "a3a62b112541cc2ebf57f38d60b46d22e6f55f7d",
+    "/apple-touch-icon.png": "a3a62b112541cc2ebf57f38d60b46d22e6f55f7d",
     "/assets/audio/af/numbers/0.mp3": "9b74e8de2e2622c86e616e27eca1f8a244ce9a07",
     "/assets/audio/af/numbers/1.mp3": "03b84ce967610c6c342a4fd35d1000d21e7e1cf6",
     "/assets/audio/af/numbers/10.mp3": "10f717df3a95ec71ee577d285ed0a80e3c3f2cad",
@@ -5244,7 +5258,7 @@
     "/assets/flags/za.png": "269b3814e0fc4d0a2985746cbe2e3f80e760b4e9",
     "/assets/flags/zm.png": "54a51f75d6fcd773fe6fae97a003c1ef8678b534",
     "/assets/flags/zw.png": "c44732cbf86a0e57773e71a9649dc9519324c742",
-    "/assets/polytalk-social.png": "46a7abf377503c8fea256fa14970ab122d5fb384",
+    "/assets/polytalk-social.png": "7a0f92dff350b3fec4671ccb33bd48fa088cce65",
     "/chunk-OVRZ4VX4.js": "9014e8ec478f354eabf9cbd68b507b14118c2cf5",
     "/chunk-Q2XJHSFD.js": "45d5291d1a1c831cdb12d8a8f596b845cfa9f966",
     "/chunk-VHSJ53CQ.js": "851c80771870ab916fe908d5634ae8e3241e7538",
@@ -5252,11 +5266,15 @@
     "/chunk-YGTXUFJW.js": "51662353318284577401bd36b63aa9dff6ad1e0a",
     "/cookieconsent.js": "4291eda7dd98d8656abc235eab847e611abfb6ed",
     "/cookieconsent.min.js": "4af61ac332a684ab76df7390055f6dfc43e44b64",
-    "/favicon.png": "b091747a8a6ef2cae7cfc030818e64c7ee80902f",
-    "/index.html": "5e24db5d5f673d556ac53964ef9dc952967b3a43",
-    "/main-SYS67C76.js": "79d2aa8ac2d52b121d3b66570a89500045f52618",
-    "/manifest.webmanifest": "36989051afb07c9582406348e01441c844de142c",
+    "/favicon.png": "f3af5943ef38372d09a98728f2924c44a184f763",
+    "/index.html": "9ed924faa547a55167a2607824f5db94c375737e",
+    "/main-FP2H6I7I.js": "025d209e06b837b5af07f7b34728bc3b8f938438",
+    "/manifest.webmanifest": "97591ff8638c3c1b5c7e0219faa147112aaf5641",
     "/polyfills-FFHMD2TL.js": "f49b49a155bc7d192db62a4c15d0a612b460a667",
+    "/polytalk-icon.svg": "6fecd516f60bf0145241074c4a19d16f7953c166",
+    "/polytalk-wordmark-dark.svg": "244b92d1afa2689c65ba8e4872e7a310a8144f1f",
+    "/polytalk-wordmark.svg": "e29caabf887c72593baaa9e60c5b63054f6f6967",
+    "/polytalk.svg": "39c3f0c76fa9a207e2534a6992e7fdd078197d48",
     "/styles-L5DWQIFQ.css": "4380113e0ec6cbab1c9ea5c90b181b1dd8687620"
   },
   "navigationUrls": [
