@@ -9,6 +9,8 @@
  *  - public/favicon.png                  browser favicon
  *  - public/apple-touch-icon.png         iOS home screen icon (180px, opaque background)
  *  - public/apple-touch-icon-<size>.png  additional iOS sizes
+ *  - public/polytalk-wordmark.svg        transparent icon + wordmark (light surfaces)
+ *  - public/polytalk-wordmark-dark.svg   transparent icon + wordmark (dark surfaces)
  *  - public/assets/polytalk-social.png   1280x640 Open Graph / Twitter card
  *  - src-android/store_icon.png          Google Play / TWA store icon (512px)
  *  - src-android/app/src/main/res/**     TWA launcher, maskable, splash and notification assets
@@ -166,6 +168,65 @@ async function renderSocialCard(page, { width, height, outFile }) {
   console.log(`  ✓ ${path.relative(ROOT, outFile)} (${width}x${height})`);
 }
 
+/**
+ * The shipped wordmark (`polytalk.svg`) starts with a full-canvas opaque plate, which
+ * makes it unusable on dark backgrounds. This strips that plate, tightens the viewBox
+ * around the artwork and emits a light and a dark variant for in-app use.
+ */
+async function generateWordmarkVariants(page) {
+  const source = fs.readFileSync(WORDMARK_SVG, 'utf8');
+
+  // The plate is the first subpath of the first <path>; everything after the first
+  // "Z" are the white highlights inside the artwork and must be kept.
+  const transparent = source.replace(/<path d="([\s\S]*?)"/, (match, d) => {
+    const end = d.indexOf('Z');
+    if (end === -1) return match;
+    return `<path d="${d.slice(end + 1)}"`;
+  });
+
+  if (transparent === source) {
+    throw new Error('Could not strip the background plate from polytalk.svg');
+  }
+
+  const box = await page.evaluate(async (svg) => {
+    const host = document.createElement('div');
+    host.style.cssText = 'position:absolute;left:-9999px;top:0;';
+    host.innerHTML = svg;
+    document.body.appendChild(host);
+    const { x, y, width, height } = host.querySelector('svg').getBBox();
+    host.remove();
+    return { x, y, width, height };
+  }, transparent);
+
+  const pad = box.height * 0.04;
+  const viewBox = [
+    (box.x - pad).toFixed(2),
+    (box.y - pad).toFixed(2),
+    (box.width + pad * 2).toFixed(2),
+    (box.height + pad * 2).toFixed(2),
+  ].join(' ');
+
+  const cropped = transparent
+    .replace(/viewBox="[^"]*"/, `viewBox="${viewBox}"`)
+    .replace(/\s(width|height)="[^"]*"/g, '');
+
+  const variants = [
+    { file: 'polytalk-wordmark.svg', svg: cropped },
+    // The deep navy used for ".Me" and the globe outline disappears on dark
+    // surfaces, so the dark variant swaps it for the dark theme's text colour.
+    {
+      file: 'polytalk-wordmark-dark.svg',
+      svg: cropped.replace(/#071f56/gi, '#eef1f7'),
+    },
+  ];
+
+  for (const { file, svg } of variants) {
+    const outFile = path.join(PUBLIC_DIR, file);
+    fs.writeFileSync(outFile, svg, 'utf8');
+    console.log(`  ✓ ${path.relative(ROOT, outFile)} (viewBox ${viewBox})`);
+  }
+}
+
 async function main() {
   if (!fs.existsSync(SOURCE_SVG)) {
     throw new Error(`Source icon not found: ${SOURCE_SVG}`);
@@ -232,6 +293,9 @@ async function main() {
     console.log('  ✓ public/apple-touch-icon.png (180x180)');
 
     if (fs.existsSync(WORDMARK_SVG)) {
+      console.log('Generating wordmark variants...');
+      await generateWordmarkVariants(page);
+
       console.log('Generating social card...');
       await renderSocialCard(page, {
         width: 1280,

@@ -9,6 +9,8 @@
         "files": [
           "/favicon.png",
           "/polytalk-icon.svg",
+          "/polytalk-wordmark.svg",
+          "/polytalk-wordmark-dark.svg",
           "/index.html",
           "/manifest.webmanifest",
           "/*.css",

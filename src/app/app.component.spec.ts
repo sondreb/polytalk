@@ -34,8 +34,8 @@ describe('AppComponent', () => {
     const compiled = fixture.nativeElement as HTMLElement;
     const brand = compiled.querySelector('.brand');
     expect(brand?.textContent).toContain('PolyTalk.Me');
-    const logo = brand?.querySelector<HTMLImageElement>('img.brand-logo');
-    expect(logo?.getAttribute('src')).toBe('polytalk-icon.svg');
-    expect(logo?.getAttribute('alt')).toBe('PolyTalk.Me');
+    const wordmark = brand?.querySelector<HTMLImageElement>('img.brand-wordmark');
+    expect(wordmark?.getAttribute('src')).toBe('polytalk-wordmark.svg');
+    expect(wordmark?.getAttribute('alt')).toBe('PolyTalk.Me');
   });
 });

@@ -12,11 +12,15 @@ import { TranslatePipe } from '../../pipes/translate.pipe';
       <div class="content-wrapper">
         <a routerLink="/home" class="brand" aria-label="PolyTalk.Me">
           <img
-            src="polytalk-icon.svg"
+            src="polytalk-wordmark.svg"
             alt="PolyTalk.Me"
-            width="44"
-            height="44"
-            class="brand-logo"
+            class="brand-logo brand-wordmark"
+          />
+          <img
+            src="polytalk-wordmark-dark.svg"
+            alt=""
+            aria-hidden="true"
+            class="brand-logo brand-wordmark brand-wordmark-dark"
           />
           <span class="visually-hidden">PolyTalk.Me</span>
         </a>
@@ -86,8 +90,19 @@ import { TranslatePipe } from '../../pipes/translate.pipe';
         outline-offset: 4px;
       }
       .brand-logo {
-        width: 44px;
-        height: 44px;
+        display: block;
+        height: 38px;
+        width: auto;
+      }
+      /* The wordmark's deep navy is unreadable on dark surfaces, so a recoloured
+         variant is swapped in whenever the dark theme is active. */
+      .brand-wordmark-dark {
+        display: none;
+      }
+      :host-context(body.dark-theme) .brand-wordmark:not(.brand-wordmark-dark) {
+        display: none;
+      }
+      :host-context(body.dark-theme) .brand-wordmark-dark {
         display: block;
       }
       .visually-hidden {
@@ -137,6 +152,9 @@ import { TranslatePipe } from '../../pipes/translate.pipe';
         .content-wrapper {
           padding: 0 0.5rem;
         }
+        .brand-logo {
+          height: 34px;
+        }
         .nav-links a {
           padding: 0.5rem 0.6rem;
         }
@@ -156,14 +174,9 @@ import { TranslatePipe } from '../../pipes/translate.pipe';
         .app-text {
           display: none;
         }
-        .brand-logo {
-          width: 34px;
-          height: 34px;
-        }
       }
       @media (max-width: 350px) {
         .brand-logo {
-          width: 30px;
           height: 30px;
         }
         .nav-links {
