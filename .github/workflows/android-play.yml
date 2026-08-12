@@ -54,8 +54,11 @@ jobs:
       - name: Set up Android SDK
         uses: android-actions/setup-android@v3
 
-      - name: Install Android SDK platform
-        run: sdkmanager "platforms;android-36"
+      - name: Install Android SDK packages
+        run: sdkmanager "platforms;android-36" "build-tools;35.0.0"
+
+      - name: Ensure Gradle wrapper is executable
+        run: chmod +x src-android/gradlew
 
       - name: Validate Android signing secrets
         shell: bash
