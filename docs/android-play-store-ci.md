@@ -9,7 +9,7 @@ Default track is **beta**. Trigger it with **Actions → Android Play Store → 
 ```
 checkout → Node 22 + Java 17 + Android SDK
   → decode keystore + write src-android/local.properties
-  → npm ci && npm run android:build
+  → node scripts/android-build.js  (no npm install; scripts use Node builtins only)
   → upload AAB artifact
   → upload to Play (r0adkll/upload-google-play@v1) if PLAY_SERVICE_ACCOUNT_JSON is set
 ```

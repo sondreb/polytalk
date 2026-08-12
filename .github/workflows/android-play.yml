@@ -38,11 +38,12 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
+      # Node is only needed for builtin scripts (version read + android-build.js).
+      # The AAB build does not require installing the Angular app's node_modules.
       - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
           node-version: '22'
-          cache: npm
 
       - name: Set up Java 17
         uses: actions/setup-java@v4
@@ -109,11 +110,8 @@ jobs:
           echo "version_code=$VERSION_CODE" >> "$GITHUB_OUTPUT"
           echo "Building PolyTalk Android $VERSION_NAME (versionCode $VERSION_CODE)"
 
-      - name: Install npm dependencies
-        run: npm ci
-
       - name: Build signed release AAB
-        run: npm run android:build
+        run: node scripts/android-build.js
 
       - name: Upload AAB artifact
         uses: actions/upload-artifact@v4
