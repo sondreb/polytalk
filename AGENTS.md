@@ -208,5 +208,6 @@ src-tauri/          # Tauri desktop app configuration and Rust source
 
 - **Deploy workflow** (`.github/workflows/deploy.yml`): Builds Angular app, runs e2e tests, deploys to GitHub Pages
 - **Release workflow** (`.github/workflows/release.yml`): Builds Tauri desktop apps for Windows/macOS/Linux
+- **Android Play workflow** (`.github/workflows/android-play.yml`): Manual `workflow_dispatch` — builds the Bubblewrap TWA AAB and uploads to Google Play (default track `beta`); see `docs/android-play-store-ci.md`
 - Unit tests are currently **not run in CI** (commented out)
 - E2e tests run against the built app in CI
