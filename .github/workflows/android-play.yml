@@ -1,0 +1,226 @@
+name: Android Play Store
+
+on:
+  workflow_dispatch:
+    inputs:
+      play_track:
+        description: "Google Play track (falls back to PLAY_TRACK variable, else beta)"
+        type: choice
+        required: false
+        default: beta
+        options:
+          - internal
+          - alpha
+          - beta
+          - production
+      play_release_status:
+        description: "Google Play release status"
+        type: choice
+        required: false
+        default: completed
+        options:
+          - completed
+          - draft
+
+permissions:
+  contents: read
+
+env:
+  AAB_PATH: src-android/app/build/outputs/bundle/release/app-release.aab
+  PACKAGE_NAME: me.polytalk.twa
+
+jobs:
+  publish-android-play-store:
+    name: Build AAB and upload to Google Play
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+
+      - name: Set up Java 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+
+      - name: Set up Android SDK
+        uses: android-actions/setup-android@v3
+
+      - name: Install Android SDK platform
+        run: sdkmanager "platforms;android-36"
+
+      - name: Validate Android signing secrets
+        shell: bash
+        env:
+          KEYSTORE_BASE64: ${{ secrets.KEYSTORE_BASE64 }}
+          KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
+          KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
+        run: |
+          set -euo pipefail
+          missing=0
+          for key in KEYSTORE_BASE64 KEYSTORE_PASSWORD KEY_PASSWORD; do
+            if [ -z "${!key}" ]; then
+              echo "Missing required secret: $key" >&2
+              missing=1
+            fi
+          done
+          if [ "$missing" -ne 0 ]; then
+            echo 'See docs/android-play-store-ci.md for the required secrets.' >&2
+            exit 1
+          fi
+
+      - name: Decode Android keystore
+        shell: bash
+        run: |
+          set -euo pipefail
+          echo "${{ secrets.KEYSTORE_BASE64 }}" | base64 --decode > src-android/signing.keystore
+          test -s src-android/signing.keystore
+
+      - name: Write local.properties
+        shell: bash
+        env:
+          KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
+          KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
+          KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
+        run: |
+          set -euo pipefail
+          {
+            echo 'key.store=signing.keystore'
+            echo "key.alias=${KEY_ALIAS:-my-key-alias}"
+            echo "key.store.password=${KEYSTORE_PASSWORD}"
+            echo "key.alias.password=${KEY_PASSWORD}"
+          } > src-android/local.properties
+
+      - name: Read TWA version
+        id: version
+        shell: bash
+        run: |
+          set -euo pipefail
+          VERSION_NAME=$(node -p "require('./src-android/twa-manifest.json').appVersionName")
+          VERSION_CODE=$(node -p "require('./src-android/twa-manifest.json').appVersionCode")
+          echo "version_name=$VERSION_NAME" >> "$GITHUB_OUTPUT"
+          echo "version_code=$VERSION_CODE" >> "$GITHUB_OUTPUT"
+          echo "Building PolyTalk Android $VERSION_NAME (versionCode $VERSION_CODE)"
+
+      - name: Install npm dependencies
+        run: npm ci
+
+      - name: Build signed release AAB
+        run: npm run android:build
+
+      - name: Upload AAB artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: polytalk-android-release-aab-${{ steps.version.outputs.version_name }}-${{ github.run_number }}
+          path: ${{ env.AAB_PATH }}
+          if-no-files-found: error
+
+      - name: Check Google Play service account secret
+        id: play-secret
+        shell: bash
+        env:
+          PLAY_SERVICE_ACCOUNT_JSON: ${{ secrets.PLAY_SERVICE_ACCOUNT_JSON }}
+        run: |
+          set -euo pipefail
+
+          if [ -z "${PLAY_SERVICE_ACCOUNT_JSON:-}" ]; then
+            echo "configured=false" >> "$GITHUB_OUTPUT"
+            echo '::warning title=Google Play upload skipped::Secret PLAY_SERVICE_ACCOUNT_JSON is not configured.'
+            {
+              echo '### Google Play upload skipped'
+              echo
+              echo 'The signed AAB was built and uploaded as a GitHub Actions artifact, but `PLAY_SERVICE_ACCOUNT_JSON` is not configured so Play upload was skipped.'
+              echo 'See `docs/android-play-store-ci.md` for the one-time setup.'
+            } >> "$GITHUB_STEP_SUMMARY"
+            exit 0
+          fi
+
+          if ! printf '%s' "$PLAY_SERVICE_ACCOUNT_JSON" | python3 -c 'import json,sys; data = json.load(sys.stdin); sys.exit(0 if data.get("type") == "service_account" and data.get("client_email") and data.get("private_key") else 1)'; then
+            echo 'PLAY_SERVICE_ACCOUNT_JSON must contain the full Google Cloud service account JSON key (type, client_email and private_key fields).' >&2
+            exit 1
+          fi
+
+          echo "configured=true" >> "$GITHUB_OUTPUT"
+
+      - name: Resolve Google Play release settings
+        id: play-config
+        if: steps.play-secret.outputs.configured == 'true'
+        shell: bash
+        env:
+          INPUT_TRACK: ${{ inputs.play_track }}
+          INPUT_STATUS: ${{ inputs.play_release_status }}
+          VAR_TRACK: ${{ vars.PLAY_TRACK }}
+        run: |
+          set -euo pipefail
+
+          TRACK="${INPUT_TRACK:-}"
+          [ -n "$TRACK" ] || TRACK="${VAR_TRACK:-}"
+          [ -n "$TRACK" ] || TRACK="beta"
+
+          STATUS="${INPUT_STATUS:-}"
+          [ -n "$STATUS" ] || STATUS="completed"
+
+          echo "track=$TRACK" >> "$GITHUB_OUTPUT"
+          echo "status=$STATUS" >> "$GITHUB_OUTPUT"
+          echo "Uploading to the '$TRACK' track as '$STATUS'."
+
+      - name: Prepare release notes
+        if: steps.play-secret.outputs.configured == 'true'
+        shell: bash
+        env:
+          VERSION_NAME: ${{ steps.version.outputs.version_name }}
+        run: |
+          set -euo pipefail
+          mkdir -p play-whatsnew
+          printf 'PolyTalk %s\n\nhttps://polytalk.me\nhttps://github.com/%s\n' \
+            "$VERSION_NAME" "${{ github.repository }}" > play-whatsnew/whatsnew-en-US
+
+      - name: Upload AAB to Google Play
+        if: steps.play-secret.outputs.configured == 'true'
+        uses: r0adkll/upload-google-play@v1
+        with:
+          serviceAccountJsonPlainText: ${{ secrets.PLAY_SERVICE_ACCOUNT_JSON }}
+          packageName: ${{ env.PACKAGE_NAME }}
+          releaseFiles: ${{ env.AAB_PATH }}
+          releaseName: ${{ steps.version.outputs.version_name }} (${{ steps.version.outputs.version_code }})
+          tracks: ${{ steps.play-config.outputs.track }}
+          status: ${{ steps.play-config.outputs.status }}
+          whatsNewDirectory: play-whatsnew
+
+      - name: Summarize
+        if: always()
+        shell: bash
+        env:
+          VERSION_NAME: ${{ steps.version.outputs.version_name }}
+          VERSION_CODE: ${{ steps.version.outputs.version_code }}
+          TRACK: ${{ steps.play-config.outputs.track }}
+          STATUS: ${{ steps.play-config.outputs.status }}
+          PLAY_CONFIGURED: ${{ steps.play-secret.outputs.configured }}
+          JOB_STATUS: ${{ job.status }}
+        run: |
+          set -euo pipefail
+          {
+            echo '### Android Play Store'
+            echo
+            echo "- Package: \`${PACKAGE_NAME}\`"
+            echo "- Version: \`${VERSION_NAME:-unknown}\` (versionCode \`${VERSION_CODE:-unknown}\`)"
+            echo "- AAB: \`${AAB_PATH}\`"
+            if [ "${PLAY_CONFIGURED:-}" = "true" ]; then
+              echo "- Track: \`${TRACK:-}\` (status \`${STATUS:-}\`)"
+              echo "- Play upload: \`${JOB_STATUS}\`"
+              if [ "$JOB_STATUS" != "success" ]; then
+                echo
+                echo 'If Play rejected a duplicate versionCode, bump `appVersionCode` (and usually `appVersionName`) in `src-android/twa-manifest.json`, then run `npm run android:update` before rebuilding.'
+              fi
+            else
+              echo "- Play upload: skipped (missing \`PLAY_SERVICE_ACCOUNT_JSON\`)"
+            fi
+            echo "- Job result: \`${JOB_STATUS}\`"
+          } >> "$GITHUB_STEP_SUMMARY"
