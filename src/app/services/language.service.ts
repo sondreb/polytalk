@@ -1,5 +1,7 @@
 import { Injectable, signal } from '@angular/core';
 
+import { mergeLearningContent, PREMIUM_CONTENT } from './premium-content';
+
 export interface Language {
   code: string;
   name: string;
@@ -3231,7 +3233,25 @@ export class LanguageService {
     return [...this.languages].sort((a, b) => a.name.localeCompare(b.name));
   }
 
-  getContent(languageCode: string): LearningContent | undefined {
-    return this.content[languageCode];
+  getContent(
+    languageCode: string,
+    includePremium = false
+  ): LearningContent | undefined {
+    const base = this.content[languageCode];
+    if (!base) {
+      return undefined;
+    }
+    if (!includePremium) {
+      return {
+        words: { ...base.words },
+        numbers: { ...base.numbers },
+        sentences: { ...base.sentences },
+      };
+    }
+    return mergeLearningContent(base, PREMIUM_CONTENT[languageCode]);
+  }
+
+  getPremiumContent(languageCode: string): LearningContent | undefined {
+    return PREMIUM_CONTENT[languageCode];
   }
 }

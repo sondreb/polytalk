@@ -57,6 +57,12 @@ describe('SettingsComponent', () => {
     expect(themeService.getSavedTheme()).toBe(newTheme);
   });
 
+  it('should render the premium status card', () => {
+    const compiled = fixture.nativeElement as HTMLElement;
+    expect(compiled.querySelector('app-premium-card')).toBeTruthy();
+    expect(compiled.textContent).toContain('Premium');
+  });
+
   it('should reset settings', () => {
     spyOn(settingsService, 'resetSettings');
     component.settingsService.resetSettings();

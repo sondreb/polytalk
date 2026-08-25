@@ -26,8 +26,14 @@
   "generatorApp": "bubblewrap-cli",
   "webManifestUrl": "https://polytalk.me/manifest.webmanifest",
   "fallbackType": "customtabs",
-  "features": {},
-  "alphaDependencies": {},
+  "features": {
+    "playBilling": {
+      "enabled": true
+    }
+  },
+  "alphaDependencies": {
+    "enabled": true
+  },
   "enableSiteSettingsShortcut": true,
   "isChromeOSOnly": false,
   "isMetaQuest": false,

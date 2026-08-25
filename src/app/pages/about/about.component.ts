@@ -1,10 +1,11 @@
 import { Component } from '@angular/core';
 import { TranslatePipe } from '../../pipes/translate.pipe';
+import { PremiumCardComponent } from '../../components/premium-card/premium-card.component';
 
 @Component({
   selector: 'app-about',
   standalone: true,
-  imports: [TranslatePipe],
+  imports: [TranslatePipe, PremiumCardComponent],
   template: `
     <div class="card page-content">
       <h1>{{ 'about.title' | translate }}</h1>
@@ -21,6 +22,9 @@ import { TranslatePipe } from '../../pipes/translate.pipe';
         <li>{{ 'about.feature3' | translate }}</li>
         <li>{{ 'about.feature4' | translate }}</li>
       </ul>
+
+      <h2>{{ 'premium.title' | translate }}</h2>
+      <app-premium-card />
 
       <h2>{{ 'about.reviewTitle' | translate }}</h2>
       <p>{{ 'about.reviewText' | translate }}</p>

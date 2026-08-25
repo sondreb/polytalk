@@ -81,10 +81,26 @@ test.describe('Learning page', () => {
     await expect(page.locator('.tabs button')).toHaveCount(3);
     await expect(page.locator('.tabs button.active')).toHaveText('Words');
 
-    const items = page.locator('.item');
-    expect(await items.count()).toBeGreaterThan(3);
+    const items = page.locator('.phrase-list .item');
+    expect(await items.count()).toBe(22);
     await expect(items.first().locator('.native span')).toHaveText('water');
     await expect(items.first().locator('.translation span')).toHaveText('agua');
+    await expect(page.locator('.premium-teaser')).toBeVisible();
+    await expect(page.locator('.item.locked').first()).toBeVisible();
+  });
+
+  test('unlocks the extra pack with the development localStorage key', async ({
+    page,
+  }) => {
+    await page.addInitScript(() => {
+      localStorage.setItem('polytalk-premium', '1');
+    });
+    await page.reload();
+
+    const items = page.locator('.phrase-list .item');
+    await expect(items).toHaveCount(49);
+    await expect(page.locator('.premium-teaser')).toHaveCount(0);
+    await expect(items.last().locator('.native span')).toHaveText('to pay');
   });
 
   test('switches category through the tabs', async ({ page }) => {
@@ -232,5 +248,13 @@ test.describe('Settings', () => {
     await expect(page.locator('#word-delay')).toBeVisible();
     await expect(page.locator('#playback-speed')).toBeVisible();
     await expect(page.locator('.actions button')).toHaveCount(2);
+  });
+
+  test('shows the web premium fallback without charging', async ({ page }) => {
+    await page.goto('/settings');
+
+    await expect(page.locator('app-premium-card')).toBeVisible();
+    await expect(page.getByRole('link', { name: /Buy on Google Play/i })).toBeVisible();
+    await expect(page.getByRole('button', { name: /Restore purchase/i })).toBeVisible();
   });
 });
