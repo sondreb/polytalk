@@ -2,9 +2,12 @@
 
 /**
  * Patches src-android/app/build.gradle to read signing credentials from
- * local.properties instead of prompting interactively. This is re-applied
- * automatically by the android:build and android:update scripts, so it survives
- * running `bubblewrap update` which regenerates the Android project files.
+ * local.properties instead of prompting interactively. Also pins
+ * targetSdkVersion to 36 so Play Console accepts updates (Android 16).
+ * This is re-applied automatically by the android:build and android:update
+ * scripts, so it survives running `bubblewrap update` which regenerates the
+ * Android project files. Bubblewrap CLI 1.24.x still templates target 35;
+ * 1.25.0+ templates 36.
  */
 
 const fs = require('fs');
@@ -66,8 +69,16 @@ if (localPropertiesFile.exists()) {
     );
   }
 
+  // 4. Pin targetSdkVersion 36. Play requires Android 16 (API 36) from 31 Aug 2026.
+  // bubblewrap update from CLI < 1.25.0 rewrites this back to 35.
+  const targetSdkPatched = content.replace(/targetSdkVersion\s+\d+/, 'targetSdkVersion 36');
+  if (targetSdkPatched === content && !/targetSdkVersion\s+36\b/.test(content)) {
+    throw new Error('Could not find targetSdkVersion in app/build.gradle to pin to 36.');
+  }
+  content = targetSdkPatched;
+
   fs.writeFileSync(BUILD_GRADLE, content, 'utf8');
-  console.log(`Patched ${path.relative(path.resolve(__dirname, '..'), BUILD_GRADLE)} for local.properties signing.`);
+  console.log(`Patched ${path.relative(path.resolve(__dirname, '..'), BUILD_GRADLE)} for local.properties signing and targetSdk 36.`);
 }
 
 patch();

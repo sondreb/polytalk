@@ -2,7 +2,7 @@
 
 Manual workflow [`.github/workflows/android-play.yml`](../.github/workflows/android-play.yml) builds the Bubblewrap TWA App Bundle and uploads it to Google Play.
 
-Default track is **beta**. Trigger it with **Actions → Android Play Store → Run workflow**.
+Default track is **beta**. Trigger it with **Actions → Android Play Store → Run workflow**. The workflow is `workflow_dispatch` only; you can run it on `main` or on a PR branch from the Actions UI (choose the branch in **Use workflow from**).
 
 ## Job flow
 
@@ -15,6 +15,8 @@ checkout → Node 22 + Java 17 + Android SDK
 ```
 
 Package name: `me.polytalk.twa` (from `src-android/twa-manifest.json`).
+
+Play target API: `targetSdkVersion` **36** (Android 16) in `src-android/app/build.gradle`. The CI job installs `platforms;android-36` plus `build-tools;36.1.0` (and `35.0.0` so AGP 8.9.1 can still resolve its default toolchain).
 
 AAB output: `src-android/app/build/outputs/bundle/release/app-release.aab`
 
@@ -73,8 +75,8 @@ Use `draft` to create the release in Play Console without rolling it out.
 
 Versions come from `src-android/twa-manifest.json`:
 
-- `appVersionName` — user-visible version (e.g. `0.0.6`)
-- `appVersionCode` — integer Play uses for uniqueness (e.g. `6`)
+- `appVersionName` — user-visible version (e.g. `0.0.7`)
+- `appVersionCode` — integer Play uses for uniqueness (e.g. `7`)
 
 **Google Play rejects a versionCode that has already been used.** Before each release:
 

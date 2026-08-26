@@ -20,8 +20,8 @@
     "path": "signing.keystore",
     "alias": "my-key-alias"
   },
-  "appVersionName": "0.0.6",
-  "appVersionCode": 6,
+  "appVersionName": "0.0.7",
+  "appVersionCode": 7,
   "shortcuts": [],
   "generatorApp": "bubblewrap-cli",
   "webManifestUrl": "https://polytalk.me/manifest.webmanifest",
@@ -38,5 +38,5 @@
   "additionalTrustedOrigins": [],
   "retainedBundles": [],
   "displayOverride": [],
-  "appVersion": "0.0.6"
+  "appVersion": "0.0.7"
 }

@@ -7,7 +7,7 @@ It is built with the latest Android SDKs available from Bubblewrap at generation
 - Android Gradle Plugin 8.9.1
 - Gradle 8.11.1
 - compileSdk 36
-- targetSdk 35
+- targetSdk 36
 - minSdk 21
 - Android Browser Helper 2.6.2
 
@@ -55,6 +55,8 @@ cp src-android/local.properties.example src-android/local.properties
 ## Versioning
 
 Before each release, bump both `appVersionName` and `appVersionCode` in [`twa-manifest.json`](./twa-manifest.json), then run `npm run android:update` so the generated Gradle files pick up the new values.
+
+`android:update` / `android:build` re-apply a patch that keeps `targetSdkVersion` at **36**. The Bubblewrap CLI currently locked in this repo (1.24.x) still templates target 35; Play requires Android 16 (API 36) from 31 August 2026.
 
 ## Digital Asset Links
 
