@@ -6,11 +6,12 @@ import { AudioService } from '../../services/audio.service';
 import { ThemeService } from '../../services/theme.service';
 import { TranslationService } from '../../services/translation.service';
 import { TranslatePipe } from '../../pipes/translate.pipe';
+import { PremiumCardComponent } from '../../components/premium-card/premium-card.component';
 
 @Component({
   selector: 'app-settings',
   standalone: true,
-  imports: [CommonModule, FormsModule, TranslatePipe],
+  imports: [CommonModule, FormsModule, TranslatePipe, PremiumCardComponent],
   template: `
     <div class="settings-container">
       <h1>{{ 'settings.title' | translate }}</h1>
@@ -37,6 +38,10 @@ import { TranslatePipe } from '../../pipes/translate.pipe';
             <option value="dark">{{ 'settings.themeDark' | translate }}</option>
           </select>
         </div>
+      </section>
+
+      <section class="card">
+        <app-premium-card />
       </section>
 
       <section class="card">

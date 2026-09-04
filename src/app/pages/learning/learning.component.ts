@@ -18,7 +18,9 @@ import {
 } from '../../services/language.service';
 import { AudioService } from '../../services/audio.service';
 import { TranslationService } from '../../services/translation.service';
+import { PremiumService } from '../../services/premium.service';
 import { TranslatePipe } from '../../pipes/translate.pipe';
+import { PremiumCardComponent } from '../../components/premium-card/premium-card.component';
 
 export interface LearningItem {
   native: string;
@@ -29,7 +31,7 @@ export interface LearningItem {
 @Component({
   selector: 'app-learning',
   standalone: true,
-  imports: [CommonModule, FormsModule, TranslatePipe],
+  imports: [CommonModule, FormsModule, TranslatePipe, PremiumCardComponent],
   template: `
     <section class="learning">
       <header class="language-header card">
@@ -136,6 +138,25 @@ export interface LearningItem {
           </div>
         }
       </div>
+
+      @if (!premium.unlocked() && premiumTeasers().length) {
+        <aside class="premium-teaser card">
+          <div class="locked-preview">
+            @for (item of premiumTeasers(); track item.key) {
+              <div class="item locked">
+                <div class="native">
+                  <span class="lock-badge">{{ 'premium.lockedItem' | translate }}</span>
+                  <span>{{ item.native }}</span>
+                </div>
+                <div class="translation">
+                  <span>{{ item.translation }}</span>
+                </div>
+              </div>
+            }
+          </div>
+          <app-premium-card [compact]="true" />
+        </aside>
+      }
     </section>
 
     <div class="transport-spacer"></div>
@@ -578,6 +599,36 @@ export interface LearningItem {
         cursor: not-allowed;
       }
 
+      .premium-teaser {
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+        padding: 1rem;
+      }
+
+      .locked-preview {
+        display: flex;
+        flex-direction: column;
+      }
+
+      .item.locked {
+        opacity: 0.72;
+        pointer-events: none;
+      }
+
+      .lock-badge {
+        display: inline-flex;
+        align-items: center;
+        padding: 0.15rem 0.5rem;
+        border-radius: var(--radius-pill);
+        background: var(--primary-soft);
+        color: var(--primary-color);
+        font-size: 0.7rem;
+        font-weight: 700;
+        letter-spacing: 0.04em;
+        text-transform: uppercase;
+      }
+
       /* ---------- Transport bar ---------- */
       .transport-spacer {
         height: 84px;
@@ -993,6 +1044,7 @@ export class LearningComponent implements OnInit, OnDestroy {
   private readonly languageService = inject(LanguageService);
   private readonly translationService = inject(TranslationService);
   readonly audioService = inject(AudioService);
+  readonly premium = inject(PremiumService);
 
   private readonly SETTINGS_KEY = 'polytalk-settings';
   private readonly FROM_LANGUAGE_KEY = 'polytalk-from-language';
@@ -1003,6 +1055,7 @@ export class LearningComponent implements OnInit, OnDestroy {
   // Route / content state
   readonly category = signal<string>('words');
   readonly currentItems = signal<LearningItem[]>([]);
+  readonly premiumTeasers = signal<LearningItem[]>([]);
   readonly availableLanguages = signal<Language[]>([]);
   readonly fromLanguageCode = signal<string>('en');
   readonly toLanguageCode = signal<string>('');
@@ -1052,6 +1105,13 @@ export class LearningComponent implements OnInit, OnDestroy {
 
     window.addEventListener('online', this.onOnline);
     window.addEventListener('offline', this.onOffline);
+
+    effect(() => {
+      this.premium.unlocked();
+      if (this.toLanguageCode()) {
+        this.loadItems();
+      }
+    });
 
     effect(() => {
       const file = this.audioService.currentFile();
@@ -1107,9 +1167,14 @@ export class LearningComponent implements OnInit, OnDestroy {
   loadItems(): void {
     if (!this.toLanguageCode()) return;
 
-    const toContent = this.languageService.getContent(this.toLanguageCode());
+    const includePremium = this.premium.unlocked();
+    const toContent = this.languageService.getContent(
+      this.toLanguageCode(),
+      includePremium
+    );
     const fromContent = this.languageService.getContent(
-      this.fromLanguageCode()
+      this.fromLanguageCode(),
+      includePremium
     );
 
     if (!toContent || !fromContent) return;
@@ -1126,6 +1191,30 @@ export class LearningComponent implements OnInit, OnDestroy {
         translation: toTranslation,
         key,
       }))
+    );
+
+    if (includePremium) {
+      this.premiumTeasers.set([]);
+      return;
+    }
+
+    const toPremium = this.languageService.getPremiumContent(
+      this.toLanguageCode()
+    );
+    const fromPremium = this.languageService.getPremiumContent(
+      this.fromLanguageCode()
+    );
+    const extraTo = toPremium?.[category] ?? {};
+    const extraFrom = fromPremium?.[category] ?? {};
+
+    this.premiumTeasers.set(
+      Object.entries(extraTo)
+        .slice(0, 3)
+        .map(([key, toTranslation]) => ({
+          native: extraFrom[key] ?? key,
+          translation: toTranslation,
+          key,
+        }))
     );
   }
 
@@ -1412,10 +1501,15 @@ export class LearningComponent implements OnInit, OnDestroy {
       const audioFiles: string[] = [];
       const allCategories = ['words', 'numbers', 'sentences'];
 
+      const includePremium = this.premium.unlocked();
       const fromContent = this.languageService.getContent(
-        this.fromLanguageCode()
+        this.fromLanguageCode(),
+        includePremium
       );
-      const toContent = this.languageService.getContent(this.toLanguageCode());
+      const toContent = this.languageService.getContent(
+        this.toLanguageCode(),
+        includePremium
+      );
 
       allCategories.forEach((category) => {
         const fromItems = fromContent

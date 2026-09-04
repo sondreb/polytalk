@@ -119,6 +119,17 @@ describe('LearningComponent', () => {
     expect(component.loopRepeat()).toBe(1);
   });
 
+  it('should show a premium teaser for locked extra items', () => {
+    component.premiumTeasers.set([
+      { native: 'I', translation: 'yo', key: 'I' },
+    ]);
+    fixture.detectChanges();
+
+    expect(element.querySelector('.premium-teaser')).toBeTruthy();
+    expect(element.querySelector('.item.locked')?.textContent).toContain('I');
+    expect(element.querySelector('app-premium-card')).toBeTruthy();
+  });
+
   it('should swap the language direction', () => {
     component.availableLanguages.set([
       { code: 'en', name: 'English', flag: '🇬🇧', flagImage: '/assets/flags/gb.png' },

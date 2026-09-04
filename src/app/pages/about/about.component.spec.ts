@@ -36,8 +36,16 @@ describe('AboutComponent', () => {
     expect(features.length).toBeGreaterThan(0);
   });
 
+  it('should render premium status', () => {
+    const compiled = fixture.nativeElement as HTMLElement;
+    expect(compiled.querySelector('app-premium-card')).toBeTruthy();
+  });
+
   it('should render contact section', () => {
     const compiled = fixture.nativeElement as HTMLElement;
-    expect(compiled.querySelector('h2:last-of-type')?.textContent).toContain('Contact');
+    const headings = Array.from(compiled.querySelectorAll('h2')).map(
+      (heading) => heading.textContent ?? ''
+    );
+    expect(headings.some((text) => text.includes('Contact'))).toBeTrue();
   });
 });

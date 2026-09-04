@@ -5,6 +5,7 @@ import { NavbarComponent } from './components/navbar/navbar.component';
 import { UpdateService } from './services/update.service';
 import { FooterComponent } from './components/footer/footer.component';
 import { ThemeService } from './services/theme.service';
+import { PremiumService } from './services/premium.service';
 import { TranslatePipe } from './pipes/translate.pipe';
 
 @Component({
@@ -96,6 +97,7 @@ import { TranslatePipe } from './pipes/translate.pipe';
 export class AppComponent {
   readonly updateService = inject(UpdateService);
   private readonly themeService = inject(ThemeService);
+  private readonly premiumService = inject(PremiumService);
 
   readonly showInstallPrompt = signal(false);
   private deferredPrompt: any;
