@@ -1,94 +1,107 @@
 <!DOCTYPE html>
 <html lang="en" data-beasties-container>
-  <head>
 
-    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5011572602448314" crossorigin="anonymous"></script>
+<head>
 
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5011572602448314" crossorigin="anonymous"></script>
 
-    <script src="/cookieconsent.js"></script>
-    <!-- Google Tag Manager -->
-    <script>
-      window.dataLayer = window.dataLayer || [];
-      function gtag() { dataLayer.push(arguments); }
-      const defaultSettings = {
-        ad_storage: "granted",
-        ad_user_data: "granted",
-        ad_personalization: "granted",
-        analytics_storage: "granted",
-      };
+  <!-- Google tag (gtag.js) -->
+  <!-- <script async src="https://www.googletagmanager.com/gtag/js?id=G-4T1ZWCJT2R"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag() { dataLayer.push(arguments); }
+    gtag('js', new Date());
 
-      const defaultRegionalSettings = {
-        ad_storage: "denied",
-        ad_user_data: "denied",
-        ad_personalization: "denied",
-        analytics_storage: "denied",
-        region: ["AT", "BE", "IS", "LI", "NO"],
-      };
+    gtag('config', 'G-4T1ZWCJT2R');
+  </script> -->
 
-      if (localStorage.getItem("consentMode") === null) {
-        gtag("consent", "default", defaultSettings);
-        gtag("consent", "default", defaultRegionalSettings);
-      } else {
-        gtag("consent", "default", {
-          ...defaultRegionalSettings,
-          ...JSON.parse(localStorage.getItem("consentMode")),
-        });
-        gtag("consent", "default", {
-          ...defaultSettings,
-          ...JSON.parse(localStorage.getItem("consentMode")),
-        });
-      }
-      (function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
-      new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
-      j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;
-      j.src='https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
-      })(window,document,'script','dataLayer','G-CGRPKT6LZD'); // Replace XXXXXXX with your GTM ID
-    </script>
-    <!-- End Google Tag Manager -->
-    <!-- Google Analytics -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-CGRPKT6LZD"></script>
-    <script>
-      window.dataLayer = window.dataLayer || [];
-      function gtag(){dataLayer.push(arguments);}
-      gtag('js', new Date());
-      gtag('config', 'G-CGRPKT6LZD');
-    </script>
-    <!-- End Google Analytics -->
-    <meta charset="utf-8">
-    <title>PolyTalk — Learn words, numbers &amp; phrases</title>
-    <base href="/">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="canonical" href="https://www.polytalk.me/">
-    <link rel="icon" type="image/svg+xml" href="polytalk-icon.svg">
-    <link rel="icon" type="image/png" href="favicon.png">
-    <link rel="apple-touch-icon" href="apple-touch-icon.png">
-    <link rel="apple-touch-icon" sizes="120x120" href="apple-touch-icon-120x120.png">
-    <link rel="apple-touch-icon" sizes="152x152" href="apple-touch-icon-152x152.png">
-    <link rel="apple-touch-icon" sizes="167x167" href="apple-touch-icon-167x167.png">
-    <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon-180x180.png">
-    <link rel="manifest" href="manifest.webmanifest">
-    <meta name="theme-color" content="#6366f1">
-    <meta name="keywords" content="language learning, vocabulary, numbers, phrases, pronunciation, multilingual, PolyTalk">
-    <meta name="description" content="Learn basic words, numbers, and phrases in any language, with native pronunciation. Free on the web and Android.">
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black">
-    <meta name="apple-mobile-web-app-title" content="PolyTalk">
-    <meta name="robots" content="index, follow">
-    <meta property="og:site_name" content="PolyTalk">
-    <meta property="og:locale" content="en_US">
-    <meta property="og:title" content="PolyTalk — Learn words, numbers &amp; phrases">
-    <meta property="og:description" content="Learn basic words, numbers, and phrases in any language, with native pronunciation.">
-    <meta property="og:image" content="https://www.polytalk.me/assets/polytalk-social.png">
-    <meta property="og:image:width" content="1280">
-    <meta property="og:image:height" content="640">
-    <meta property="og:type" content="website">
-    <meta property="og:url" content="https://www.polytalk.me/">
-    <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:site" content="@PolyTalkMe">
-    <meta name="twitter:title" content="PolyTalk — Learn words, numbers &amp; phrases">
-    <meta name="twitter:description" content="Learn basic words, numbers, and phrases in any language, with native pronunciation.">
-    <meta name="twitter:image" content="https://www.polytalk.me/assets/polytalk-social.png">
-    <script type="application/ld+json">
+  <script src="/cookieconsent.js"></script>
+  <!-- Google Tag Manager -->
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag() { dataLayer.push(arguments); }
+    const defaultSettings = {
+      ad_storage: "granted",
+      ad_user_data: "granted",
+      ad_personalization: "granted",
+      analytics_storage: "granted",
+    };
+
+    const defaultRegionalSettings = {
+      ad_storage: "denied",
+      ad_user_data: "denied",
+      ad_personalization: "denied",
+      analytics_storage: "denied",
+      region: ["AT", "BE", "IS", "LI", "NO"],
+    };
+
+    if (localStorage.getItem("consentMode") === null) {
+      gtag("consent", "default", defaultSettings);
+      gtag("consent", "default", defaultRegionalSettings);
+    } else {
+      gtag("consent", "default", {
+        ...defaultRegionalSettings,
+        ...JSON.parse(localStorage.getItem("consentMode")),
+      });
+      gtag("consent", "default", {
+        ...defaultSettings,
+        ...JSON.parse(localStorage.getItem("consentMode")),
+      });
+    }
+    (function (w, d, s, l, i) {
+      w[l] = w[l] || []; w[l].push({
+        'gtm.start':
+          new Date().getTime(), event: 'gtm.js'
+      }); var f = d.getElementsByTagName(s)[0],
+        j = d.createElement(s), dl = l != 'dataLayer' ? '&l=' + l : ''; j.async = true;
+      j.src = 'https://www.googletagmanager.com/gtm.js?id=' + i + dl; f.parentNode.insertBefore(j, f);
+    })(window, document, 'script', 'dataLayer', 'G-4T1ZWCJT2R'); // Replace XXXXXXX with your GTM ID
+  </script>
+  <!-- End Google Tag Manager -->
+  <!-- Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-4T1ZWCJT2R"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag() { dataLayer.push(arguments); }
+    gtag('js', new Date());
+    gtag('config', 'G-4T1ZWCJT2R');
+  </script>
+  <!-- End Google Analytics -->
+  <meta charset="utf-8">
+  <title>PolyTalk — Learn words, numbers &amp; phrases</title>
+  <base href="/">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="canonical" href="https://www.polytalk.me/">
+  <link rel="icon" type="image/svg+xml" href="polytalk-icon.svg">
+  <link rel="icon" type="image/png" href="favicon.png">
+  <link rel="apple-touch-icon" href="apple-touch-icon.png">
+  <link rel="apple-touch-icon" sizes="120x120" href="apple-touch-icon-120x120.png">
+  <link rel="apple-touch-icon" sizes="152x152" href="apple-touch-icon-152x152.png">
+  <link rel="apple-touch-icon" sizes="167x167" href="apple-touch-icon-167x167.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon-180x180.png">
+  <link rel="manifest" href="manifest.webmanifest">
+  <meta name="theme-color" content="#6366f1">
+  <meta name="keywords" content="language learning, vocabulary, numbers, phrases, pronunciation, multilingual, PolyTalk">
+  <meta name="description" content="Learn basic words, numbers, and phrases in any language, with native pronunciation. Free on the web and Android.">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  <meta name="apple-mobile-web-app-title" content="PolyTalk">
+  <meta name="robots" content="index, follow">
+  <meta property="og:site_name" content="PolyTalk">
+  <meta property="og:locale" content="en_US">
+  <meta property="og:title" content="PolyTalk — Learn words, numbers &amp; phrases">
+  <meta property="og:description" content="Learn basic words, numbers, and phrases in any language, with native pronunciation.">
+  <meta property="og:image" content="https://www.polytalk.me/assets/polytalk-social.png">
+  <meta property="og:image:width" content="1280">
+  <meta property="og:image:height" content="640">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://www.polytalk.me/">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:site" content="@PolyTalkMe">
+  <meta name="twitter:title" content="PolyTalk — Learn words, numbers &amp; phrases">
+  <meta name="twitter:description" content="Learn basic words, numbers, and phrases in any language, with native pronunciation.">
+  <meta name="twitter:image" content="https://www.polytalk.me/assets/polytalk-social.png">
+  <script type="application/ld+json">
       {
         "@context": "https://schema.org",
         "@type": "WebApplication",
@@ -104,46 +117,47 @@
         }
       }
     </script>
-  <style>:root{--primary-color:#6366f1;--primary-dark:#4f46e5;--secondary-color:#10b981;--secondary-dark:#059669;--accent-color:#f43f5e;--gradient-start:#6366f1;--gradient-end:#8b5cf6;--light-background-color:#f6f7fb;--light-surface-color:#ffffff;--light-surface-muted:#f1f3f9;--light-text-color:#101828;--light-text-light:#667085;--light-border-color:rgba(16, 24, 40, .09);--light-border-strong:rgba(16, 24, 40, .16);--light-overlay:rgba(16, 24, 40, .45);--dark-background-color:#0f1420;--dark-surface-color:#171d2b;--dark-surface-muted:#1f2637;--dark-text-color:#eef1f7;--dark-text-light:#98a2b3;--dark-border-color:rgba(255, 255, 255, .09);--dark-border-strong:rgba(255, 255, 255, .18);--dark-overlay:rgba(0, 0, 0, .6);--background-color:var(--light-background-color);--surface-color:var(--light-surface-color);--surface-muted:var(--light-surface-muted);--text-color:var(--light-text-color);--text-light:var(--light-text-light);--border-color:var(--light-border-color);--border-strong:var(--light-border-strong);--overlay-color:var(--light-overlay);--primary-soft:rgba(99, 102, 241, .1);--primary-soft-hover:rgba(99, 102, 241, .18);--radius-sm:8px;--radius-md:12px;--radius-lg:16px;--radius-xl:24px;--radius-pill:999px;--shadow-sm:0 1px 2px rgba(16, 24, 40, .06);--shadow-md:0 4px 12px rgba(16, 24, 40, .08);--shadow-lg:0 12px 32px rgba(16, 24, 40, .12);--shadow-brand:0 8px 20px rgba(99, 102, 241, .28);--ease:cubic-bezier(.4, 0, .2, 1);--duration:.2s;color-scheme:light}*,*:before,*:after{box-sizing:border-box}html{-webkit-text-size-adjust:100%}body{overscroll-behavior:none;font-size:16px;margin:0;padding:0;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;font-family:-apple-system,BlinkMacSystemFont,Segoe UI,system-ui,Roboto,Helvetica Neue,Arial,sans-serif;background-color:var(--background-color);color:var(--text-color);transition:background-color var(--duration) var(--ease),color var(--duration) var(--ease)}*{scrollbar-width:thin;scrollbar-color:var(--border-strong) transparent}@media (prefers-reduced-motion: reduce){*,*:before,*:after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important;scroll-behavior:auto!important}}</style><link rel="stylesheet" href="styles-L5DWQIFQ.css" media="print" onload="this.media='all'"><noscript><link rel="stylesheet" href="styles-L5DWQIFQ.css"></noscript></head>
-  <body>
-    <app-root></app-root>
-    <noscript>Please enable JavaScript to continue using this application.</noscript>
+<style>:root{--primary-color:#6366f1;--primary-dark:#4f46e5;--secondary-color:#10b981;--secondary-dark:#059669;--accent-color:#f43f5e;--gradient-start:#6366f1;--gradient-end:#8b5cf6;--light-background-color:#f6f7fb;--light-surface-color:#ffffff;--light-surface-muted:#f1f3f9;--light-text-color:#101828;--light-text-light:#667085;--light-border-color:rgba(16, 24, 40, .09);--light-border-strong:rgba(16, 24, 40, .16);--light-overlay:rgba(16, 24, 40, .45);--dark-background-color:#0f1420;--dark-surface-color:#171d2b;--dark-surface-muted:#1f2637;--dark-text-color:#eef1f7;--dark-text-light:#98a2b3;--dark-border-color:rgba(255, 255, 255, .09);--dark-border-strong:rgba(255, 255, 255, .18);--dark-overlay:rgba(0, 0, 0, .6);--background-color:var(--light-background-color);--surface-color:var(--light-surface-color);--surface-muted:var(--light-surface-muted);--text-color:var(--light-text-color);--text-light:var(--light-text-light);--border-color:var(--light-border-color);--border-strong:var(--light-border-strong);--overlay-color:var(--light-overlay);--primary-soft:rgba(99, 102, 241, .1);--primary-soft-hover:rgba(99, 102, 241, .18);--radius-sm:8px;--radius-md:12px;--radius-lg:16px;--radius-xl:24px;--radius-pill:999px;--shadow-sm:0 1px 2px rgba(16, 24, 40, .06);--shadow-md:0 4px 12px rgba(16, 24, 40, .08);--shadow-lg:0 12px 32px rgba(16, 24, 40, .12);--shadow-brand:0 8px 20px rgba(99, 102, 241, .28);--ease:cubic-bezier(.4, 0, .2, 1);--duration:.2s;color-scheme:light}*,*:before,*:after{box-sizing:border-box}html{-webkit-text-size-adjust:100%}body{overscroll-behavior:none;font-size:16px;margin:0;padding:0;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;font-family:-apple-system,BlinkMacSystemFont,Segoe UI,system-ui,Roboto,Helvetica Neue,Arial,sans-serif;background-color:var(--background-color);color:var(--text-color);transition:background-color var(--duration) var(--ease),color var(--duration) var(--ease)}*{scrollbar-width:thin;scrollbar-color:var(--border-strong) transparent}@media (prefers-reduced-motion: reduce){*,*:before,*:after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important;scroll-behavior:auto!important}}</style><link rel="stylesheet" href="styles-L5DWQIFQ.css" media="print" onload="this.media='all'"><noscript><link rel="stylesheet" href="styles-L5DWQIFQ.css"></noscript></head>
 
-    <!-- Google Tag Manager (noscript) -->
-    <noscript>
-      <iframe src="https://www.googletagmanager.com/ns.html?id=G-CGRPKT6LZD" height="0" width="0" style="display:none;visibility:hidden"></iframe>
-    </noscript>
-    <!-- End Google Tag Manager (noscript) -->
+<body>
+  <app-root></app-root>
+  <noscript>Please enable JavaScript to continue using this application.</noscript>
 
-    <script>
-      window.CookieConsent.init({
-        // How long to wait until bar or initial modal comes up.
-        UITimeout: 1000,
-        // Show 'bar' or 'modal' initial layout
-        mode: "bar",
-        // Show the 'reject all cookies' button. It's false by default.
-        showRejectAllButton: false,
-        // Look and feel.
-        theme: {
-          barColor: "#2C7CBF",
-          barTextColor: "#FFF",
-          barMainButtonColor: "#FFF",
-          barMainButtonTextColor: "#2C7CBF",
-          modalMainButtonColor: "#4285F4",
-          modalMainButtonTextColor: "#FFF",
-          focusColor: "rgb(853 238 52 / 75%)",
-        },
+  <!-- Google Tag Manager (noscript) -->
+  <noscript>
+    <iframe src="https://www.googletagmanager.com/ns.html?id=G-CGRPKT6LZD" height="0" width="0" style="display:none;visibility:hidden"></iframe>
+  </noscript>
+  <!-- End Google Tag Manager (noscript) -->
 
-        // You can declare a 'customCSS' property to partially customize the default CSS instead of customizing specific properties described on the 'theme' object. The value of this property should be a template string as in the example. Bear in mind that this style will be injected in the document body.
-        customCSS: `
+  <script>
+    window.CookieConsent.init({
+      // How long to wait until bar or initial modal comes up.
+      UITimeout: 1000,
+      // Show 'bar' or 'modal' initial layout
+      mode: "bar",
+      // Show the 'reject all cookies' button. It's false by default.
+      showRejectAllButton: false,
+      // Look and feel.
+      theme: {
+        barColor: "#2C7CBF",
+        barTextColor: "#FFF",
+        barMainButtonColor: "#FFF",
+        barMainButtonTextColor: "#2C7CBF",
+        modalMainButtonColor: "#4285F4",
+        modalMainButtonTextColor: "#FFF",
+        focusColor: "rgb(853 238 52 / 75%)",
+      },
+
+      // You can declare a 'customCSS' property to partially customize the default CSS instead of customizing specific properties described on the 'theme' object. The value of this property should be a template string as in the example. Bear in mind that this style will be injected in the document body.
+      customCSS: `
           #cconsent-bar, #cconsent-bar * { box-sizing:border-box; }
           #cconsent-bar .visually-hide, #cconsent-modal .visually-hide { position: absolute !important; overflow: hidden !important; clip-path: rect(1px 1px 1px 1px) !important; width: 1px !important; height: 1px !important; }
           #cconsent-bar { background-color: red; color: black; padding:15px; text-align:right; font-family:inherit; font-size:14px; line-height:18px; position:fixed; bottom:0; inset-inline:0; z-index:9998; transform: translateY(0); transition: transform .6s ease-in-out; transition-delay: .3s;}
           #cconsent-bar.ccb--hidden {transform: translateY(100%); display:block; visible:hidden;}
         `,
 
-        // Optionally, you have the chance to fully override the CSS as per your requirements. This options gives you full freedom but you'll have to declare CSS for the UI elements. The resulted style will be injected in the document head.
-        fullCSSOverride: `
+      // Optionally, you have the chance to fully override the CSS as per your requirements. This options gives you full freedom but you'll have to declare CSS for the UI elements. The resulted style will be injected in the document head.
+      fullCSSOverride: `
           #cconsent-bar, #cconsent-bar * { box-sizing:border-box }
           #cconsent-bar .visually-hide, #cconsent-modal .visually-hide { position: absolute !important; overflow: hidden !important; clip-path: rect(1px 1px 1px 1px) !important; width: 1px !important; height: 1px !important; }
           #cconsent-bar { background-color: #2b7abb; color: #fff; padding:15px; text-align:right; font-family:inherit; font-size:14px; line-height:18px; position:fixed; bottom:0; inset-inline:0; z-index:9998; transform: translateY(0); transition: transform .6s ease-in-out; transition-delay: .3s;}
@@ -210,137 +224,138 @@
           #cconsent-modal .ccm__footer button:hover, #cconsent-init-modal .ccm__footer button:hover { background-color: #181616; }
           #cconsent-modal .ccm__footer button:focus-within, #cconsent-init-modal .ccm__footer button:focus-within { box-shadow: 0 0 0 0.25rem rgb(40 168 52 / 75%); }
           #cconsent-modal .ccm__footer button + button, #cconsent-init-modal .ccm__footer button + button { margin-left: 10px; }`,
-        language: {
-          // Current language.
-          current: "en",
-          locale: {
-            en: {
-              barMainText:
-                "This app uses cookies to ensure you get the best experience.",
-              closeAriaLabel: "close",
-              barLinkSetting: "Cookie Settings",
-              barBtnAcceptAll: "Accept all cookies",
-              modalMainTitle: "Cookie settings",
-              // You can insert <a> tags within this prop to render links
-              modalMainText:
-                "Cookies are small pieces of data sent from a website and stored on the user's computer by the user's web browser while the user is browsing. Your browser stores each message in a small file, called cookie. When you request another page from the server, your browser sends the cookie back to the server. Cookies were designed to be a reliable mechanism for websites to remember information or to record the user's browsing activity.",
-              modalBtnSave: "Save current settings",
-              modalBtnAcceptAll: "Accept all cookies and close",
-              modalAffectedSolutions: "Affected solutions:",
-              learnMore: "Learn More",
-              on: "On",
-              off: "Off",
-              enabled: "is enabled.",
-              disabled: "is disabled.",
-              checked: "checked",
-              unchecked: "unchecked",
-            },
-            hu: {
-              barMainText:
-                "Ez a weboldal Sütiket haszn a jobb felhasználói élmény érdekében.",
-              closeAriaLabel: "bezár",
-              barLinkSetting: "Süti beállítások",
-              barBtnAcceptAll: "Minden süti elfogadása",
-              modalMainTitle: "Süti beállítások",
-              modalMainText:
-                "A HTTP-süti (általában egyszerűen süti, illetve angolul cookie) egy információcsomag, amelyet a szerver küld a webböngészőnek, majd a böngésző visszaküld a szervernek minden, a szerver felé irányított kérés alkalmával. Amikor egy weboldalt kérünk le a szervertől, akkor a böngésző elküldi a számára elérhető sütiket. A süti-ket úgy tervezték, hogy megbízható mechanizmust biztosítsanak a webhelyek számára az információk megőrzésére vagy a felhasználók böngészési tevékenységének rögzítésére.",
-              modalBtnSave: "Beállítások mentése",
-              modalBtnAcceptAll: "Minden Süti elfogadása",
-              modalAffectedSolutions: "Mire lesz ez hatással:",
-              learnMore: "Tudj meg többet",
-              on: "Be",
-              off: "Ki",
-              enabled: "bekapcsolva.",
-              disabled: "kikapcsolva.",
-              checked: "kipipálva",
-              unchecked: "nincs kipipálva",
-            },
+      language: {
+        // Current language.
+        current: "en",
+        locale: {
+          en: {
+            barMainText:
+              "This app uses cookies to ensure you get the best experience.",
+            closeAriaLabel: "close",
+            barLinkSetting: "Cookie Settings",
+            barBtnAcceptAll: "Accept all cookies",
+            modalMainTitle: "Cookie settings",
+            // You can insert <a> tags within this prop to render links
+            modalMainText:
+              "Cookies are small pieces of data sent from a website and stored on the user's computer by the user's web browser while the user is browsing. Your browser stores each message in a small file, called cookie. When you request another page from the server, your browser sends the cookie back to the server. Cookies were designed to be a reliable mechanism for websites to remember information or to record the user's browsing activity.",
+            modalBtnSave: "Save current settings",
+            modalBtnAcceptAll: "Accept all cookies and close",
+            modalAffectedSolutions: "Affected solutions:",
+            learnMore: "Learn More",
+            on: "On",
+            off: "Off",
+            enabled: "is enabled.",
+            disabled: "is disabled.",
+            checked: "checked",
+            unchecked: "unchecked",
+          },
+          hu: {
+            barMainText:
+              "Ez a weboldal Sütiket haszn a jobb felhasználói élmény érdekében.",
+            closeAriaLabel: "bezár",
+            barLinkSetting: "Süti beállítások",
+            barBtnAcceptAll: "Minden süti elfogadása",
+            modalMainTitle: "Süti beállítások",
+            modalMainText:
+              "A HTTP-süti (általában egyszerűen süti, illetve angolul cookie) egy információcsomag, amelyet a szerver küld a webböngészőnek, majd a böngésző visszaküld a szervernek minden, a szerver felé irányított kérés alkalmával. Amikor egy weboldalt kérünk le a szervertől, akkor a böngésző elküldi a számára elérhető sütiket. A süti-ket úgy tervezték, hogy megbízható mechanizmust biztosítsanak a webhelyek számára az információk megőrzésére vagy a felhasználók böngészési tevékenységének rögzítésére.",
+            modalBtnSave: "Beállítások mentése",
+            modalBtnAcceptAll: "Minden Süti elfogadása",
+            modalAffectedSolutions: "Mire lesz ez hatással:",
+            learnMore: "Tudj meg többet",
+            on: "Be",
+            off: "Ki",
+            enabled: "bekapcsolva.",
+            disabled: "kikapcsolva.",
+            checked: "kipipálva",
+            unchecked: "nincs kipipálva",
           },
         },
-        // List all the categories you want to display.
-        categories: {
-          // Unique name.
-          // This probably will be the default category.
-          necessary: {
-            // The cookies here are necessary and category can't be turned off.
-            // Wanted config value will be ignored.
-            needed: true,
-            // The cookies in this category will be let trough.
-            // This probably should be false if category not necessary.
-            wanted: true,
-            // If checkbox is on or off at first run.
-            checked: true,
-            // Language settings for categories.
-            language: {
-              locale: {
-                en: {
-                  name: "Strictly Necessary Cookies",
-                  description:
-                    "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur eu commodo est, nec gravida odio. Suspendisse scelerisque a ex nec semper.",
-                },
-                hu: {
-                  name: "Szükséges sütik",
-                  description:
-                    "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur eu commodo est, nec gravida odio. Suspendisse scelerisque a ex nec semper.",
-                },
+      },
+      // List all the categories you want to display.
+      categories: {
+        // Unique name.
+        // This probably will be the default category.
+        necessary: {
+          // The cookies here are necessary and category can't be turned off.
+          // Wanted config value will be ignored.
+          needed: true,
+          // The cookies in this category will be let trough.
+          // This probably should be false if category not necessary.
+          wanted: true,
+          // If checkbox is on or off at first run.
+          checked: true,
+          // Language settings for categories.
+          language: {
+            locale: {
+              en: {
+                name: "Strictly Necessary Cookies",
+                description:
+                  "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur eu commodo est, nec gravida odio. Suspendisse scelerisque a ex nec semper.",
               },
-            },
-          },
-        },
-        // List actual services here.
-        services: {
-          // Unique name.
-          analytics: {
-            // Existing category Unique name.
-            // This example shows how to block Google Analytics.
-            category: "necessary",
-            // Type of blocking to apply here.
-            // This depends on the type of script we are trying to block.
-            // Can be: dynamic-script, script-tag, wrapped, localcookie.
-            type: "dynamic-script",
-            // Only needed if "type: dynamic-script".
-            // The filter will look for this keyword in inserted scipt tags
-            //  and block if match found.
-            search: "analytics",
-            // List of known cookie names or regular expressions matching
-            //  cookie names placed by this service.
-            // These will be removed from current domain and .domain.
-            cookies: [
-              {
-                // Known cookie name.
-                name: "_gid",
-                // Expected cookie domain.
-                domain: `.${window.location.hostname}`,
-              },
-              {
-                // Regex matching cookie name.
-                name: /^_ga/,
-                domain: `.${window.location.hostname}`,
-              },
-            ],
-            language: {
-              locale: {
-                en: {
-                  name: "Google Analytics",
-                },
-                hu: {
-                  name: "Google Analytics",
-                },
+              hu: {
+                name: "Szükséges sütik",
+                description:
+                  "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur eu commodo est, nec gravida odio. Suspendisse scelerisque a ex nec semper.",
               },
             },
           },
         },
-        //List consent properties according to Google Consent Mode v2, and their respecting controlling categories listed above.
-        consentModeControls: {
-          ad_storage: "necessary",
-          ad_user_data: "necessary",
-          ad_personalization: "necessary",
-          analytics_storage: "necessary",
+      },
+      // List actual services here.
+      services: {
+        // Unique name.
+        analytics: {
+          // Existing category Unique name.
+          // This example shows how to block Google Analytics.
+          category: "necessary",
+          // Type of blocking to apply here.
+          // This depends on the type of script we are trying to block.
+          // Can be: dynamic-script, script-tag, wrapped, localcookie.
+          type: "dynamic-script",
+          // Only needed if "type: dynamic-script".
+          // The filter will look for this keyword in inserted scipt tags
+          //  and block if match found.
+          search: "analytics",
+          // List of known cookie names or regular expressions matching
+          //  cookie names placed by this service.
+          // These will be removed from current domain and .domain.
+          cookies: [
+            {
+              // Known cookie name.
+              name: "_gid",
+              // Expected cookie domain.
+              domain: `.${window.location.hostname}`,
+            },
+            {
+              // Regex matching cookie name.
+              name: /^_ga/,
+              domain: `.${window.location.hostname}`,
+            },
+          ],
+          language: {
+            locale: {
+              en: {
+                name: "Google Analytics",
+              },
+              hu: {
+                name: "Google Analytics",
+              },
+            },
+          },
         },
-        // whether consent mode updates will be handled by gtag or via custom GTM template. The value by default is null. Can have 'gtag' or 'gtm-template' values.
-        // consentModeHandler: 'gtm-template'
-        consentModeHandler: "gtag",
-      });
-    </script>
-  <link rel="modulepreload" href="chunk-YGTXUFJW.js"><link rel="modulepreload" href="chunk-Q2XJHSFD.js"><script src="polyfills-FFHMD2TL.js" type="module"></script><script src="main-FP2H6I7I.js" type="module"></script></body>
+      },
+      //List consent properties according to Google Consent Mode v2, and their respecting controlling categories listed above.
+      consentModeControls: {
+        ad_storage: "necessary",
+        ad_user_data: "necessary",
+        ad_personalization: "necessary",
+        analytics_storage: "necessary",
+      },
+      // whether consent mode updates will be handled by gtag or via custom GTM template. The value by default is null. Can have 'gtag' or 'gtm-template' values.
+      // consentModeHandler: 'gtm-template'
+      consentModeHandler: "gtag",
+    });
+  </script>
+<link rel="modulepreload" href="chunk-YGTXUFJW.js"><link rel="modulepreload" href="chunk-Q2XJHSFD.js"><script src="polyfills-FFHMD2TL.js" type="module"></script><script src="main-FP2H6I7I.js" type="module"></script></body>
+
 </html>
